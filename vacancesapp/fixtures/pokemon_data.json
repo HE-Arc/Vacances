@@ -1,0 +1,123 @@
+[
+    {
+        "model": "vacancesapp.pokemontype",
+        "pk": 1,
+        "fields": {
+            "name": "Nouveau-né",
+            "max_happiness": 5,
+            "cost": 20,
+            "cash_factor": 1.0
+        }
+    },
+    {
+        "model": "vacancesapp.pokemontype",
+        "pk": 2,
+        "fields": {
+            "name": "Première évolution",
+            "max_happiness": 10,
+            "cost": 40,
+            "cash_factor": 2.0
+        }
+    },
+    {
+        "model": "vacancesapp.pokemontype",
+        "pk": 3,
+        "fields": {
+            "name": "Dernière évolution",
+            "max_happiness": 15,
+            "cost": 60,
+            "cash_factor": 3.0
+        }
+    },
+    {
+        "model": "vacancesapp.pokemontype",
+        "pk": 4,
+        "fields": {
+            "name": "Légendaire",
+            "max_happiness": 30,
+            "cost": 200,
+            "cash_factor": 4.0
+        }
+    },
+    {
+      "model": "vacancesapp.pokemon",
+      "pk": 1,
+      "fields": {
+            "pokemon_type": 1,
+            "name": "Bulbizarre",
+            "obtainable": true
+      }
+    },
+    {
+        "model": "vacancesapp.pokemon",
+        "pk": 2,
+        "fields": {
+            "pokemon_type": 2,
+            "name": "Herbizarre",
+            "obtainable": true
+        }
+    },
+    {
+        "model": "vacancesapp.pokemon",
+        "pk": 3,
+        "fields": {
+            "pokemon_type": 3,
+            "name": "Florizarre",
+            "obtainable": true
+        }
+    },
+    {
+        "model": "vacancesapp.pokemon",
+        "pk": 4,
+        "fields": {
+            "pokemon_type": 1,
+            "name": "Carapuce",
+            "obtainable": true
+        }
+    },
+    {
+        "model": "vacancesapp.pokemon",
+        "pk": 5,
+        "fields": {
+            "pokemon_type": 2,
+            "name": "Carabaffe",
+            "obtainable": true
+        }
+    },
+    {
+        "model": "vacancesapp.pokemon",
+        "pk": 6,
+        "fields": {
+            "pokemon_type": 3,
+            "name": "Tortank",
+            "obtainable": true
+        }
+    },
+    {
+        "model": "vacancesapp.pokemon",
+        "pk": 7,
+        "fields": {
+            "pokemon_type": 1,
+            "name": "Salamèche",
+            "obtainable": true
+        }
+    },
+    {
+        "model": "vacancesapp.pokemon",
+        "pk": 8,
+        "fields": {
+            "pokemon_type": 2,
+            "name": "Reptincel",
+            "obtainable": true
+        }
+    },
+    {
+        "model": "vacancesapp.pokemon",
+        "pk": 9,
+        "fields": {
+            "pokemon_type": 3,
+            "name": "Dracaufeu",
+            "obtainable": true
+        }
+    }
+  ]
