@@ -1,9 +1,10 @@
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <q-page padding>
+      <div>Hello World</div>
+  </q-page>
   </main>
 </template>
