@@ -8,7 +8,7 @@ from rest_framework import viewsets
 
 class PokemonViewSet(viewsets.ModelViewSet):
     queryset = Pokemon.objects.all()
-    serializer_class = PokemonSerializer
+    serializer_class = ComplexPokemonSerializer
 
 class PokemonTypeViewSet(viewsets.ModelViewSet):
     queryset = PokemonType.objects.all()

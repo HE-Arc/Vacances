@@ -72,3 +72,12 @@ class OwnedPokemonSerializer(serializers.HyperlinkedModelSerializer):
             "requested_area",
             "current_happiness",
         ]
+
+
+class ComplexPokemonSerializer(PokemonSerializer):
+    pokemon_type_object = PokemonTypeSerializer(source="pokemon_type", read_only=True)
+    class Meta:
+        model = Pokemon
+        fields = PokemonSerializer.Meta.fields + [
+            "pokemon_type_object",
+        ]
