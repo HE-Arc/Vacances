@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class Player(models.Model):
     user = models.ForeignKey(User, related_name="players", on_delete=models.CASCADE)
     username = models.CharField(max_length=150, unique=True)
-    is_admin = models.BooleanField()
+    is_manager = models.BooleanField()
     money = models.PositiveIntegerField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

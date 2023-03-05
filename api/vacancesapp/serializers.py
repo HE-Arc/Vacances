@@ -20,7 +20,7 @@ class PlayerSerializer(serializers.HyperlinkedModelSerializer):
             "id",
             "user",
             "username",
-            "is_admin",
+            "is_manager",
             "money",
         ]
         
