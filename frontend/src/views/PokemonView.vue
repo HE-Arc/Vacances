@@ -5,7 +5,9 @@ import { ref, onMounted } from "vue";
 const pokemons = ref([]);
 
 const fetchPokemons = async () => {
-  const result = await axios.get("http://localhost:8000/api/pokemons/");
+  const result = await axios.get(
+    import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemons/"
+  );
   pokemons.value = result.data;
 };
 
@@ -13,12 +15,16 @@ const pokemonTypes = ref([]);
 
 const fetchPokemonTypes = async () => {
   pokemonTypes.value = (
-    await axios.get("http://localhost:8000/api/pokemon-types/")
+    await axios.get(
+      import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemon-types/"
+    )
   ).data;
 };
 
 const removePokemon = async (id) => {
-  await axios.delete(`http://127.0.0.1:8000/api/pokemons/${id}/`);
+  await axios.delete(
+    import.meta.env.VITE_DATABASE_SERVER_NAME + `/api/pokemons/${id}/`
+  );
   await fetchPokemons();
 };
 
