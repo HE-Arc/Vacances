@@ -1,33 +1,49 @@
 <script setup>
 import axios from "axios";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 const success = ref(false);
 const errors = ref(null);
 
 const pokemonType = ref("");
 const name = ref("");
-const obtainable = ref("");
+
+let options = ref([]);
+const pokemonTypes = ref([]);
+
+const fetchPokemonTypes = async () => {
+  pokemonTypes.value = (
+    await axios.get(import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemon-types/")
+  ).data;
+
+  for(var i = 0; i < pokemonTypes.value.length; i++) {
+    options.value.push({label:pokemonTypes.value[i].name, value:pokemonTypes.value[i].url});
+  }
+  
+};
+
 
 const submit = async () => {
   try {
     success.value = false;
     errors.value = null;
     
-    console.log(obtainable.value);
 
-    await axios.post("http://127.0.0.1:8000/api/pokemons/", {
-      pokemon_type: `http://127.0.0.1:8000/api/pokemon-types/${pokemonType.value}/`,
+    await axios.post(import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemons/", {
+      pokemon_type: pokemonType.value.value,
       name: name.value,
       obtainable: true,
     });
 
     success.value = true;
   } catch (error) {
-    console.log(error);
-    //errors.value = error.response.data;
+    errors.value = error.response.data;
   }
 };
+
+onMounted(() => {
+  fetchPokemonTypes();
+});
 </script>
 
 <template>
@@ -50,20 +66,13 @@ const submit = async () => {
 
             <q-card-section>
               <q-input v-model="name" label="*Nom" class="q-mb-md" outlined />
-              <q-input
+              
+              <q-select
                 v-model="pokemonType"
-                type="number"
-                label="*Type de Pokémon"
-                class="q-mb-md"
-                outlined
+                :options="options"
+                label="Sélectionnez un type"
               />
-              <q-input
-                v-model="obtainable"
-                type="checkbox"
-                label="Achetable"
-                class="q-mb-md"
-                outlined
-              />
+              
             </q-card-section>
 
             <q-banner
