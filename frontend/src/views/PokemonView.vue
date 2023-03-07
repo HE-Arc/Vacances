@@ -39,8 +39,8 @@ onMounted(() => {
   <q-page>
     <div>Liste des Pokémon</div>
     <div class="">
-      <q-btn color="primary" :to="{ name: 'pokemons.create' }">
-        <q-icon left size="xl" name="mdi-plus-box" />
+      <q-btn color="green" :to="{ name: 'pokemons.create' }">
+        <q-icon left size="xl" name="add_circle_outline" />
         <div>Créer un Pokémon</div>
       </q-btn>
     </div>
@@ -52,13 +52,16 @@ onMounted(() => {
             {{ item.pokemon_type_object.name }}
           </div>
           <q-btn
-            color="warning"
+            color="red"
             push
             @click="removePokemon(item.id)"
             class="q-ma-xs"
             dense
           >
-            <div>Supprimer</div>
+            <div>
+              <q-icon left size="xs" name="delete_outline" />
+              Supprimer
+            </div>
           </q-btn>
         </q-card-section>
 
