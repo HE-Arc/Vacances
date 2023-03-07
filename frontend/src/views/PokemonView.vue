@@ -115,7 +115,7 @@ onMounted(() => {
         
         <q-card-actions align="right">
           <q-btn color="blue-grey" v-close-popup>
-            <q-icon left size="xs" name="cancel_outline" />
+            <q-icon left size="xs" name="cancel" />
             Annuler
           </q-btn>
           <q-btn color="red" @click="removePokemon(removeItem.id)" v-close-popup>
