@@ -55,7 +55,7 @@ onMounted(() => {
     
     <q-banner v-if="success" inline-actions class="q-mb-lg text-white bg-green">
       <div class="text-h6">
-        <q-icon left size="md" name="mdi-check-circle-outline" />
+        <q-icon left size="md" name="check_circle" />
         Pokémon créé avec succès !
       </div>
     </q-banner>
@@ -114,8 +114,14 @@ onMounted(() => {
         <hr>
         
         <q-card-actions align="right">
-          <q-btn label="Annuler" color="blue-grey" v-close-popup/>
-          <q-btn label="Supprimer" color="red" @click="removePokemon(removeItem.id)" v-close-popup/>
+          <q-btn color="blue-grey" v-close-popup>
+            <q-icon left size="xs" name="cancel_outline" />
+            Annuler
+          </q-btn>
+          <q-btn color="red" @click="removePokemon(removeItem.id)" v-close-popup>
+            <q-icon left size="xs" name="delete_outline" />
+            Supprimer
+          </q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
