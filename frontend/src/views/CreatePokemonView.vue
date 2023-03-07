@@ -52,9 +52,9 @@ onMounted(() => {
         <div class="col-8 col-md-6 q-mt-md">
           <q-card class="q-pa-lg">
             <q-card-section class="">
-              <q-btn color="primary" :to="{ name: 'pokemons' }">
-                <q-icon left name="mdi-arrow-left-top-bold" />
-                <div>Retour</div>
+              <q-btn color="blue-grey" :to="{ name: 'pokemons' }">
+                <q-icon left name="arrow_back_ios" />
+                Retour
               </q-btn>
             </q-card-section>
 
@@ -79,14 +79,17 @@ onMounted(() => {
               class="q-mb-lg text-white bg-red"
             >
               <div class="text-h6">
-                <q-icon left size="md" name="mdi-check-circle-outline" />
+                <q-icon left size="md" name="emoji_nature" />
                 Erreur lors de la création du Pokémon!
               </div>
             </q-banner>
 
             <q-card-section class="q-gutter-y-sm">
               <div class="text-center">
-                <q-btn type="submit" color="primary" label="Submit" />
+                <q-btn type="submit" color="green">
+                  <q-icon left name="fact_check" />
+                  <div>Créer</div>
+                </q-btn>
               </div>
             </q-card-section>
           </q-card>

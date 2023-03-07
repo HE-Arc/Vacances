@@ -7,8 +7,14 @@
     </q-toolbar>
 
     <q-tabs align="left">
-      <q-route-tab :to="{ name: 'home' }" label="Home" />
-      <q-route-tab :to="{ name: 'pokemons' }" label="Pokémon" />
+      <q-route-tab :to="{ name: 'home' }">
+        <q-icon name="cottage" />
+        Accueil
+      </q-route-tab>
+      <q-route-tab :to="{ name: 'pokemons' }">
+        <q-icon name="auto_stories" />
+        Pokédex
+      </q-route-tab>
     </q-tabs>
   </q-header>
 </template>
