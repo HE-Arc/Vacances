@@ -41,36 +41,46 @@ onMounted(() => {
 
 <template>
   <q-page>
-    <div>Liste des Pokémon</div>
-    <div class="">
-      <q-btn color="primary" :to="{ name: 'pokemons.create' }">
-        <q-icon left size="xl" name="mdi-plus-box" />
+    <h1>Pokédex</h1>
+    
+    <div class="text-center q-mb-md q-mt-md">
+      <q-btn color="green" :to="{ name: 'pokemons.create' }">
+        <q-icon left size="xl" name="add_circle_outline" />
         <div>Créer un Pokémon</div>
       </q-btn>
     </div>
+    
     <q-banner v-if="success" inline-actions class="q-mb-lg text-white bg-green">
       <div class="text-h6">
         <q-icon left size="md" name="mdi-check-circle-outline" />
         Pokémon créé avec succès!
       </div>
     </q-banner>
+
+    <!-- Card list -->
     <div class="" v-for="(item, index) in pokemons" :key="index">
-      <q-card class="my-card">
-        <q-card-section>
-          <div class="text-h4">{{ item.name }}</div>
-          <div class="text-subtitle2">
-            {{ item.pokemon_type_object.name }}
+      <q-card class="my-card q-mb-sm">
+        <div class="flex justify-between">
+          <q-card-section class="flex-auto">
+            <div class="text-h4">{{ item.name }}</div>
+            <div class="text-subtitle2">{{ item.pokemon_type_object.name }}</div>
+          </q-card-section>
+
+          <div class="flex" style="height:3em">
+            <q-btn
+              color="red"
+              push
+              @click="removePokemon(item.id)"
+              class="q-ma-xs"
+              dense
+            >
+              <div>
+                <q-icon left size="xs" name="delete_outline" />
+                Supprimer
+              </div>
+            </q-btn>
           </div>
-          <q-btn
-            color="warning"
-            push
-            @click="removePokemon(item.id)"
-            class="q-ma-xs"
-            dense
-          >
-            <div>Supprimer</div>
-          </q-btn>
-        </q-card-section>
+        </div>
 
         <q-separator inset />
       </q-card>
