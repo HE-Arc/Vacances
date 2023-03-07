@@ -21,6 +21,7 @@ a,
   }
 }
 
+/* TODO : Check if this is needed (it split to "2 colonnes" when large screen, but only left is used)
 @media (min-width: 1024px) {
   body {
     display: flex;
@@ -33,6 +34,7 @@ a,
     padding: 0 2rem;
   }
 }
+*/
 
 /* Custom CSS */
 
