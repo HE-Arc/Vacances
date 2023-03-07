@@ -1,7 +1,6 @@
 <script setup>
 import axios from "axios";
 import { ref, onMounted } from "vue";
-// TODO-2-3 Récupérer tous les users de l'API (ref var, async func, axios, onMounted)
 const users = ref([]);
 
 const fetchUsers = async () => {

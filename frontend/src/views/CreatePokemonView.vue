@@ -2,8 +2,7 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 
-const success = ref(false);
-const errors = ref(null);
+const errors = ref(false);
 
 const pokemonType = ref("");
 const name = ref("");
@@ -25,8 +24,7 @@ const fetchPokemonTypes = async () => {
 
 const submit = async () => {
   try {
-    success.value = false;
-    errors.value = null;
+    errors.value = false;
     
 
     await axios.post(import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemons/", {
@@ -34,10 +32,10 @@ const submit = async () => {
       name: name.value,
       obtainable: true,
     });
+    location.href = "/pokemons?success=true";
 
-    success.value = true;
   } catch (error) {
-    errors.value = error.response.data;
+    errors.value = true;
   }
 };
 
@@ -76,13 +74,13 @@ onMounted(() => {
             </q-card-section>
 
             <q-banner
-              v-if="success"
+              v-if="errors"
               inline-actions
-              class="q-mb-lg text-white bg-green"
+              class="q-mb-lg text-white bg-red"
             >
               <div class="text-h6">
                 <q-icon left size="md" name="mdi-check-circle-outline" />
-                Le Pokémon a été créé!
+                Erreur lors de la création du Pokémon!
               </div>
             </q-banner>
 
