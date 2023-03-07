@@ -62,7 +62,7 @@ onMounted(() => {
 
     <!-- Card list -->
     <div class="" v-for="(item, index) in pokemons" :key="index">
-      <q-card class="my-card q-mb-sm">
+      <q-card class="q-mb-sm">
         <div class="flex justify-between">
           <q-card-section class="flex-auto">
             <div class="text-h4">{{ item.name }}</div>
