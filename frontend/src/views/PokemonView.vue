@@ -69,7 +69,7 @@ onMounted(() => {
             <div class="text-subtitle2">{{ item.pokemon_type_object.name }}</div>
           </q-card-section>
 
-          <div class="flex" style="height:3em">
+          <div class="flex normal-btn-size">
             <q-btn
               color="red"
               push
@@ -89,8 +89,9 @@ onMounted(() => {
       </q-card>
     </div>
 
-    <q-dialog v-model="showDelDialog" class="border border-red">
-      <q-card>
+    <!-- Delete dialog -->
+    <q-dialog v-model="showDelDialog">
+      <q-card class="confirm-border">
         <q-card-section>
           <div class="text-h6 text-red">
             <q-icon name="error" size="lg" />
