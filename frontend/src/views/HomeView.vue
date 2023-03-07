@@ -17,9 +17,9 @@ onMounted(() => {
   <main>
     <q-page padding>
       <div>
-        <img src="../img/Logo.png" alt="Vacances ?" style="max-width: 100%;"/>
+        <img src="../assets/images/Logo.png" alt="Vacances ?" class="mw-100"/>
         <p>Oui, mais pas pour vous !</p>
-        <img src="../img/Pika.gif" alt="Pikachu at the beach" />
+        <img src="../assets/images/Pika.gif" alt="Pikachu at the beach" />
         <h1>But du projet</h1>
         <br>
         <p>Le projet choisi consiste à créer un jeu sur navigateur.</p>

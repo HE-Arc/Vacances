@@ -33,3 +33,17 @@ a,
     padding: 0 2rem;
   }
 }
+
+/* Custom CSS */
+
+.mw-100 {
+  max-width: 100%;
+}
+
+.normal-btn-size {
+  height: 3em;
+}
+
+.confirm-border {
+  border: 2px solid red;
+}

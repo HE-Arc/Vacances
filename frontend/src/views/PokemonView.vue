@@ -33,6 +33,9 @@ const removePokemon = async (id) => {
   await fetchPokemons();
 };
 
+let showDelDialog = ref(false);
+let removeItem = ref(null);
+
 onMounted(() => {
   fetchPokemons();
   fetchPokemonTypes();
@@ -52,25 +55,25 @@ onMounted(() => {
     
     <q-banner v-if="success" inline-actions class="q-mb-lg text-white bg-green">
       <div class="text-h6">
-        <q-icon left size="md" name="mdi-check-circle-outline" />
-        Pokémon créé avec succès!
+        <q-icon left size="md" name="check_circle" />
+        Pokémon créé avec succès !
       </div>
     </q-banner>
 
     <!-- Card list -->
     <div class="" v-for="(item, index) in pokemons" :key="index">
-      <q-card class="my-card q-mb-sm">
+      <q-card class="q-mb-sm">
         <div class="flex justify-between">
           <q-card-section class="flex-auto">
             <div class="text-h4">{{ item.name }}</div>
             <div class="text-subtitle2">{{ item.pokemon_type_object.name }}</div>
           </q-card-section>
 
-          <div class="flex" style="height:3em">
+          <div class="flex normal-btn-size">
             <q-btn
               color="red"
               push
-              @click="removePokemon(item.id)"
+              @click="showDelDialog = true; removeItem = item;"
               class="q-ma-xs"
               dense
             >
@@ -85,6 +88,43 @@ onMounted(() => {
         <q-separator inset />
       </q-card>
     </div>
+
+    <!-- Delete dialog -->
+    <q-dialog v-model="showDelDialog">
+      <q-card class="confirm-border">
+        <q-card-section>
+          <div class="text-h6 text-red">
+            <q-icon name="error" size="lg" />
+            Confirmation de suppression
+          </div>
+        </q-card-section>
+
+        <hr>
+
+        <q-card-section>
+          <p>Souhaitez-vous réellement supprimer le pokémon <span class="text-teal">{{ removeItem.name }}</span></p>
+          <p>Si vous le supprimez, toutes les données associées le seront également.</p>
+          <!-- TODO When game implemented : change text to specify the refund the players and remove it -->
+          <p class="text-red">
+            <q-icon name="crisis_alert" size="sm" />
+            Attention, cette action est irréversible.
+          </p>
+        </q-card-section>
+
+        <hr>
+        
+        <q-card-actions align="right">
+          <q-btn color="blue-grey" v-close-popup>
+            <q-icon left size="xs" name="cancel_outline" />
+            Annuler
+          </q-btn>
+          <q-btn color="red" @click="removePokemon(removeItem.id)" v-close-popup>
+            <q-icon left size="xs" name="delete_outline" />
+            Supprimer
+          </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
