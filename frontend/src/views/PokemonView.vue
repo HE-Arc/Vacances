@@ -50,7 +50,6 @@ onMounted(() => {
       </q-btn>
     </div>
     
-    <!-- Card list -->
     <q-banner v-if="success" inline-actions class="q-mb-lg text-white bg-green">
       <div class="text-h6">
         <q-icon left size="md" name="mdi-check-circle-outline" />
@@ -58,6 +57,7 @@ onMounted(() => {
       </div>
     </q-banner>
 
+    <!-- Card list -->
     <div class="" v-for="(item, index) in pokemons" :key="index">
       <q-card class="my-card q-mb-sm">
         <div class="flex justify-between">
