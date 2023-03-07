@@ -4,6 +4,15 @@ import { ref, onMounted } from "vue";
 
 const pokemons = ref([]);
 
+let success;
+let queryString = window.location.search;
+let urlParams = new URLSearchParams(queryString);
+if (urlParams.has("success")) {
+  success = urlParams.get('success');
+}
+
+
+
 const fetchPokemons = async () => {
   const result = await axios.get(
     import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemons/"
@@ -15,20 +24,15 @@ const pokemonTypes = ref([]);
 
 const fetchPokemonTypes = async () => {
   pokemonTypes.value = (
-    await axios.get(
-      import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemon-types/"
-    )
+    await axios.get(import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemon-types/")
   ).data;
 };
 
 const removePokemon = async (id) => {
-  await axios.delete(
-    import.meta.env.VITE_DATABASE_SERVER_NAME + `/api/pokemons/${id}/`
-  );
+  await axios.delete(import.meta.env.VITE_DATABASE_SERVER_NAME + `/api/pokemons/${id}/`);
   await fetchPokemons();
 };
 
-// Execute le code quand le composant démarre
 onMounted(() => {
   fetchPokemons();
   fetchPokemonTypes();
@@ -45,8 +49,15 @@ onMounted(() => {
         <div>Créer un Pokémon</div>
       </q-btn>
     </div>
-
+    
     <!-- Card list -->
+    <q-banner v-if="success" inline-actions class="q-mb-lg text-white bg-green">
+      <div class="text-h6">
+        <q-icon left size="md" name="mdi-check-circle-outline" />
+        Pokémon créé avec succès!
+      </div>
+    </q-banner>
+
     <div class="" v-for="(item, index) in pokemons" :key="index">
       <q-card class="my-card q-mb-sm">
         <div class="flex justify-between">

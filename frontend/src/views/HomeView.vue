@@ -1,7 +1,6 @@
 <script setup>
 import axios from "axios";
 import { ref, onMounted } from "vue";
-// TODO-2-3 Récupérer tous les users de l'API (ref var, async func, axios, onMounted)
 const users = ref([]);
 
 const fetchUsers = async () => {
@@ -18,8 +17,11 @@ onMounted(() => {
   <main>
     <q-page padding>
       <div>
+        <img src="../img/Logo.png" alt="Vacances ?" />
+        <p>Oui, mais pas pour vous !</p>
+        <img src="../img/Pika.gif" alt="Pikachu at the beach" />
         <h1>But du projet</h1>
-        <br />
+        <br>
         <p>Le projet choisi consiste à créer un jeu sur navigateur.</p>
         <p>
           Le joueur est le gérant d'une pension Pokémon. Son rôle est de veiller
