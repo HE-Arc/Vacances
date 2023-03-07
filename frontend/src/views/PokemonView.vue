@@ -33,6 +33,9 @@ const removePokemon = async (id) => {
   await fetchPokemons();
 };
 
+let showDelDialog = ref(false);
+let removeItem = ref(null);
+
 onMounted(() => {
   fetchPokemons();
   fetchPokemonTypes();
@@ -53,7 +56,7 @@ onMounted(() => {
     <q-banner v-if="success" inline-actions class="q-mb-lg text-white bg-green">
       <div class="text-h6">
         <q-icon left size="md" name="mdi-check-circle-outline" />
-        Pokémon créé avec succès!
+        Pokémon créé avec succès !
       </div>
     </q-banner>
 
@@ -70,7 +73,7 @@ onMounted(() => {
             <q-btn
               color="red"
               push
-              @click="removePokemon(item.id)"
+              @click="showDelDialog = true; removeItem = item;"
               class="q-ma-xs"
               dense
             >
@@ -85,6 +88,36 @@ onMounted(() => {
         <q-separator inset />
       </q-card>
     </div>
+
+    <q-dialog v-model="showDelDialog" class="border border-red">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6 text-red">
+            <q-icon name="error" size="lg" />
+            Confirmation de suppression
+          </div>
+        </q-card-section>
+
+        <hr>
+
+        <q-card-section>
+          <p>Souhaitez-vous réellement supprimer le pokémon <span class="text-teal">{{ removeItem.name }}</span></p>
+          <p>Si vous le supprimez, toutes les données associées le seront également.</p>
+          <!-- TODO When game implemented : change text to specify the refund the players and remove it -->
+          <p class="text-red">
+            <q-icon name="crisis_alert" size="sm" />
+            Attention, cette action est irréversible.
+          </p>
+        </q-card-section>
+
+        <hr>
+        
+        <q-card-actions align="right">
+          <q-btn label="Annuler" color="blue-grey" v-close-popup/>
+          <q-btn label="Supprimer" color="red" @click="removePokemon(removeItem.id)" v-close-popup/>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
