@@ -16,10 +16,15 @@ onMounted(() => {
 <template>
   <main>
     <q-page padding>
-      <div>
+      <!-- "Catch phrase" -->
+      <div class="text-center">
         <img src="../assets/images/Logo.png" alt="Vacances ?" class="mw-100"/>
         <p>Oui, mais pas pour vous !</p>
         <img src="../assets/images/Pika.gif" alt="Pikachu at the beach" />
+      </div>
+
+      <!-- "Project information" -->
+      <div>
         <h1>But du projet</h1>
         <br>
         <p>Le projet choisi consiste à créer un jeu sur navigateur.</p>
