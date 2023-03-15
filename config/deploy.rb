@@ -38,3 +38,30 @@ set :repo_url, "https://github.com/HE-Arc/Vacances"
 
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
+
+# Fait un lien symbolique du fichier .env (à la racine du "share") vers le dossier "current")
+append :linked_files, ".env"
+
+# Installation des dépendances
+after 'deploy:updated', 'pip:install'
+
+namespace :pip do
+    desc 'Install'
+    task :install do
+        on roles([:app, :web]) do |h|
+            execute "pip install -r #{release_path}/api/requirements.txt"
+        end
+    end
+end
+
+# Redémarrage de gunicorn
+after 'deploy:publishing', 'gunicorn:restart'
+
+namespace :gunicorn do
+    desc 'Restart application'
+    task :restart do
+        on roles(:web) do |h|
+	        execute :sudo, 'systemctl restart gunicorn'
+	    end
+    end
+end
