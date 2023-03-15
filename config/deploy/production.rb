@@ -2,6 +2,8 @@
 # ======================
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
+puts "Hello World"
+puts "DEPLOY_HOST = " << String(ENV['DEPLOY_HOST'])
 
 server ENV['DEPLOY_HOST'], user: ENV['DEPLOY_USER'], roles: %w{app db web}, port: ENV['DEPLOY_PORT']
 # server "example.com", user: "deploy", roles: %w{app db web}, my_property: :my_value
