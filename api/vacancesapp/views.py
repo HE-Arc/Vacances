@@ -14,6 +14,10 @@ class PokemonTypeViewSet(viewsets.ModelViewSet):
     queryset = PokemonType.objects.all()
     serializer_class = PokemonTypeSerializer
 
-class UserTypeViewSet(viewsets.ModelViewSet):
+class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+class PlayerViewSet(viewsets.ModelViewSet):
+    queryset = Player.objects.all()
+    serializer_class = ComplexPlayerSerializer
