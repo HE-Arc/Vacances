@@ -46,6 +46,10 @@ a,
   height: 3em;
 }
 
-.confirm-border {
+.confirm-border-attention {
   border: 2px solid red;
+}
+
+.confirm-border-information {
+  border: 2px solid blue;
 }
