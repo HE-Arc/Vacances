@@ -15,6 +15,11 @@ const router = createRouter({
       component: () => import("../views/AboutView.vue"),
     },
     {
+      path: "/daycare",
+      name: "daycare",
+      component: () => import("../views/DaycareView.vue"),
+    },
+    {
       path: "/pokemons:success?",
       name: "pokemons",
       props: true,

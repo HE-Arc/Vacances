@@ -15,6 +15,10 @@
         <q-icon name="auto_stories" />
         Pokédex
       </q-route-tab>
+      <q-route-tab :to="{ name: 'daycare' }">
+        <q-icon name="auto_stories" />
+        Pension
+      </q-route-tab>
     </q-tabs>
   </q-header>
 </template>
