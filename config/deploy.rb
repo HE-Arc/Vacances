@@ -39,8 +39,9 @@ set :repo_url, "https://github.com/HE-Arc/Vacances"
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
 
-# Fait un lien symbolique du fichier .env (à la racine du "share") vers le dossier "current")
-append :linked_files, ".env"
+# Fait un lien symbolique du fichier .env du dossier "share" vers le dossier "current")
+# .env est dans shared/api/vacances/.env et doit être lié dans current/api/vacances/.env (chemin identique)
+append :linked_files, "api/vacances/.env"
 
 # Installation des dépendances
 after 'deploy:updated', 'pip:install'
