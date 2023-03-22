@@ -73,11 +73,18 @@ class OwnedPokemonSerializer(serializers.HyperlinkedModelSerializer):
             "current_happiness",
         ]
 
-
 class ComplexPokemonSerializer(PokemonSerializer):
     pokemon_type_object = PokemonTypeSerializer(source="pokemon_type", read_only=True)
     class Meta:
         model = Pokemon
         fields = PokemonSerializer.Meta.fields + [
             "pokemon_type_object",
+        ]
+
+class ComplexPlayerSerializer(PlayerSerializer):
+    user_object = UserSerializer(source="user", read_only=True)
+    class Meta:
+        model = Player
+        fields = PlayerSerializer.Meta.fields + [
+            "user_object",
         ]

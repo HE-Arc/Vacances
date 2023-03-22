@@ -25,6 +25,16 @@ const router = createRouter({
       name: "pokemons.create",
       component: () => import("../views/CreatePokemonView.vue"),
     },
+    {
+      path: "/users/create",
+      name: "users.create",
+      component: () => import("../views/users/CreateUserView.vue"),
+    },
+    {
+      path: "/users:success?",
+      name: "users",
+      component: () => import("../views/users/UserView.vue"),
+    },
   ],
 });
 
