@@ -32,6 +32,18 @@ const router = createRouter({
       name: "shop",
       component: () => import("../views/ShopView.vue"),
     },
+
+    /* ====== USERS ====== */
+    {
+      path: "/users/create",
+      name: "users.create",
+      component: () => import("../views/users/CreateUserView.vue"),
+    },
+    {
+      path: "/users:success?",
+      name: "users",
+      component: () => import("../views/users/UserView.vue"),
+    },
   ],
 });
 

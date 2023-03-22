@@ -15,9 +15,14 @@ router.register("pokemon-types",
 
 
 router.register("users",
-                views.UserTypeViewSet,
+                views.UserViewSet,
                 basename="user")
 
+router.register("players",
+                views.PlayerViewSet,
+                basename="player")
+
 urlpatterns = [
-    path("", include(router.urls))
+    path("", include(router.urls)),
+    path("accounts/", include("django.contrib.auth.urls")),
 ]
