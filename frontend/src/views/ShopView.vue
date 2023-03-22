@@ -55,6 +55,8 @@ onMounted(() => {
   <q-page>
     <h1>Magasin</h1>
 
+    <br>
+
     <q-banner v-if="success" inline-actions class="q-mb-lg text-white bg-green">
       <div class="text-h6">
         <q-icon left size="md" name="check_circle" />

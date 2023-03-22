@@ -22,6 +22,10 @@ router.register("players",
                 views.PlayerViewSet,
                 basename="player")
 
+router.register("owned-pokemons",
+                views.OwnedPokemonViewSet,
+                basename="ownedpokemon")
+
 urlpatterns = [
     path("", include(router.urls)),
     path("accounts/", include("django.contrib.auth.urls")),
