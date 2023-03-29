@@ -32,8 +32,23 @@ onMounted(() => {
     <br>
 
     <div class="row">
-      <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-        <img src="../assets/images/1.jpg" style="outline: solid;width: 40%;" alt="Plage" />
+      <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3">
+        <img src="../assets/images/Beach.jpg" style="outline: solid;width: 90%;" alt="Plage" />
+        <br><br><br><br><br><br><br><br><br><br>
+        <img src="../assets/images/Forest.jpg" style="outline: solid;width: 90%;" alt="Forêt" />
+      </div>
+
+      <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3">
+        <br><br><br><br><br><br><br><br><br>
+        <img src="../assets/images/Mountain.jpg" style="outline: solid;width: 90%;" alt="Montagne" />
+        <br><br><br><br><br><br><br><br><br><br><br>
+        <img src="../assets/images/Town.jpg" style="outline: solid;width: 90%;" alt="Ville" />
+      </div>
+
+      <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3">
+        <img src="../assets/images/Cave.jpg" style="outline: solid;width: 90%;" alt="Grotte" />
+        <br><br><br><br><br><br><br><br><br><br><br><br>
+        <img src="../assets/images/PowerPlant.jpg" style="outline: solid;width: 90%;" alt="Centrale" />
       </div>
 
       <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
