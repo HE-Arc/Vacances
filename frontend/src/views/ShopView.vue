@@ -13,7 +13,7 @@ if (urlParams.has("success")) {
 
 const fetchPokemons = async () => {
   const result = await axios.get(
-    import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemons/"
+    import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemons/unowned_by_user/"
   );
   pokemons.value = result.data;
 };
