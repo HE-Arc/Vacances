@@ -91,7 +91,7 @@ onMounted(() => {
 
     <!-- Delete dialog -->
     <q-dialog v-model="showDelDialog">
-      <q-card class="confirm-border">
+      <q-card class="confirm-border-attention">
         <q-card-section>
           <div class="text-h6 text-red">
             <q-icon name="error" size="lg" />
