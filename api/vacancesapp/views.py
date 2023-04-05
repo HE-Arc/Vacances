@@ -15,7 +15,7 @@ class PokemonViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def unowned_by_user(self, request): 
         # user = request.user TODO Use this when auth is implemented
-        user = User.objects.get(username="samy") # TODO TMP LOCAL @Jonas : admin (1 pokemon got), samy (3 pokemon got), MPolo (0 pokemon got)
+        user = User.objects.get(username="admin") # TODO TMP LOCAL @Jonas : admin (1 pokemon got), samy (3 pokemon got), MPolo (0 pokemon got)
         
         # aaa__bbb__ccc means : aaa with relation (double _) to bbb with relation to ccc
         queryset = Pokemon.objects.exclude(owned_pokemons__player__user=user)
