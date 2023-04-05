@@ -12,12 +12,12 @@ const submit = async () => {
   try {
     errors.value = false;
 
-    const result = await axios.post(import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/users/", {
+    const result = await axios.post("users/", {
       username: username.value,
       password: password.value,
     });
 
-    await axios.post(import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/players/", {
+    await axios.post("players/", {
       user: result.data.url,
       username: username.value,
       is_manager: false,

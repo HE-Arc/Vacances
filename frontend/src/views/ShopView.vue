@@ -13,7 +13,7 @@ if (urlParams.has("success")) {
 
 const fetchPokemons = async () => {
   const result = await axios.get(
-    import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemons/unowned_by_user/"
+    "pokemons/unowned_by_user/"
   );
   pokemons.value = result.data;
 };
@@ -23,13 +23,13 @@ const pokemonTypes = ref([]);
 const fetchPokemonTypes = async () => {
   pokemonTypes.value = (
     await axios.get(
-      import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemon-types/"
+      "pokemon-types/"
     )
   ).data;
 };
 
 const buyPokemon = async (id) => {
-  // await axios.delete(import.meta.env.VITE_DATABASE_SERVER_NAME + `/api/pokemons/${id}/`);
+  // await axios.delete(`pokemons/${id}/`);
   // TODO : buy the pokemon
   // 1) Check if enough money
   // 2) Check if pokemon is not already owned
@@ -37,7 +37,7 @@ const buyPokemon = async (id) => {
   // 4) Add pokemon to owned pokemons
   // 5) Redirect to /shop?success=true
   // note : example of axios post request :
-  // await axios.post(import.meta.env.VITE_DATABASE_SERVER_NAME + `/api/pokemons/${id}/buy/`)
+  // await axios.post(`pokemons/${id}/buy/`)
   
   await fetchPokemons();
 };
