@@ -4,10 +4,10 @@ import { ref, onMounted } from "vue";
 
 const pokemons = ref([]);
 
-let successTitle = ref("abc");
-let success = ref(["a", "b", "c"]);
-let errorsTitle = ref("def");
-let errors = ref(["a", "b", "c"]);
+let successTitle = ref("");
+let success = ref([]);
+let errorsTitle = ref("");
+let errors = ref([]);
 
 const fetchPokemons = async () => {
   const result = await axios.get("pokemons/unowned_by_user/");
@@ -45,7 +45,6 @@ const buyPokemon = async (id) => {
 
   let buyedPokemon = await fetchPokemon(id);
 
-  console.log(buyedPokemon);
   // 1) Check errors
   // 1.a) Check if enough money
   if (playerCash.value < buyedPokemon.pokemon_type_object.cost) {
@@ -64,27 +63,21 @@ const buyPokemon = async (id) => {
     return; // There is some error, stop the buy process
   }
 
-  // TODO : buy the pokemon
-
-  // 2) Remove money
-
-  // 3) Add pokemon to owned pokemons
-
-  try {
-    await axios.post(`pokemons/${id}/buy`, {
-      
+  // 2) Process buy (backend)
+  await axios
+    .post(`pokemons/${id}/buy/`, {})
+    .then((response) => {
+      successTitle.value = "Achat réussi !";
+      success.value.push(buyedPokemon.name + " vous attend !");
+    })
+    .catch((error) => {
+      errorsTitle.value =
+        "Erreur lors de l'achat de " + buyedPokemon.name + " :";
+      errors.value.push("Une erreur est survenue lors de l'achat.");
     });
 
-    successTitle.value = "Achat réussi !";
-    success.value.push(buyedPokemon.name + " vous attend !");
-  } catch (error) {
-    errorsTitle.value = "Erreur lors de l'achat de " + buyedPokemon.name + " :";
-    errors.value.push("Une erreur est survenue lors de l'achat.");
-  }
-
-  // 4) Update data with new values
-
-  await playerCash();
+  // 3) Update data with new values
+  await fetchPlayerCash();
   await fetchPokemons();
 };
 

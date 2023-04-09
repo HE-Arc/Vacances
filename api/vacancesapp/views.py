@@ -23,7 +23,7 @@ class PokemonViewSet(viewsets.ModelViewSet):
         serializer = ComplexPokemonSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
     
-    @action(detail=True, methods=['get']) # detail=True means that the id of the pokemon is passed in the url
+    @action(detail=True, methods=['post']) # detail=True means that the id of the pokemon is passed in the url
     def buy(self, request, pk=None):
         # user = request.user TODO Use this when auth is implemented
         user = User.objects.get(username=current_username)
@@ -100,7 +100,6 @@ class OwnedPokemonViewSet(viewsets.ModelViewSet):
             return Response("Error : pokemon already owned", status=status.HTTP_409_CONFLICT)
         
         # Create new entry
-        print(player)
         owned_pokemon = OwnedPokemon()
         owned_pokemon.player = player
         owned_pokemon.pokemon = pokemon
