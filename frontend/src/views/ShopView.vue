@@ -12,20 +12,20 @@ if (urlParams.has("success")) {
 }
 
 const fetchPokemons = async () => {
-  const result = await axios.get(
-    "pokemons/unowned_by_user/"
-  );
+  const result = await axios.get("pokemons/unowned_by_user/");
   pokemons.value = result.data;
 };
 
 const pokemonTypes = ref([]);
 
 const fetchPokemonTypes = async () => {
-  pokemonTypes.value = (
-    await axios.get(
-      "pokemon-types/"
-    )
-  ).data;
+  pokemonTypes.value = (await axios.get("pokemon-types/")).data;
+};
+
+const playerCash = ref(0);
+
+const fetchPlayerCash = async () => {
+  playerCash.value = (await axios.get("players/my_data/")).data.money;
 };
 
 const buyPokemon = async (id) => {
@@ -38,7 +38,7 @@ const buyPokemon = async (id) => {
   // 5) Redirect to /shop?success=true
   // note : example of axios post request :
   // await axios.post(`pokemons/${id}/buy/`)
-  
+
   await fetchPokemons();
 };
 
@@ -48,6 +48,8 @@ let buyItem = ref(null);
 onMounted(() => {
   fetchPokemons();
   fetchPokemonTypes();
+
+  fetchPlayerCash();
 });
 </script>
 
@@ -55,7 +57,15 @@ onMounted(() => {
   <q-page>
     <h1>Magasin</h1>
 
-    <br>
+    <br />
+
+    <q-page-sticky
+      position="top-right"
+      :offset="[18, 18]"
+      class="text-h6 bg-info text-black border-info q-pa-sm rounded-borders always-on-top"
+    >
+      Vous avez {{ playerCash }} <q-icon name="currency_ruble" />
+    </q-page-sticky>
 
     <q-banner v-if="success" inline-actions class="q-mb-lg text-white bg-green">
       <div class="text-h6">
@@ -75,12 +85,21 @@ onMounted(() => {
             </div>
 
             <div class="q-mt-md">
-              <p><q-icon name="price_change" size="xs" /> Facteur de gain : {{ item.pokemon_type_object.cash_factor }}</p>
-              <p><q-icon name="sentiment_very_satisfied" size="xs" /> Bonheur max : {{ item.pokemon_type_object.max_happiness }} </p>
+              <p>
+                <q-icon name="price_change" size="xs" /> Facteur de gain :
+                {{ item.pokemon_type_object.cash_factor }}
+              </p>
+              <p>
+                <q-icon name="sentiment_very_satisfied" size="xs" /> Bonheur max
+                : {{ item.pokemon_type_object.max_happiness }}
+              </p>
             </div>
           </q-card-section>
 
           <div class="flex normal-btn-size">
+            <q-tooltip v-if="playerCash < item.pokemon_type_object.cost">
+              Vous n'avez pas assez d'argent pour acheter ce Pokémon.
+            </q-tooltip>
             <q-btn
               color="blue"
               push
@@ -90,11 +109,13 @@ onMounted(() => {
               "
               class="q-ma-xs"
               dense
+              :disable="playerCash < item.pokemon_type_object.cost"
             >
               <div>
                 <q-icon left size="xs" name="price_check" />
-                Acheter<br>
-                {{ item.pokemon_type_object.cost }} <q-icon name="currency_ruble" size="xs" />
+                Acheter<br />
+                {{ item.pokemon_type_object.cost }}
+                <q-icon name="currency_ruble" size="xs" />
               </div>
             </q-btn>
           </div>
@@ -122,12 +143,16 @@ onMounted(() => {
             <span class="text-teal">{{ buyItem.name }}</span> ?
           </p>
           <p>
-            Il vous coutera <span class="text-teal">{{ buyItem.pokemon_type_object.cost }} <q-icon name="currency_ruble" size="xs" /></span>.
+            Il vous coutera
+            <span class="text-teal"
+              >{{ buyItem.pokemon_type_object.cost }}
+              <q-icon name="currency_ruble" size="xs" /></span
+            >.
           </p>
           <p>
             Votre nouveau solde sera de
             <span class="text-teal"
-              >§§§ TODO §§§
+              >{{ playerCash - buyItem.pokemon_type_object.cost }}
               <q-icon name="currency_ruble" size="xs" />
             </span>
             .
@@ -142,11 +167,7 @@ onMounted(() => {
             <q-icon left size="xs" name="cancel" />
             Annuler
           </q-btn>
-          <q-btn
-            color="blue"
-            @click="buyPokemon(removeItem.id)"
-            v-close-popup
-          >
+          <q-btn color="blue" @click="buyPokemon(removeItem.id)" v-close-popup>
             <q-icon left size="xs" name="price_check" />
             Acheter
           </q-btn>
