@@ -12,7 +12,7 @@ const pokemonTypes = ref([]);
 
 const fetchPokemonTypes = async () => {
   pokemonTypes.value = (
-    await axios.get(import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemon-types/")
+    await axios.get("pokemon-types/")
   ).data;
 
   for(var i = 0; i < pokemonTypes.value.length; i++) {
@@ -26,7 +26,7 @@ const submit = async () => {
   try {
     errors.value = false;
     
-    await axios.post(import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemons/", {
+    await axios.post("pokemons/", {
       pokemon_type: pokemonType.value.value,
       name: name.value,
       obtainable: true,

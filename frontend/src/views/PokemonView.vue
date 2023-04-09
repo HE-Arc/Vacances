@@ -15,7 +15,7 @@ if (urlParams.has("success")) {
 
 const fetchPokemons = async () => {
   const result = await axios.get(
-    import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemons/"
+    "pokemons/"
   );
   pokemons.value = result.data;
 };
@@ -24,12 +24,12 @@ const pokemonTypes = ref([]);
 
 const fetchPokemonTypes = async () => {
   pokemonTypes.value = (
-    await axios.get(import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemon-types/")
+    await axios.get("pokemon-types/")
   ).data;
 };
 
 const removePokemon = async (id) => {
-  await axios.delete(import.meta.env.VITE_DATABASE_SERVER_NAME + `/api/pokemons/${id}/`);
+  await axios.delete(`pokemons/${id}/`);
   await fetchPokemons();
 };
 
