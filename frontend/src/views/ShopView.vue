@@ -38,22 +38,24 @@ const buyPokemon = async (id) => {
   errors.value = [];
   errorsTitle.value = "";
 
-  // update cash of the player (to be sure of the real value)
-  await fetchPlayerCash(); // TODO : It is realy necessary ?
+  // update data of the player (to be sure of the real value)
+  // TODO : It is realy necessary ?
+  await fetchPlayerCash();
+  await fetchPokemons();
 
   let buyedPokemon = await fetchPokemon(id);
 
   console.log(buyedPokemon);
-
-  // await axios.delete(`pokemons/${id}/`);
-  // TODO : buy the pokemon
-
   // 1) Check errors
   // 1.a) Check if enough money
-  errors.value.push("Vous n'avez pas suffisament d'argent");
+  if (playerCash.value < buyedPokemon.pokemon_type_object.cost) {
+    errors.value.push("Vous n'avez pas suffisament d'argent.");
+  }
 
-  // 1.b) Check if pokemon is not already owned
-  errors.value.push("Vous possédez déjà ce Pokémon");
+  // 1.b) Check if pokemon is already owned
+  if (!pokemons.value.find((pokemon) => pokemon.id === id)) {
+    errors.value.push("Vous possédez déjà ce Pokémon.");
+  }
 
   // 1.c) add global error message + handle case
   if (errors.value.length) {
@@ -62,16 +64,25 @@ const buyPokemon = async (id) => {
     return; // There is some error, stop the buy process
   }
 
+  // TODO : buy the pokemon
+
   // 2) Remove money
 
   // 3) Add pokemon to owned pokemons
 
-  // 4) Redirect to /shop?success=true
-  successTitle.value = "Achat réussi !";
-  success.value.push(buyedPokemon.name + " vous attend !");
+  try {
+    await axios.post(`pokemons/${id}/buy`, {
+      
+    });
 
-  // note : example of axios post request :
-  // await axios.post(`pokemons/${id}/buy/`)
+    successTitle.value = "Achat réussi !";
+    success.value.push(buyedPokemon.name + " vous attend !");
+  } catch (error) {
+    errorsTitle.value = "Erreur lors de l'achat de " + buyedPokemon.name + " :";
+    errors.value.push("Une erreur est survenue lors de l'achat.");
+  }
+
+  // 4) Update data with new values
 
   await playerCash();
   await fetchPokemons();
