@@ -57,7 +57,3 @@ a,
 .border-info {
   border: 1px solid black;
 }
-
-.always-on-top {
-  z-index: 9999;
-}

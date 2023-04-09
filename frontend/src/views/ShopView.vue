@@ -4,12 +4,18 @@ import { ref, onMounted } from "vue";
 
 const pokemons = ref([]);
 
-let success;
-let queryString = window.location.search;
-let urlParams = new URLSearchParams(queryString);
-if (urlParams.has("success")) {
-  success = urlParams.get("success");
-}
+let success = ref(["a", "b", "c"]);
+let errors = ref(["a", "b", "c"]);
+
+// let queryString = window.location.search;
+// let urlParams = new URLSearchParams(queryString);
+
+// if (urlParams.has("success")) {
+//   success = urlParams.get("success");
+// }
+// if (urlParams.has("failed")) {
+//   failed = urlParams.get("failed");
+// }
 
 const fetchPokemons = async () => {
   const result = await axios.get("pokemons/unowned_by_user/");
@@ -28,17 +34,54 @@ const fetchPlayerCash = async () => {
   playerCash.value = (await axios.get("players/my_data/")).data.money;
 };
 
+const fetchPokemon = async (id) => {
+  const result = await axios.get(`pokemons/${id}/`);
+  return result.data;
+};
+
 const buyPokemon = async (id) => {
+  // Clean messages
+  success.value = [];
+  errors.value = [];
+
+  // update cash of the player (to be sure of the real value)
+  await fetchPlayerCash(); // TODO : It is realy necessary ?
+
+  let buyedPokemon = await fetchPokemon(id);
+
+  console.log(buyedPokemon);
+
   // await axios.delete(`pokemons/${id}/`);
   // TODO : buy the pokemon
-  // 1) Check if enough money
-  // 2) Check if pokemon is not already owned
-  // 3) Remove money
-  // 4) Add pokemon to owned pokemons
-  // 5) Redirect to /shop?success=true
+  
+  // 1) Check errors
+  // 1.a) Check if enough money
+  errors.value.push("Vous n'avez pas suffisament d'argent.");
+  
+  // 1.b) Check if pokemon is not already owned
+  errors.value.push("Vous possédez déjà ce Pokémon");
+  
+  // 1.c) add global error message + handle case
+  if (errors.value.length) {
+    errors.value.unshift("Erreur lors de l'achat de " + buyedPokemon.name + " :");
+
+    return;
+  }
+
+  // 2) Remove money
+  
+  
+  // 3) Add pokemon to owned pokemons
+  
+  
+  // 4) Redirect to /shop?success=true
+  success.value.push("Vous avez bien acheté " + buyedPokemon.name);
+  
+  
   // note : example of axios post request :
   // await axios.post(`pokemons/${id}/buy/`)
 
+  await playerCash();
   await fetchPokemons();
 };
 
@@ -62,15 +105,38 @@ onMounted(() => {
     <q-page-sticky
       position="top-right"
       :offset="[18, 18]"
-      class="text-h6 bg-info text-black border-info q-pa-sm rounded-borders always-on-top"
+      class="text-h6 bg-info text-black border-info q-pa-sm rounded-borders z-top"
     >
       Vous avez {{ playerCash }} <q-icon name="currency_ruble" />
     </q-page-sticky>
 
-    <q-banner v-if="success" inline-actions class="q-mb-lg text-white bg-green">
-      <div class="text-h6">
+    <q-banner
+      v-if="success.length"
+      inline-actions
+      class="q-mb-lg text-white bg-green"
+    >
+      <div class="text-h6 flex">
         <q-icon left size="md" name="check_circle" />
-        Pokémon acheté avec succès !
+        <q-list dense>
+          <q-item v-for="(item, index) in success" :key="index">
+            {{ item }}
+          </q-item>
+        </q-list>
+      </div>
+    </q-banner>
+
+    <q-banner
+      v-if="errors.length"
+      inline-actions
+      class="q-mb-lg text-white bg-red"
+    >
+      <div class="text-h6 flex">
+        <q-icon left size="md" name="emoji_nature" />
+        <q-list dense>
+          <q-item v-for="(item, index) in errors" :key="index">
+            {{ item }}
+          </q-item>
+        </q-list>
       </div>
     </q-banner>
 
@@ -167,7 +233,7 @@ onMounted(() => {
             <q-icon left size="xs" name="cancel" />
             Annuler
           </q-btn>
-          <q-btn color="blue" @click="buyPokemon(removeItem.id)" v-close-popup>
+          <q-btn color="blue" @click="buyPokemon(buyItem.id)" v-close-popup>
             <q-icon left size="xs" name="price_check" />
             Acheter
           </q-btn>
