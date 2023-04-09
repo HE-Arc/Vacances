@@ -4,18 +4,10 @@ import { ref, onMounted } from "vue";
 
 const pokemons = ref([]);
 
+let successTitle = ref("abc");
 let success = ref(["a", "b", "c"]);
+let errorsTitle = ref("def");
 let errors = ref(["a", "b", "c"]);
-
-// let queryString = window.location.search;
-// let urlParams = new URLSearchParams(queryString);
-
-// if (urlParams.has("success")) {
-//   success = urlParams.get("success");
-// }
-// if (urlParams.has("failed")) {
-//   failed = urlParams.get("failed");
-// }
 
 const fetchPokemons = async () => {
   const result = await axios.get("pokemons/unowned_by_user/");
@@ -42,7 +34,9 @@ const fetchPokemon = async (id) => {
 const buyPokemon = async (id) => {
   // Clean messages
   success.value = [];
+  successTitle.value = "";
   errors.value = [];
+  errorsTitle.value = "";
 
   // update cash of the player (to be sure of the real value)
   await fetchPlayerCash(); // TODO : It is realy necessary ?
@@ -53,31 +47,29 @@ const buyPokemon = async (id) => {
 
   // await axios.delete(`pokemons/${id}/`);
   // TODO : buy the pokemon
-  
+
   // 1) Check errors
   // 1.a) Check if enough money
-  errors.value.push("Vous n'avez pas suffisament d'argent.");
-  
+  errors.value.push("Vous n'avez pas suffisament d'argent");
+
   // 1.b) Check if pokemon is not already owned
   errors.value.push("Vous possédez déjà ce Pokémon");
-  
+
   // 1.c) add global error message + handle case
   if (errors.value.length) {
-    errors.value.unshift("Erreur lors de l'achat de " + buyedPokemon.name + " :");
+    errorsTitle.value = "Erreur lors de l'achat de " + buyedPokemon.name + " :";
 
-    return;
+    return; // There is some error, stop the buy process
   }
 
   // 2) Remove money
-  
-  
+
   // 3) Add pokemon to owned pokemons
-  
-  
+
   // 4) Redirect to /shop?success=true
-  success.value.push("Vous avez bien acheté " + buyedPokemon.name);
-  
-  
+  successTitle.value = "Achat réussi !";
+  success.value.push(buyedPokemon.name + " vous attend !");
+
   // note : example of axios post request :
   // await axios.post(`pokemons/${id}/buy/`)
 
@@ -111,32 +103,40 @@ onMounted(() => {
     </q-page-sticky>
 
     <q-banner
-      v-if="success.length"
+      v-if="successTitle || success.length"
       inline-actions
       class="q-mb-lg text-white bg-green"
     >
       <div class="text-h6 flex">
         <q-icon left size="md" name="check_circle" />
-        <q-list dense>
-          <q-item v-for="(item, index) in success" :key="index">
-            {{ item }}
-          </q-item>
-        </q-list>
+        <div>
+          {{ successTitle }}
+
+          <q-list dense class="text-subtitle2">
+            <q-item v-for="(item, index) in success" :key="index">
+              {{ item }}
+            </q-item>
+          </q-list>
+        </div>
       </div>
     </q-banner>
 
     <q-banner
-      v-if="errors.length"
+      v-if="errorsTitle || errors.length"
       inline-actions
       class="q-mb-lg text-white bg-red"
     >
       <div class="text-h6 flex">
         <q-icon left size="md" name="emoji_nature" />
-        <q-list dense>
-          <q-item v-for="(item, index) in errors" :key="index">
-            {{ item }}
-          </q-item>
-        </q-list>
+        <div>
+          {{ errorsTitle }}
+
+          <q-list dense class="text-subtitle2">
+            <q-item v-for="(item, index) in errors" :key="index">
+              {{ item }}
+            </q-item>
+          </q-list>
+        </div>
       </div>
     </q-banner>
 
