@@ -82,6 +82,17 @@ class ComplexPokemonSerializer(PokemonSerializer):
             "pokemon_type_object",
             "owned_pokemon_object",
         ]
+        
+class ComplexPokemonOfPlayerSerializer(ComplexPokemonSerializer):
+    is_owned = serializers.SerializerMethodField()
+    class Meta:
+        model = Pokemon
+        fields = ComplexPokemonSerializer.Meta.fields + [
+            "is_owned"
+        ]
+        
+    def get_is_owned(self, obj):
+        return False
 
 class ComplexPlayerSerializer(PlayerSerializer):
     user_object = UserSerializer(source="user", read_only=True)
