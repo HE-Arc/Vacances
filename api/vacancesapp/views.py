@@ -9,11 +9,16 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 class PokemonViewSet(viewsets.ModelViewSet):
+    """Registred pokemons in the app (the pokedex)"""
     queryset = Pokemon.objects.all()
     serializer_class = ComplexPokemonSerializer
     
     @action(detail=False, methods=['get'])
     def unowned_by_user(self, request):
+        """
+        Get all pokemons that are not owned by the connected user
+        It's a shortcut to "pokemon_of_player", to avoid filter "is_owned == False" on the front side
+        """
         user = get_current_username(request)
         
         # aaa__bbb__ccc means : aaa with relation (double _) to bbb with relation to ccc
@@ -22,7 +27,10 @@ class PokemonViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
     
     @action(detail=False, methods=['get'])
-    def pokemon_of_player(self, request): 
+    def pokemons_of_user(self, request):
+        """
+        Get all pokemons in the app with an indication if it is owned by the connected user
+        """
         queryset = Pokemon.objects.all()
         serializer = ComplexPokemonOfPlayerSerializer(queryset, many=True, context={'request': request})
 
@@ -30,6 +38,10 @@ class PokemonViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['post']) # detail=True means that the id of the pokemon is passed in the url
     def buy(self, request, pk=None):
+        """
+        Perform the purchase of a pokemon by the connected user
+        It will reduce the money of the user and add the pokemon to his list of owned pokemons
+        """
         user = get_current_username(request)
         pokemon = self.get_object()
         pokemonType = PokemonType.objects.get(id=pokemon.pokemon_type.id)
