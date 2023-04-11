@@ -2,6 +2,8 @@ from unittest.util import _MAX_LENGTH
 from rest_framework import serializers
 from .models import *
 
+current_username = "samy" # TODO TMP LOCAL @Jonas : admin (1 pokemon got), samy (3 pokemon got), MPolo (0 pokemon got)
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
@@ -92,7 +94,10 @@ class ComplexPokemonOfPlayerSerializer(ComplexPokemonSerializer):
         ]
         
     def get_is_owned(self, obj):
-        return False
+        # Default value of "is_owned"
+        print(self.context)
+        user = User.objects.get(username=current_username)
+        return obj.owned_pokemons.filter(player__user=user).exists()
 
 class ComplexPlayerSerializer(PlayerSerializer):
     user_object = UserSerializer(source="user", read_only=True)

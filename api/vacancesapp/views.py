@@ -25,21 +25,10 @@ class PokemonViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'])
     def pokemon_of_player(self, request): 
-        # user = request.user TODO Use this when auth is implemented
-        user = User.objects.get(username=current_username)
-        
-        # aaa__bbb__ccc means : aaa with relation (double _) to bbb with relation to ccc
-        all_queryset = Pokemon.objects.all()
-        owned_queryset = Pokemon.objects.filter(owned_pokemons__player__user=user)
-        
-        all_serializer = ComplexPokemonOfPlayerSerializer(all_queryset, many=True, context={'request': request})
-        owned_serializer = ComplexPokemonSerializer(owned_queryset, many=True, context={'request': request})
-        
-        # Manage "is_owned" field
-        for pokemon in all_serializer.data:
-            pokemon['is_owned'] = pokemon['id'] in set(p['id'] for p in owned_serializer.data)
+        queryset = Pokemon.objects.all()
+        serializer = ComplexPokemonOfPlayerSerializer(queryset, many=True, context={'request': request})
 
-        return Response(all_serializer.data)
+        return Response(serializer.data)
     
     @action(detail=True, methods=['post']) # detail=True means that the id of the pokemon is passed in the url
     def buy(self, request, pk=None):
