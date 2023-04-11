@@ -62,18 +62,18 @@ onMounted(() => {
       >
         <div class="flex justify-between">
           <q-card-section class="flex-auto">
-            <div class="text-h4 flex items-center">
-              <q-img
-                v-if="item.is_owned"
-                src="../assets/images/pokeball-icon.png"
-                width="20px"
-              />
-              <q-img
-                v-if="!item.is_owned"
-                src="../assets/images/pokeball-icon-white.png"
-                width="20px"
-              />
-              <span class="q-ml-sm"> {{ item.name }} </span>
+            <div class="text-h4 flex">
+              <div class="flex items-center q-mr-sm icon-size-pokedex">
+                <q-img
+                  v-if="item.is_owned"
+                  src="../assets/images/pokeball-icon.png"
+                />
+                <q-img
+                  v-if="!item.is_owned"
+                  src="../assets/images/pokeball-icon-white.png"
+                />
+              </div>
+              {{ item.name }}
             </div>
             <div class="text-subtitle2">
               {{ item.pokemon_type_object.name }}

@@ -57,3 +57,12 @@ a,
 .border-info {
   border: 1px solid black;
 }
+
+.icon-size-pokedex {
+  /*
+   There is a bug with q-img sized too small, lower than 0.6em make it have a "top margin issue"
+   Normaly should be fixed like said here : https://github.com/quasarframework/quasar/issues/13598
+   But still appear in 2.11.7
+   */
+  width: 0.65em
+}
