@@ -2,21 +2,19 @@ from django.shortcuts import render
 
 from .serializers import *
 from .models import *
+from .utils import *
 
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
-current_username = "samy" # TODO TMP LOCAL @Jonas : admin (1 pokemon got), samy (3 pokemon got), MPolo (0 pokemon got)
 
 class PokemonViewSet(viewsets.ModelViewSet):
     queryset = Pokemon.objects.all()
     serializer_class = ComplexPokemonSerializer
     
     @action(detail=False, methods=['get'])
-    def unowned_by_user(self, request): 
-        # user = request.user TODO Use this when auth is implemented
-        user = User.objects.get(username=current_username)
+    def unowned_by_user(self, request):
+        user = get_current_username(request)
         
         # aaa__bbb__ccc means : aaa with relation (double _) to bbb with relation to ccc
         queryset = Pokemon.objects.exclude(owned_pokemons__player__user=user)
@@ -32,8 +30,7 @@ class PokemonViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['post']) # detail=True means that the id of the pokemon is passed in the url
     def buy(self, request, pk=None):
-        # user = request.user TODO Use this when auth is implemented
-        user = User.objects.get(username=current_username)
+        user = get_current_username(request)
         pokemon = self.get_object()
         pokemonType = PokemonType.objects.get(id=pokemon.pokemon_type.id)
         
@@ -68,8 +65,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def my_data(self, request):
-        # user = request.user TODO Use this when auth is implemented
-        user = User.objects.get(username=current_username)
+        user = get_current_username(request)
         
         queryset = Player.objects.filter(user=user)
         serializer = ComplexPlayerSerializer(queryset, many=True, context={'request': request})
@@ -77,8 +73,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['post'])
     def reduce_money(self, request, qty=0):
-        # user = request.user TODO Use this when auth is implemented
-        user = User.objects.get(username=current_username)
+        user = get_current_username(request)
         
         player = Player.objects.get(user=user)
         
@@ -98,8 +93,7 @@ class OwnedPokemonViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['post'])
     def create_if_new(self, request, pokemon):
-        # user = request.user TODO Use this when auth is implemented
-        user = User.objects.get(username=current_username)
+        user = get_current_username(request)
         
         player = Player.objects.get(user=user)
         
