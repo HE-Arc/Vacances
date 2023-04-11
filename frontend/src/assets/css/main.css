@@ -53,3 +53,7 @@ a,
 .confirm-border-information {
   border: 2px solid blue;
 }
+
+.border-info {
+  border: 1px solid black;
+}
