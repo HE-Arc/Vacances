@@ -1,3 +1,4 @@
+<!-- eslint-disable prettier/prettier -->
 <script setup>
 import axios from "axios";
 import { ref } from "vue";
@@ -18,13 +19,13 @@ const submit = async () => {
     });
 
     await axios.post(import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/players/", {
-      user: result.data.url,
+      user: result.data.data.url,
       username: username.value,
       is_manager: false,
       money: 10,
     });
 
-    //location.href = "/users?success=true";
+    location.href = "/users?success=true";
 
   } catch (error) {
     errors.value = true;

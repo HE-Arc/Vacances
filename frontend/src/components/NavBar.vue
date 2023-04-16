@@ -15,6 +15,9 @@
         <q-icon name="auto_stories" />
         Pokédex
       </q-route-tab>
+      <q-route-tab :to="{ name: 'users' }">
+        Se connecter
+      </q-route-tab>
     </q-tabs>
   </q-header>
 </template>
