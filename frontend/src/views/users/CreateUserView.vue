@@ -1,46 +1,36 @@
 <script setup>
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 
 const errors = ref(false);
 
-const pokemonType = ref("");
-const name = ref("");
-
-let options = ref([]);
-const pokemonTypes = ref([]);
-
-const fetchPokemonTypes = async () => {
-  pokemonTypes.value = (
-    await axios.get("pokemon-types/")
-  ).data;
-
-  for(var i = 0; i < pokemonTypes.value.length; i++) {
-    options.value.push({label:pokemonTypes.value[i].name, value:pokemonTypes.value[i].url});
-  }
-  
-};
+const username = ref("");
+const password = ref("");
 
 
 const submit = async () => {
   try {
     errors.value = false;
-    
-    await axios.post("pokemons/", {
-      pokemon_type: pokemonType.value.value,
-      name: name.value,
-      obtainable: true,
+
+    const result = await axios.post("users/", {
+      username: username.value,
+      password: password.value,
     });
-    location.href = "/pokemons?success=true";
+
+    await axios.post("players/", {
+      user: result.data.url,
+      username: username.value,
+      is_manager: false,
+      money: 10,
+    });
+
+    //location.href = "/users?success=true";
 
   } catch (error) {
     errors.value = true;
+    console.log(error);
   }
 };
-
-onMounted(() => {
-  fetchPokemonTypes();
-});
 </script>
 
 <template>
@@ -51,25 +41,24 @@ onMounted(() => {
         <div class="col-8 col-md-6 q-mt-md">
           <q-card class="q-pa-lg">
             <q-card-section class="">
-              <q-btn color="blue-grey" :to="{ name: 'pokemons' }">
+              <q-btn color="blue-grey" :to="{ name: 'users' }">
                 <q-icon left name="arrow_back_ios" />
                 Retour
               </q-btn>
             </q-card-section>
 
             <q-card-section class="text-center">
-              <div class="text-h5">Créer le Pokémon</div>
+              <div class="text-h5">Créer un compte</div>
             </q-card-section>
 
             <q-card-section>
-              <q-input v-model="name" label="*Nom" class="q-mb-md" outlined />
-              
-              <q-select
-                v-model="pokemonType"
-                :options="options"
-                label="Sélectionnez un type"
+              <q-input v-model="username" label="*Nom" class="q-mb-md" outlined />
+              <q-input
+                v-model="password"
+                label="*Mot de passe"
+                class="q-mb-md"
+                outlined
               />
-              
             </q-card-section>
 
             <q-banner
@@ -79,7 +68,7 @@ onMounted(() => {
             >
               <div class="text-h6">
                 <q-icon left size="md" name="emoji_nature" />
-                Erreur lors de la création du Pokémon!
+                Erreur lors de la création de l'utilisateur!
               </div>
             </q-banner>
 
