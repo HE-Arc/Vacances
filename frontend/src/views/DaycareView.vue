@@ -4,6 +4,8 @@ import { ref, onMounted } from "vue";
 
 const pokemons = ref([]);
 
+const interval = ref(null);
+
 const fetchPokemons = async () => {
   const result = await axios.get(
     import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemons/"
@@ -24,41 +26,57 @@ const fetchPokemonTypes = async () => {
 onMounted(() => {
   fetchPokemons();
   fetchPokemonTypes();
+  coroutine();
 });
 
-const imageArray = [
+const zones = [
   {
     source: "../assets/images/Beach.jpg",
-    alt: "Plage",
+    alt: "plage",
   },
   {
     source: "../assets/images/Forest.jpg",
-    alt: "Forêt",
+    alt: "forêt",
   },
   {
     source: "../assets/images/Mountain.jpg",
-    alt: "Montagne",
+    alt: "montagne",
   },
   {
     source: "../assets/images/Town.jpg",
-    alt: "Ville",
+    alt: "ville",
   },
   {
     source: "../assets/images/Cave.jpg",
-    alt: "Grotte",
+    alt: "grotte",
   },
   {
     source: "../assets/images/PowerPlant.jpg",
-    alt: "Centrale",
+    alt: "centrale",
   },
 ];
+
+function pokemonRequest() {
+  const randomIndexPokemon = Math.floor(Math.random() * pokemons.value.length);
+  const randomIndexZone = Math.floor(Math.random() * zones.length);
+
+  document.getElementById("Request").innerText =
+    pokemons.value[randomIndexPokemon].name +
+    " aimerait aller à la " +
+    zones[randomIndexZone].alt +
+    ".";
+}
+
+function coroutine() {
+  interval.value = setInterval(pokemonRequest, 30000);
+}
 </script>
 
 <template>
   <q-page>
     <h1>La pension</h1>
     <br />
-
+    <p id="Request" style="color: deeppink; font-size: 3em"></p>
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
         <div class="row">
@@ -67,7 +85,7 @@ const imageArray = [
               src="../assets/images/Beach.jpg"
               style="outline: solid; max-width: 300px; height: 150px"
               fit="cover"
-              alt="Plage"
+              alt="plage"
             ></q-img>
           </div>
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm"></div>
@@ -76,7 +94,7 @@ const imageArray = [
               src="../assets/images/Mountain.jpg"
               style="outline: solid; max-width: 300px; height: 150px"
               fit="cover"
-              alt="Montagne"
+              alt="montagne"
             ></q-img>
           </div>
         </div>
@@ -87,7 +105,7 @@ const imageArray = [
               src="../assets/images/Cave.jpg"
               style="outline: solid; max-width: 300px; height: 150px"
               fit="cover"
-              alt="Grotte"
+              alt="grotte"
             ></q-img>
           </div>
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm"></div>
@@ -96,7 +114,7 @@ const imageArray = [
               src="../assets/images/Forest.jpg"
               style="outline: solid; max-width: 300px; height: 150px"
               fit="cover"
-              alt="Forêt"
+              alt="forêt"
             ></q-img>
           </div>
         </div>
@@ -106,7 +124,7 @@ const imageArray = [
               src="../assets/images/Town.jpg"
               style="outline: solid; max-width: 300px; height: 150px"
               fit="cover"
-              alt="Ville"
+              alt="ville"
             ></q-img>
           </div>
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm"></div>
@@ -115,13 +133,16 @@ const imageArray = [
               src="../assets/images/PowerPlant.jpg"
               style="outline: solid; max-width: 300px; height: 150px"
               fit="cover"
-              alt="Centrale"
+              alt="centrale"
             ></q-img>
           </div>
         </div>
       </div>
       <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 q-pl-xl">
-        <div class="container" style="outline: solid; outline-offset: 1em">
+        <div
+          class="container"
+          style="outline: solid; outline-offset: 2em; margin-top: 3em"
+        >
           <h5>Mes Pokémon</h5>
           <br />
           <!-- Card list -->
@@ -138,7 +159,7 @@ const imageArray = [
         </div>
         <br />
         <div class="text-center q-mb-md q-mt-md">
-          <q-btn color="green" :to="{ TODO }">
+          <q-btn color="green" :to="{ name: 'shop' }" @click="clearInterval(interval);">
             <q-icon left size="xl" name="add_circle_outline" />
             <div>Acheter un Pokémon</div>
           </q-btn>
