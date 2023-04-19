@@ -17,6 +17,13 @@
       </q-route-tab>
       <q-route-tab :to="{ name: 'users' }">
         Se connecter
+      <q-route-tab :to="{ name: 'daycare' }">
+        <q-icon name="auto_stories" />
+        Pension
+      </q-route-tab>
+      <q-route-tab :to="{ name: 'shop' }">
+        <q-icon name="storefront" />
+        Magasin
       </q-route-tab>
     </q-tabs>
   </q-header>
