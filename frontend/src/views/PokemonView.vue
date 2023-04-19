@@ -18,9 +18,8 @@ const fetchPokemons = async () => {
   const result = await axios.get(
     import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemons/",
     {
-      withCredentials: true,
-    }
-  );
+        withCredentials: true,            
+    });
   pokemons.value = result.data;
 };
 

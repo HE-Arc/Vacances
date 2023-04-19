@@ -13,24 +13,21 @@ const password = ref("");
 const submit = async () => {
   try {
     errors.value = false;
-    const resultUser = await axios.get(import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/users/", {
-      params: {
-        loginPage: true,
-        username: username.value,
-        password: password.value,
-      }
+    const resultUser = await axios.post(import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/login/",
+    {
+      username: username.value,
+      password: password.value,
     },
     {
-      withCredentials: true
+      withCredentials : true
     });
-    if(resultUser.data[0] == null)
+    if(resultUser.data.success == null)
     {
       errors.value = true;
     }
     else
     {
-      //commit('userId', resultUser.data.id);
-      location.href = "/home?success=true";
+      location.href = "/?success=true";
     }
     
 
