@@ -6,33 +6,33 @@ const errors = ref(false);
 
 const pokemonType = ref("");
 const name = ref("");
+const imageUrl = ref("");
 
 let options = ref([]);
 const pokemonTypes = ref([]);
 
 const fetchPokemonTypes = async () => {
-  pokemonTypes.value = (
-    await axios.get("pokemon-types/")
-  ).data;
+  pokemonTypes.value = (await axios.get("pokemon-types/")).data;
 
-  for(var i = 0; i < pokemonTypes.value.length; i++) {
-    options.value.push({label:pokemonTypes.value[i].name, value:pokemonTypes.value[i].url});
+  for (var i = 0; i < pokemonTypes.value.length; i++) {
+    options.value.push({
+      label: pokemonTypes.value[i].name,
+      value: pokemonTypes.value[i].url,
+    });
   }
-  
 };
-
 
 const submit = async () => {
   try {
     errors.value = false;
-    
+
     await axios.post("pokemons/", {
       pokemon_type: pokemonType.value.value,
       name: name.value,
       obtainable: true,
+      image_url: imageUrl.value,
     });
     location.href = "/pokemons?success=true";
-
   } catch (error) {
     errors.value = true;
   }
@@ -45,7 +45,6 @@ onMounted(() => {
 
 <template>
   <q-page padding>
-
     <q-form class="q-gutter-md" @submit="submit()">
       <div class="row self-center justify-evenly">
         <div class="col-8 col-md-6 q-mt-md">
@@ -63,13 +62,22 @@ onMounted(() => {
 
             <q-card-section>
               <q-input v-model="name" label="*Nom" class="q-mb-md" outlined />
-              
+
               <q-select
                 v-model="pokemonType"
                 :options="options"
                 label="Sélectionnez un type"
+                class="q-mb-md"
               />
-              
+
+              <div>
+                <q-input
+                  v-model="imageUrl"
+                  label="URL d'une image"
+                  class="q-mb-md"
+                  outlined
+                />
+              </div>
             </q-card-section>
 
             <q-banner
