@@ -2,31 +2,47 @@ from django.shortcuts import render
 
 from .serializers import *
 from .models import *
+from .utils import *
 
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-current_username = "samy" # TODO TMP LOCAL @Jonas : admin (1 pokemon got), samy (3 pokemon got), MPolo (0 pokemon got)
-
 class PokemonViewSet(viewsets.ModelViewSet):
+    """Registred pokemons in the app (the pokedex)"""
     queryset = Pokemon.objects.all()
     serializer_class = ComplexPokemonSerializer
     
     @action(detail=False, methods=['get'])
-    def unowned_by_user(self, request): 
-        # user = request.user TODO Use this when auth is implemented
-        user = User.objects.get(username=current_username)
+    def unowned_by_user(self, request):
+        """
+        Get all pokemons that are not owned by the connected user
+        It's a shortcut to "pokemon_of_player", to avoid filter "is_owned == False" on the front side
+        """
+        user = get_current_username(request)
         
         # aaa__bbb__ccc means : aaa with relation (double _) to bbb with relation to ccc
         queryset = Pokemon.objects.exclude(owned_pokemons__player__user=user)
         serializer = ComplexPokemonSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
     
+    @action(detail=False, methods=['get'])
+    def pokemons_of_user(self, request):
+        """
+        Get all pokemons in the app with an indication if it is owned by the connected user
+        """
+        queryset = Pokemon.objects.all()
+        serializer = ComplexPokemonOfPlayerSerializer(queryset, many=True, context={'request': request})
+
+        return Response(serializer.data)
+    
     @action(detail=True, methods=['post']) # detail=True means that the id of the pokemon is passed in the url
     def buy(self, request, pk=None):
-        # user = request.user TODO Use this when auth is implemented
-        user = User.objects.get(username=current_username)
+        """
+        Perform the purchase of a pokemon by the connected user
+        It will reduce the money of the user and add the pokemon to his list of owned pokemons
+        """
+        user = get_current_username(request)
         pokemon = self.get_object()
         pokemonType = PokemonType.objects.get(id=pokemon.pokemon_type.id)
         
@@ -61,8 +77,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def my_data(self, request):
-        # user = request.user TODO Use this when auth is implemented
-        user = User.objects.get(username=current_username)
+        user = get_current_username(request)
         
         queryset = Player.objects.filter(user=user)
         serializer = ComplexPlayerSerializer(queryset, many=True, context={'request': request})
@@ -70,8 +85,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['post'])
     def reduce_money(self, request, qty=0):
-        # user = request.user TODO Use this when auth is implemented
-        user = User.objects.get(username=current_username)
+        user = get_current_username(request)
         
         player = Player.objects.get(user=user)
         
@@ -91,8 +105,7 @@ class OwnedPokemonViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['post'])
     def create_if_new(self, request, pokemon):
-        # user = request.user TODO Use this when auth is implemented
-        user = User.objects.get(username=current_username)
+        user = get_current_username(request)
         
         player = Player.objects.get(user=user)
         
