@@ -52,7 +52,7 @@ class PokemonSerializer(serializers.HyperlinkedModelSerializer):
         
 class AreaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Pokemon
+        model = Area
         fields = [
             "url",
             "id",
