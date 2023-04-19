@@ -1,7 +1,7 @@
 from .models import User
 
 # This variable "simulate" the name of the connected user
-DEBUG_force_connect_user = "samy" # TODO DEBUG VAR Comment this line when auth is implemented 
+DEBUG_force_connect_user = "admin" # TODO DEBUG VAR Comment this line when auth is implemented 
 # Available users :       admin               (mentionned in "clone project steps")
 #   LOCAL TO @Jonas :     samy, MPolo
 
