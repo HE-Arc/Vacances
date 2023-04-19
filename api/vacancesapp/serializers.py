@@ -47,6 +47,7 @@ class PokemonSerializer(serializers.HyperlinkedModelSerializer):
             "pokemon_type",
             "name",
             "obtainable",
+            "image_url",
         ]
         
         
