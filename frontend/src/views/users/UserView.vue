@@ -1,18 +1,38 @@
+<!-- eslint-disable prettier/prettier -->
 <script setup>
+import axios from "axios";
 import { ref } from "vue";
+
 
 const errors = ref(false);
 
+const username = ref("");
 const password = ref("");
 
 
 const submit = async () => {
   try {
     errors.value = false;
-
-    location.href = "/logins?success=true";
+    const resultUser = await axios.post(import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/login/",
+    {
+      username: username.value,
+      password: password.value,
+    },
+    {
+      withCredentials : true
+    });
+    if(resultUser.data.success == null)
+    {
+      errors.value = true;
+    }
+    else
+    {
+      location.href = "/?success=true";
+    }
+    
 
   } catch (error) {
+    console.log(error);
     errors.value = true;
   }
 };
@@ -26,9 +46,12 @@ const submit = async () => {
         <div class="col-8 col-md-6 q-mt-md">
           <q-card class="q-pa-lg">
             <q-card-section class="">
-              <q-btn color="blue-grey" :to="{ name: 'users' }">
+              <q-btn color="blue-grey" :to="{ name: 'home' }">
                 <q-icon left name="arrow_back_ios" />
                 Retour
+              </q-btn>
+              <q-btn color="blue-grey" :to="{ name: 'users.create' }">
+                Créer un compte
               </q-btn>
             </q-card-section>
 
@@ -37,7 +60,12 @@ const submit = async () => {
             </q-card-section>
 
             <q-card-section>
-              <q-input v-model="name" label="*Nom" class="q-mb-md" outlined />
+              <q-input
+                v-model="username"
+                label="*Nom"
+                class="q-mb-md"
+                outlined
+              />
               <q-input
                 v-model="password"
                 label="*Mot de passe"
@@ -53,7 +81,7 @@ const submit = async () => {
             >
               <div class="text-h6">
                 <q-icon left size="md" name="emoji_nature" />
-                Erreur lors de la création de l'utilisateur!
+                Erreur! utilisateur incorrect!
               </div>
             </q-banner>
 
@@ -61,7 +89,7 @@ const submit = async () => {
               <div class="text-center">
                 <q-btn type="submit" color="green">
                   <q-icon left name="fact_check" />
-                  <div>Créer</div>
+                  <div>Se connecter</div>
                 </q-btn>
               </div>
             </q-card-section>

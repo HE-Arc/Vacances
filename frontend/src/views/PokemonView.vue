@@ -1,3 +1,4 @@
+<!-- eslint-disable prettier/prettier -->
 <script setup>
 import axios from "axios";
 import { ref, onMounted } from "vue";
@@ -12,7 +13,16 @@ if (urlParams.has("success")) {
 }
 
 const fetchPokemons = async () => {
-  const result = await axios.get("pokemons/pokemons_of_user/");
+
+  /*const result = await axios.get(
+    import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemons/",
+    {
+        withCredentials: true,            
+    });*/
+  const result = await axios.get("pokemons/pokemons_of_user/",
+  {
+    withCredentials: true,   
+  });
   pokemons.value = result.data;
 };
 

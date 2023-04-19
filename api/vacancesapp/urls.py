@@ -33,4 +33,5 @@ router.register("areas",
 urlpatterns = [
     path("", include(router.urls)),
     path("accounts/", include("django.contrib.auth.urls")),
+    path('login/', views.LoginView.as_view(), name='login'),
 ]

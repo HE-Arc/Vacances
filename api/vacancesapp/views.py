@@ -1,9 +1,14 @@
 from django.shortcuts import render
-
+from django.contrib.auth import authenticate, login, logout
+from rest_framework.decorators import action
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from .serializers import *
 from .models import *
+from rest_framework.views import APIView
+from rest_framework import viewsets
 from .utils import *
-
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -12,6 +17,9 @@ class PokemonViewSet(viewsets.ModelViewSet):
     """Registred pokemons in the app (the pokedex)"""
     queryset = Pokemon.objects.all()
     serializer_class = ComplexPokemonSerializer
+    
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     
     @action(detail=False, methods=['get'])
     def unowned_by_user(self, request):
@@ -71,6 +79,36 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     
+    def create(self, request):
+        values = request.data
+        user = User(username=values['username'])
+        
+        # set password and hash it
+        user.set_password(values['password'])
+        
+        try:
+            user.save()
+            serializer = UserSerializer(user, context={'request': request})
+            return Response({'data' : serializer.data}, status=status.HTTP_201_CREATED)
+        
+        except:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginView(APIView):
+    def post(self, request):
+        data = request.data
+        username = data.get('username')
+        password = data.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            serializer = UserSerializer(user, context={'request': request})
+            return Response({'success': 'Login successful'})
+
+        return Response({'error': 'error'})
+
+
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
     serializer_class = ComplexPlayerSerializer

@@ -1,3 +1,4 @@
+<!-- eslint-disable prettier/prettier -->
 <script setup>
 import axios from "axios";
 import { ref } from "vue";
@@ -17,6 +18,7 @@ const submit = async () => {
       password: password.value,
     });
 
+
     await axios.post("players/", {
       user: result.data.url,
       username: username.value,
@@ -24,7 +26,7 @@ const submit = async () => {
       money: 10,
     });
 
-    //location.href = "/users?success=true";
+    location.href = "/users?success=true";
 
   } catch (error) {
     errors.value = true;
