@@ -13,7 +13,7 @@ const password = ref("");
 const submit = async () => {
   try {
     errors.value = false;
-    const resultUser = await axios.post(import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/login/",
+    const resultUser = await axios.post("login/",
     {
       username: username.value,
       password: password.value,
