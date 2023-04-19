@@ -86,10 +86,11 @@ class UserViewSet(viewsets.ModelViewSet):
         # set password and hash it
         user.set_password(values['password'])
         
+        serializer = None
         try:
             user.save()
             serializer = UserSerializer(user, context={'request': request})
-            return Response({'data' : serializer.data}, status=status.HTTP_201_CREATED)
+            return Response({'user' : serializer.data}, status=status.HTTP_201_CREATED)
         
         except:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
