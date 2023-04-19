@@ -58,6 +58,7 @@ a,
   border: 1px solid black;
 }
 
+/* Put this class to the container div of a q-image */
 .icon-size-pokedex {
   /*
    There is a bug with q-img sized too small, lower than 0.6em make it have a "top margin issue"
@@ -65,4 +66,15 @@ a,
    But still appear in 2.11.7
    */
   width: 0.65em
+}
+
+/* Put this class to the container div of a q-image */
+.image-size-pokedex {
+  width:100px;
+  height:100px;
+}
+
+.image-max-size-parent {
+  max-width: 100%;
+  max-height: 100%;
 }
