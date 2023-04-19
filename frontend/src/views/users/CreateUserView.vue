@@ -18,9 +18,9 @@ const submit = async () => {
       password: password.value,
     });
 
-
+    console.log(result.data.user.url);
     await axios.post("players/", {
-      user: result.data.url,
+      user: result.data.user.url,
       username: username.value,
       is_manager: false,
       money: 10,
