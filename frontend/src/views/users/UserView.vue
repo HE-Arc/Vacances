@@ -17,9 +17,7 @@ const submit = async () => {
     {
       username: username.value,
       password: password.value,
-    },
-    {
-      withCredentials : true
+      withCredentials : true,
     });
     if(resultUser.data.success == null)
     {
