@@ -127,9 +127,23 @@ const imageArray = [
           <!-- Card list -->
           <div class="" v-for="(item, index) in pokemons" :key="index">
             <q-card class="q-mb-sm">
-              <div class="flex justify-between">
-                <q-card-section class="flex-end">
-                  <div class="text-h4">{{ item.name }}</div>
+              <div class="flex justify-center">
+                <q-card-section>
+                  <div class="col justify-center items-center">
+                    <div class="text-h7 row justify-center">
+                      {{ item.name }}
+                    </div>
+                    <div
+                      class="image-size-daycare row justify-center items-center q-ma-sm"
+                    >
+                      <q-img
+                        :src="item.image_url"
+                        :alt="item.name"
+                        class="image-max-size-parent"
+                        fit="contain"
+                      />
+                    </div>
+                  </div>
                 </q-card-section>
               </div>
               <q-separator inset />
