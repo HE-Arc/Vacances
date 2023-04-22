@@ -116,6 +116,10 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+    @action(detail=False, methods=['get'])
+    def logout(self, request):
+        logout(request)
+        return Response(status=status.HTTP_200_OK)
 
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()

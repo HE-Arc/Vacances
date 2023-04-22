@@ -18,6 +18,9 @@
       <q-route-tab :to="{ name: 'users' }">
         Se connecter
       </q-route-tab>
+      <q-route-tab :to="{ name: 'users.logout' }">
+        Se déconnecter
+      </q-route-tab>
       <q-route-tab :to="{ name: 'daycare' }">
         <q-icon name="grass" />
         Pension
