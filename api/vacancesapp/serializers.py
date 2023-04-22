@@ -39,6 +39,7 @@ class PokemonTypeSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 class PokemonSerializer(serializers.HyperlinkedModelSerializer):
+    image_url = serializers.SerializerMethodField()
     class Meta:
         model = Pokemon
         fields = [
@@ -49,6 +50,11 @@ class PokemonSerializer(serializers.HyperlinkedModelSerializer):
             "obtainable",
             "image_url",
         ]
+        
+    def get_image_url(self, obj):
+        if not obj.image_url:
+            return "https://www.pokepedia.fr/images/5/54/Sprite_MissingNo._RV.png"
+        return obj.image_url
         
         
 class AreaSerializer(serializers.HyperlinkedModelSerializer):
