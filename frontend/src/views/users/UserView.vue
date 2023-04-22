@@ -13,7 +13,7 @@ const password = ref("");
 const submit = async () => {
   try {
     errors.value = false;
-    const resultUser = await axios.post("login/",
+    const resultUser = await axios.post("users/login/",
     {
       username: username.value,
       password: password.value,

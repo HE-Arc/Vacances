@@ -94,10 +94,9 @@ class UserViewSet(viewsets.ModelViewSet):
         
         except:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class LoginView(APIView):
-    def post(self, request):
+        
+    @action(detail=False, methods=['post'])
+    def login(self, request):
         data = request.data
         username = data.get('username')
         password = data.get('password')
@@ -109,13 +108,13 @@ class LoginView(APIView):
 
         return Response({'error': 'error'})
     
-    def get(self, request):
+    @action(detail=False, methods=['get'])
+    def current(self, request):
         if request.user.is_authenticated:
             serializer = UserSerializer(request.user, context={'request': request})
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-
 
 
 class PlayerViewSet(viewsets.ModelViewSet):
