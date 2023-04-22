@@ -137,7 +137,7 @@ const imageArray = [
                       class="image-size-daycare row justify-center items-center q-ma-sm"
                     >
                       <q-img
-                        :src="item.image_url"
+                        :src="item.display_image_url"
                         :alt="item.name"
                         class="image-max-size-parent"
                         fit="contain"

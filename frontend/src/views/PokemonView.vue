@@ -65,7 +65,7 @@ onMounted(() => {
             <div class="flex">
               <!-- Image -->
               <div class="image-size-pokedex row justify-center items-center q-ma-sm">
-                <q-img :src="item.image_url" :alt="item.name" class="image-max-size-parent" fit="contain" />
+                <q-img :src="item.display_image_url" :alt="item.name" class="image-max-size-parent" fit="contain" />
               </div>
               <q-card-section class="flex-auto">
                 <div class="text-h4 flex">
