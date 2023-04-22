@@ -148,6 +148,18 @@ onMounted(() => {
     <div class="" v-for="(item, index) in pokemons" :key="index">
       <q-card class="q-mb-sm">
         <div class="flex justify-between">
+          <div class="flex items-center q-ma-sm">
+              <!-- Image -->
+              <div
+                class="image-size-pokedex rrow justify-center items-center q-mr-sm"
+              >
+                <q-img
+                  :src="item.display_image_url"
+                  :alt="item.name"
+                  class="image-max-size-parent"
+                  fit="contain"
+                />
+              </div>
           <q-card-section class="flex-auto">
             <div class="text-h4">{{ item.name }}</div>
             <div class="text-subtitle2">
@@ -165,7 +177,7 @@ onMounted(() => {
               </p>
             </div>
           </q-card-section>
-
+</div>
           <div class="flex normal-btn-size">
             <q-tooltip v-if="playerCash < item.pokemon_type_object.cost">
               Vous n'avez pas assez d'argent pour acheter ce Pokémon.

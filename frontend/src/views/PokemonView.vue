@@ -13,15 +13,13 @@ if (urlParams.has("success")) {
 }
 
 const fetchPokemons = async () => {
-
   /*const result = await axios.get(
     import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemons/",
     {
         withCredentials: true,            
     });*/
-  const result = await axios.get("pokemons/pokemons_of_user/",
-  {
-    withCredentials: true,   
+  const result = await axios.get("pokemons/pokemons_of_user/", {
+    withCredentials: true,
   });
   pokemons.value = result.data;
 };
@@ -72,10 +70,17 @@ onMounted(() => {
       >
         <div>
           <div class="flex justify-between">
-            <div class="flex">
+            <div class="flex items-center q-ma-sm">
               <!-- Image -->
-              <div class="image-size-pokedex row justify-center items-center q-ma-sm">
-                <q-img :src="item.display_image_url" :alt="item.name" class="image-max-size-parent" fit="contain" />
+              <div
+                class="image-size-pokedex row justify-center items-center q-mr-sm"
+              >
+                <q-img
+                  :src="item.display_image_url"
+                  :alt="item.name"
+                  class="image-max-size-parent"
+                  fit="contain"
+                />
               </div>
               <q-card-section class="flex-auto">
                 <div class="text-h4 flex">
@@ -98,22 +103,22 @@ onMounted(() => {
               </q-card-section>
             </div>
             <div class="flex normal-btn-size">
-                <q-btn
-                  color="red"
-                  push
-                  @click="
-                    showDelDialog = true;
-                    removeItem = item;
-                  "
-                  class="q-ma-xs"
-                  dense
-                >
-                  <div>
-                    <q-icon left size="xs" name="delete_outline" />
-                    Supprimer
-                  </div>
-                </q-btn>
-              </div>
+              <q-btn
+                color="red"
+                push
+                @click="
+                  showDelDialog = true;
+                  removeItem = item;
+                "
+                class="q-ma-xs"
+                dense
+              >
+                <div>
+                  <q-icon left size="xs" name="delete_outline" />
+                  Supprimer
+                </div>
+              </q-btn>
+            </div>
           </div>
         </div>
 
