@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from rest_framework import viewsets
 from .utils import *
 from rest_framework import viewsets, status
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 
 class PokemonViewSet(viewsets.ModelViewSet):
@@ -18,8 +18,8 @@ class PokemonViewSet(viewsets.ModelViewSet):
     queryset = Pokemon.objects.all()
     serializer_class = ComplexPokemonSerializer
     
-    # authentication_classes = [SessionAuthentication]
-    # permission_classes = [IsAuthenticated]
+    #authentication_classes = [SessionAuthentication]
+    #permission_classes = [IsAuthenticated]
     
     @action(detail=False, methods=['get'])
     def unowned_by_user(self, request):
@@ -108,6 +108,14 @@ class LoginView(APIView):
             return Response({'success': 'Login successful'})
 
         return Response({'error': 'error'})
+    
+    def get(self, request):
+        if request.user.is_authenticated:
+            serializer = UserSerializer(request.user, context={'request': request})
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
 
 
 class PlayerViewSet(viewsets.ModelViewSet):
