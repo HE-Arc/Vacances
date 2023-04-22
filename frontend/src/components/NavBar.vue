@@ -19,7 +19,7 @@
         Se connecter
       </q-route-tab>
       <q-route-tab :to="{ name: 'daycare' }">
-        <q-icon name="auto_stories" />
+        <q-icon name="grass" />
         Pension
       </q-route-tab>
       <q-route-tab :to="{ name: 'shop' }">
