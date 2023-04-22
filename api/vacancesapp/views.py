@@ -18,8 +18,8 @@ class PokemonViewSet(viewsets.ModelViewSet):
     queryset = Pokemon.objects.all()
     serializer_class = ComplexPokemonSerializer
     
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [SessionAuthentication]
+    # permission_classes = [IsAuthenticated]
     
     @action(detail=False, methods=['get'])
     def unowned_by_user(self, request):
