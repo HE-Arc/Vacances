@@ -70,43 +70,50 @@ onMounted(() => {
         class="q-mb-sm"
         :class="{ 'bg-green-3': item.is_owned, 'bg-grey-4': !item.is_owned }"
       >
-        <div class="flex justify-between">
-          <q-card-section class="flex-auto">
-            <div class="text-h4 flex">
-              <div class="flex items-center q-mr-sm icon-size-pokedex">
-                <q-img
-                  v-if="item.is_owned"
-                  src="../assets/images/pokeball-icon.png"
-                />
-                <q-img
-                  v-if="!item.is_owned"
-                  src="../assets/images/pokeball-icon-white.png"
-                />
+        <div>
+          <div class="flex justify-between">
+            <div class="flex">
+              <!-- Image -->
+              <div class="image-size-pokedex row justify-center items-center q-ma-sm">
+                <q-img :src="item.display_image_url" :alt="item.name" class="image-max-size-parent" fit="contain" />
               </div>
-              {{ item.name }}
+              <q-card-section class="flex-auto">
+                <div class="text-h4 flex">
+                  <div class="flex items-center q-mr-sm icon-size-pokedex">
+                    <q-img
+                      v-if="item.is_owned"
+                      src="../assets/images/pokeball-icon.png"
+                    />
+                    <q-img
+                      v-if="!item.is_owned"
+                      src="../assets/images/pokeball-icon-white.png"
+                    />
+                  </div>
+                  {{ item.name }}
+                </div>
+                <div class="text-subtitle2">
+                  {{ item.pokemon_type_object.name }}
+                </div>
+                <div class="text-subtitle2"></div>
+              </q-card-section>
             </div>
-            <div class="text-subtitle2">
-              {{ item.pokemon_type_object.name }}
-            </div>
-            <div class="text-subtitle2"></div>
-          </q-card-section>
-
-          <div class="flex normal-btn-size">
-            <q-btn
-              color="red"
-              push
-              @click="
-                showDelDialog = true;
-                removeItem = item;
-              "
-              class="q-ma-xs"
-              dense
-            >
-              <div>
-                <q-icon left size="xs" name="delete_outline" />
-                Supprimer
+            <div class="flex normal-btn-size">
+                <q-btn
+                  color="red"
+                  push
+                  @click="
+                    showDelDialog = true;
+                    removeItem = item;
+                  "
+                  class="q-ma-xs"
+                  dense
+                >
+                  <div>
+                    <q-icon left size="xs" name="delete_outline" />
+                    Supprimer
+                  </div>
+                </q-btn>
               </div>
-            </q-btn>
           </div>
         </div>
 
