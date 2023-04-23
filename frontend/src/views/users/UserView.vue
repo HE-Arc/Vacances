@@ -11,16 +11,10 @@ const password = ref("");
 const submit = async () => {
   try {
     errors.value = false;
-    const resultUser = await axios.post(
-      "users/login/",
-      {
-        username: username.value,
-        password: password.value,
-      },
-      {
-        withCredentials: true,
-      }
-    );
+    const resultUser = await axios.post("users/login/", {
+      username: username.value,
+      password: password.value,
+    });
     if (resultUser.data.success == null) {
       errors.value = true;
     } else {

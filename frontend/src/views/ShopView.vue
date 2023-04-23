@@ -10,9 +10,7 @@ let errorsTitle = ref("");
 let errors = ref([]);
 
 const fetchPokemons = async () => {
-  const result = await axios.get("pokemons/unowned_by_user/", {
-    withCredentials: true,
-  });
+  const result = await axios.get("pokemons/unowned_by_user/");
   pokemons.value = result.data;
 };
 
@@ -25,11 +23,7 @@ const fetchPokemonTypes = async () => {
 const playerCash = ref(0);
 
 const fetchPlayerCash = async () => {
-  playerCash.value = (
-    await axios.get("players/my_data/", {
-      withCredentials: true,
-    })
-  ).data.money;
+  playerCash.value = (await axios.get("players/my_data/")).data.money;
 };
 
 const fetchPokemon = async (id) => {
@@ -71,9 +65,7 @@ const buyPokemon = async (id) => {
 
   // 2) Process buy (backend)
   await axios
-    .post(`pokemons/${id}/buy/`, {
-      withCredentials: true,
-    })
+    .post(`pokemons/${id}/buy/`)
     .then((response) => {
       successTitle.value = "Achat réussi !";
       success.value.push(buyedPokemon.name + " vous attend !");

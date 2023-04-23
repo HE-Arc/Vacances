@@ -17,9 +17,7 @@ errorsTitle.value = sessionGetAndRemove(varToString({ errorsTitle }));
 errors.value = sessionGetAndRemove(varToString({ errors }), true);
 
 const fetchPokemons = async () => {
-  const result = await axios.get("pokemons/pokemons_of_user/", {
-    withCredentials: true,
-  });
+  const result = await axios.get("pokemons/pokemons_of_user/");
   pokemons.value = result.data;
 };
 
@@ -35,9 +33,7 @@ const removePokemon = async (id) => {
 };
 
 const printLogin = async () => {
-  let username = (await axios.get("users/current/", {
-    withCredentials : true,
-  })).data.username;
+  let username = (await axios.get("users/current/")).data.username;
   console.log(username);
 };
 
