@@ -29,6 +29,8 @@ class PokemonViewSet(viewsets.ModelViewSet):
         It's a shortcut to "pokemon_of_player", to avoid filter "is_owned == False" on the front side
         """
         user = get_current_username(request)
+        if not user.is_authenticated:
+            return Response({"error": "User is not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
         
         # aaa__bbb__ccc means : aaa with relation (double _) to bbb with relation to ccc
         queryset = Pokemon.objects.exclude(owned_pokemons__player__user=user)
@@ -52,6 +54,9 @@ class PokemonViewSet(viewsets.ModelViewSet):
         It will reduce the money of the user and add the pokemon to his list of owned pokemons
         """
         user = get_current_username(request)
+        if not user.is_authenticated:
+            return Response({"error": "User is not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
+        
         pokemon = self.get_object()
         pokemonType = PokemonType.objects.get(id=pokemon.pokemon_type.id)
         
@@ -142,6 +147,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def my_data(self, request):
         user = get_current_username(request)
+        if not user.is_authenticated:
+            return Response({"error": "User is not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
         
         queryset = Player.objects.filter(user=user)
         serializer = ComplexPlayerSerializer(queryset, many=True, context={'request': request})
@@ -150,6 +157,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def reduce_money(self, request, qty=0):
         user = get_current_username(request)
+        if not user.is_authenticated:
+            return Response({"error": "User is not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
         
         player = Player.objects.get(user=user)
         
@@ -170,6 +179,9 @@ class OwnedPokemonViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def create_if_new(self, request, pokemon):
         user = get_current_username(request)
+        
+        if not user.is_authenticated:
+            return Response({"error": "User is not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
         
         player = Player.objects.get(user=user)
         

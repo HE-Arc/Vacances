@@ -3,34 +3,29 @@
 import axios from "axios";
 import { ref } from "vue";
 
-
 const errors = ref(false);
 
 const username = ref("");
 const password = ref("");
 
-
 const submit = async () => {
   try {
     errors.value = false;
-    const resultUser = await axios.post("users/login/",
-    {
-      username: username.value,
-      password: password.value,
-    },
-    {
-      withCredentials : true,
-    });
-    if(resultUser.data.success == null)
-    {
+    const resultUser = await axios.post(
+      "users/login/",
+      {
+        username: username.value,
+        password: password.value,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    if (resultUser.data.success == null) {
       errors.value = true;
-    }
-    else
-    {
+    } else {
       location.href = "/?success=true";
     }
-    
-
   } catch (error) {
     console.log(error);
     errors.value = true;

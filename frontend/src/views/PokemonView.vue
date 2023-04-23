@@ -17,11 +17,6 @@ errorsTitle.value = sessionGetAndRemove(varToString({ errorsTitle }));
 errors.value = sessionGetAndRemove(varToString({ errors }), true);
 
 const fetchPokemons = async () => {
-  /*const result = await axios.get(
-    import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemons/",
-    {
-        withCredentials: true,            
-    });*/
   const result = await axios.get("pokemons/pokemons_of_user/", {
     withCredentials: true,
   });
