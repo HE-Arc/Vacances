@@ -3,7 +3,8 @@ import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
-const errors = ref(false);
+let errorsTitle = ref("");
+let errors = ref([]);
 
 const name = ref("");
 const imageUrl = ref("");
@@ -40,30 +41,66 @@ const getPokemonForEdit = async () => {
   imageUrl.value = pokemon.image_url;
 };
 
-
 const submit = async () => {
-  try {
-    errors.value = false;
-    if (!isEdit)
-    {
-      await axios.post("pokemons/", {
+  errors.value = [];
+  errorsTitle.value = "";
+
+  // Validation
+  if (!name.value) {
+    errors.value.push("Le nom est obligatoire.");
+  }
+
+  // selectedPokemonType.value not in options ?
+  if (
+    !options.value.find(
+      (option) => option.value === selectedPokemonType.value.value
+    )
+  ) {
+    errors.value.push("Le type de Pokémon est invalide.");
+  }
+
+  if (errors.value.length) {
+    errorsTitle.value =
+      "Erreur avec les données du formulaire, veuillez les corriger :";
+
+    return; // There is some error, stop the buy process
+  }
+
+  // Send to backend
+  if (!isEdit) {
+    await axios
+      .post("pokemons/", {
         pokemon_type: selectedPokemonType.value.value,
         name: name.value,
         obtainable: true,
         image_url: imageUrl.value,
+      })
+      .then(() => {
+        location.href = "/pokemons?success=true";
+      })
+      .catch((error) => {
+        errorsTitle.value = "Erreur avec lors de la sauvegarde des données.";
+        errors.value.push(
+          "Une des cause possible est que l'URL de l'image n'est pas valide"
+        );
       });
-    }
-    else {
-      await axios.put(`pokemons/${pokemonEditId.value}/update/`, {
+  } else {
+    await axios
+      .put(`pokemons/${pokemonEditId.value}/update/`, {
         pokemon_type: selectedPokemonType.value.value,
         name: name.value,
         //obtainable: ..., // TODO When obtainable is implemented
         image_url: imageUrl.value,
+      })
+      .then(() => {
+        location.href = "/pokemons?success=true";
+      })
+      .catch((error) => {
+        errorsTitle.value = "Erreur avec lors de la sauvegarde des données.";
+        errors.value.push(
+          "Une des cause possible est que l'URL de l'image n'est pas valide"
+        );
       });
-    }
-    location.href = "/pokemons?success=true";
-  } catch (error) {
-    errors.value = true;
   }
 };
 
@@ -115,13 +152,21 @@ onMounted(() => {
             </q-card-section>
 
             <q-banner
-              v-if="errors"
+              v-if="errorsTitle || errors.length"
               inline-actions
               class="q-mb-lg text-white bg-red"
             >
-              <div class="text-h6">
+              <div class="text-h6 flex">
                 <q-icon left size="md" name="emoji_nature" />
-                Erreur lors de la création du Pokémon!
+                <div>
+                  {{ errorsTitle }}
+
+                  <q-list dense class="text-subtitle2">
+                    <q-item v-for="(item, index) in errors" :key="index">
+                      {{ item }}
+                    </q-item>
+                  </q-list>
+                </div>
               </div>
             </q-banner>
 
