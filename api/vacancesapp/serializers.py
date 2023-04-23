@@ -110,7 +110,7 @@ class ComplexPokemonOfPlayerSerializer(ComplexPokemonSerializer):
         # Default value of "is_owned"
         if (not self.context["request"].user.is_authenticated):
             return False
-        user = User.objects.get(user=self.context["request"].user)
+        user = User.objects.get(username=self.context["request"].user)
         return obj.owned_pokemons.filter(player__user=user).exists()
 
 class ComplexPlayerSerializer(PlayerSerializer):
