@@ -20,7 +20,7 @@ class Pokemon(models.Model):
     pokemon_type = models.ForeignKey(PokemonType, related_name="pokemons", on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     obtainable = models.BooleanField()
-    image_url = models.URLField(null=True)
+    image_url = models.URLField(null=True, blank=True)
 
 class Area(models.Model):
     name = models.CharField(max_length=100)
