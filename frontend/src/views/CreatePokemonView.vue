@@ -26,6 +26,21 @@ const fetchPokemonTypes = async () => {
   selectedPokemonType.value = options.value[0];
 };
 
+// Is edit == route.params.id defined
+const isEdit = useRoute().params.id !== undefined;
+const pokemonEditId = ref(-1);
+
+const getPokemonForEdit = async () => {
+  pokemonEditId.value = useRoute().params.id;
+  const pokemon = (await axios.get(`pokemons/${pokemonEditId.value}/`)).data;
+  selectedPokemonType.value = options.value.find((option) => {
+    return option.value === pokemon.pokemon_type;
+  });
+  name.value = pokemon.name;
+  imageUrl.value = pokemon.image_url;
+};
+
+
 const submit = async () => {
   try {
     errors.value = false;
@@ -50,20 +65,6 @@ const submit = async () => {
   } catch (error) {
     errors.value = true;
   }
-};
-
-// Is edit == route.params.id defined
-const isEdit = useRoute().params.id !== undefined;
-const pokemonEditId = ref(-1);
-
-const getPokemonForEdit = async () => {
-  pokemonEditId.value = useRoute().params.id;
-  const pokemon = (await axios.get(`pokemons/${pokemonEditId.value}/`)).data;
-  selectedPokemonType.value = options.value.find((option) => {
-    return option.value === pokemon.pokemon_type;
-  });
-  name.value = pokemon.name;
-  imageUrl.value = pokemon.image_url;
 };
 
 onMounted(() => {
