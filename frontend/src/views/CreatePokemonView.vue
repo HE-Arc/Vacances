@@ -1,6 +1,7 @@
 <script setup>
 import axios from "axios";
 import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 
 const errors = ref(false);
 
@@ -38,8 +39,24 @@ const submit = async () => {
   }
 };
 
+// Is edit == route.params.id defined
+const isEdit = useRoute().params.id !== undefined;
+
+const getPokemonForEdit = async () => {
+  const pokemon = (await axios.get(`pokemons/${useRoute().params.id}/`)).data;
+  console.log(pokemon)
+  pokemonType.value = pokemon.pokemon_type_object.name;
+  console.log(pokemon.pokemon_type)
+  name.value = pokemon.name;
+  imageUrl.value = pokemon.image_url;
+};
+
+
 onMounted(() => {
   fetchPokemonTypes();
+  if (isEdit) {
+    getPokemonForEdit();
+  }
 });
 </script>
 
@@ -57,7 +74,7 @@ onMounted(() => {
             </q-card-section>
 
             <q-card-section class="text-center">
-              <div class="text-h5">Créer le Pokémon</div>
+              <div class="text-h5">{{ isEdit ? 'Modifier' : 'Créer' }} un Pokémon</div>
             </q-card-section>
 
             <q-card-section>
@@ -95,7 +112,7 @@ onMounted(() => {
               <div class="text-center">
                 <q-btn type="submit" color="green">
                   <q-icon left name="fact_check" />
-                  <div>Créer</div>
+                  <div>{{ isEdit ? 'Modifier' : 'Créer' }}</div>
                 </q-btn>
               </div>
             </q-card-section>

@@ -36,9 +36,11 @@ const removePokemon = async (id) => {
 };
 
 const a = async () => {
-  let b = (await axios.get("users/current/", {
-    withCredentials : true,
-  })).data.username;
+  let b = (
+    await axios.get("users/current/", {
+      withCredentials: true,
+    })
+  ).data.username;
   console.log(b);
 };
 
@@ -48,7 +50,7 @@ let removeItem = ref(null);
 onMounted(() => {
   fetchPokemons();
   fetchPokemonTypes();
-  a()
+  a();
 });
 </script>
 
@@ -110,22 +112,41 @@ onMounted(() => {
                 <div class="text-subtitle2"></div>
               </q-card-section>
             </div>
-            <div class="flex normal-btn-size">
-              <q-btn
-                color="red"
-                push
-                @click="
-                  showDelDialog = true;
-                  removeItem = item;
-                "
-                class="q-ma-xs"
-                dense
-              >
-                <div>
-                  <q-icon left size="xs" name="delete_outline" />
-                  Supprimer
-                </div>
-              </q-btn>
+            <!-- Buttons -->
+            <div class="flex column">
+              <div class="flex normal-btn-size">
+                <q-btn
+                  color="orange-8"
+                  push
+                  :to="{ name: 'pokemons.edit', params: { id: item.id } }"
+                  class="q-ma-xs"
+                  style="width: 100%;"
+                  dense
+                >
+                  <div>
+                    <q-icon left size="xs" name="edit" />
+                    Modifier
+                  </div>
+                </q-btn>
+              </div>
+              <div class="flex normal-btn-size">
+                <q-btn
+                  color="red"
+                  push
+                  @click="
+                    showDelDialog = true;
+                    removeItem = item;
+                  "
+                  class="q-ma-xs"
+                  style="width: 100%;"
+                  dense
+                >
+                  <div>
+                    <q-icon left size="xs" name="delete_outline" />
+                    Supprimer
+                  </div>
+                </q-btn>
+              </div>
             </div>
           </div>
         </div>

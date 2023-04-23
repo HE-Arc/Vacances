@@ -30,6 +30,11 @@ const router = createRouter({
       name: "pokemons.create",
       component: () => import("../views/CreatePokemonView.vue"),
     },
+    {
+      path: "/pokemons/:id/edit",
+      name: "pokemons.edit",
+      component: () => import("../views/CreatePokemonView.vue"),
+    },
 
     /* ====== SHOP ====== */
     {
