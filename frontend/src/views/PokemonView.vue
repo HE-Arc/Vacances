@@ -1,16 +1,20 @@
 <!-- eslint-disable prettier/prettier -->
 <script setup>
+import { varToString, sessionGetAndRemove } from "@/assets/js/utils.js";
 import axios from "axios";
 import { ref, onMounted } from "vue";
 
 const pokemons = ref([]);
 
-let success;
-let queryString = window.location.search;
-let urlParams = new URLSearchParams(queryString);
-if (urlParams.has("success")) {
-  success = urlParams.get("success");
-}
+let successTitle = ref("");
+let success = ref([]);
+let errorsTitle = ref("");
+let errors = ref([]);
+
+successTitle.value = sessionGetAndRemove(varToString({ successTitle }));
+success.value = sessionGetAndRemove(varToString({ success }), true);
+errorsTitle.value = sessionGetAndRemove(varToString({ errorsTitle }));
+errors.value = sessionGetAndRemove(varToString({ errors }), true);
 
 const fetchPokemons = async () => {
   /*const result = await axios.get(
@@ -58,19 +62,50 @@ onMounted(() => {
   <q-page>
     <h1>Pokédex</h1>
 
+    <q-banner
+      v-if="successTitle || success.length"
+      inline-actions
+      class="q-mb-lg text-white bg-green"
+    >
+      <div class="text-h6 flex">
+        <q-icon left size="md" name="check_circle" />
+        <div>
+          {{ successTitle }}
+
+          <q-list dense class="text-subtitle2">
+            <q-item v-for="(item, index) in success" :key="index">
+              {{ item }}
+            </q-item>
+          </q-list>
+        </div>
+      </div>
+    </q-banner>
+
+    <q-banner
+      v-if="errorsTitle || errors.length"
+      inline-actions
+      class="q-mb-lg text-white bg-red"
+    >
+      <div class="text-h6 flex">
+        <q-icon left size="md" name="emoji_nature" />
+        <div>
+          {{ errorsTitle }}
+
+          <q-list dense class="text-subtitle2">
+            <q-item v-for="(item, index) in errors" :key="index">
+              {{ item }}
+            </q-item>
+          </q-list>
+        </div>
+      </div>
+    </q-banner>
+
     <div class="text-center q-mb-md q-mt-md">
       <q-btn color="green" :to="{ name: 'pokemons.create' }">
         <q-icon left size="xl" name="add_circle_outline" />
         <div>Créer un Pokémon</div>
       </q-btn>
     </div>
-
-    <q-banner v-if="success" inline-actions class="q-mb-lg text-white bg-green">
-      <div class="text-h6">
-        <q-icon left size="md" name="check_circle" />
-        Pokémon créé avec succès !
-      </div>
-    </q-banner>
 
     <!-- Card list -->
     <div class="" v-for="(item, index) in pokemons" :key="index">
@@ -120,7 +155,7 @@ onMounted(() => {
                   push
                   :to="{ name: 'pokemons.edit', params: { id: item.id } }"
                   class="q-ma-xs"
-                  style="width: 100%;"
+                  style="width: 100%"
                   dense
                 >
                   <div>
@@ -138,7 +173,7 @@ onMounted(() => {
                     removeItem = item;
                   "
                   class="q-ma-xs"
-                  style="width: 100%;"
+                  style="width: 100%"
                   dense
                 >
                   <div>

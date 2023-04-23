@@ -1,8 +1,16 @@
 <script setup>
+import { varToString } from "@/assets/js/utils.js"; // IMPORTANT : Need to be in { } to work !
 import axios from "axios";
 import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+// useRoute is to get data like params or query from the route
+// useRouter is to redirect to another route with some data
+//    sample :  obj = "abc"
+//              router.push({ path: "/a", query: { obj } });
+//          => Will redirect to /a?obj=abc
 
+let successTitle = ref("");
+let success = ref([]);
 let errorsTitle = ref("");
 let errors = ref([]);
 
@@ -27,6 +35,7 @@ const fetchPokemonTypes = async () => {
   selectedPokemonType.value = options.value[0];
 };
 
+const router = useRouter();
 const isEdit = useRoute().params.id !== undefined;
 const pokemonEditId = ref(-1);
 
@@ -78,7 +87,15 @@ const submit = async () => {
 
   await axiosMethod(uri, data)
     .then(() => {
-      location.href = "/pokemons?success=true";
+      successTitle.value = "Le Pokémon a été sauvegardé avec succès.";
+
+      sessionStorage.setItem(varToString({ successTitle }), successTitle.value);
+      sessionStorage.setItem(
+        varToString({ success }),
+        JSON.stringify(success.value)
+      );
+
+      router.push({ path: "/pokemons" });
     })
     .catch((error) => {
       errorsTitle.value = "Erreur avec lors de la sauvegarde des données.";
