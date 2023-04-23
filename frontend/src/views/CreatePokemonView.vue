@@ -27,7 +27,6 @@ const fetchPokemonTypes = async () => {
   selectedPokemonType.value = options.value[0];
 };
 
-// Is edit == route.params.id defined
 const isEdit = useRoute().params.id !== undefined;
 const pokemonEditId = ref(-1);
 
@@ -67,41 +66,26 @@ const submit = async () => {
   }
 
   // Send to backend
-  if (!isEdit) {
-    await axios
-      .post("pokemons/", {
-        pokemon_type: selectedPokemonType.value.value,
-        name: name.value,
-        obtainable: true,
-        image_url: imageUrl.value,
-      })
-      .then(() => {
-        location.href = "/pokemons?success=true";
-      })
-      .catch((error) => {
-        errorsTitle.value = "Erreur avec lors de la sauvegarde des données.";
-        errors.value.push(
-          "Une des cause possible est que l'URL de l'image n'est pas valide"
-        );
-      });
-  } else {
-    await axios
-      .put(`pokemons/${pokemonEditId.value}/update/`, {
-        pokemon_type: selectedPokemonType.value.value,
-        name: name.value,
-        //obtainable: ..., // TODO When obtainable is implemented
-        image_url: imageUrl.value,
-      })
-      .then(() => {
-        location.href = "/pokemons?success=true";
-      })
-      .catch((error) => {
-        errorsTitle.value = "Erreur avec lors de la sauvegarde des données.";
-        errors.value.push(
-          "Une des cause possible est que l'URL de l'image n'est pas valide"
-        );
-      });
-  }
+  const data = {
+    pokemon_type: selectedPokemonType.value.value,
+    name: name.value,
+    obtainable: true, // TODO When obtainable is implemented
+    image_url: imageUrl.value,
+  };
+
+  const uri = isEdit ? `pokemons/${pokemonEditId.value}/update/` : "pokemons/";
+  const axiosMethod = isEdit ? axios.put : axios.post;
+
+  await axiosMethod(uri, data)
+    .then(() => {
+      location.href = "/pokemons?success=true";
+    })
+    .catch((error) => {
+      errorsTitle.value = "Erreur avec lors de la sauvegarde des données.";
+      errors.value.push(
+        "Une des cause possible est que l'URL de l'image n'est pas valide"
+      );
+    });
 };
 
 onMounted(() => {
