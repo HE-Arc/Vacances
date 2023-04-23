@@ -102,8 +102,8 @@ class UserViewSet(viewsets.ModelViewSet):
         password = data.get('password')
         user = authenticate(username=username, password=password)
         if user is not None:
+            print(user)
             login(request, user)
-            serializer = UserSerializer(user, context={'request': request})
             return Response({'success': 'Login successful'})
 
         return Response({'error': 'error'})
@@ -120,6 +120,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def logout(self, request):
         logout(request)
         return Response(status=status.HTTP_200_OK)
+    
 
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
