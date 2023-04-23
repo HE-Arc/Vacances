@@ -57,6 +57,7 @@ const submit = async () => {
               <q-input v-model="username" label="*Nom" class="q-mb-md" outlined />
               <q-input
                 v-model="password"
+                type="password"
                 label="*Mot de passe"
                 class="q-mb-md"
                 outlined

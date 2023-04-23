@@ -17,6 +17,8 @@ const submit = async () => {
     {
       username: username.value,
       password: password.value,
+    },
+    {
       withCredentials : true,
     });
     if(resultUser.data.success == null)
@@ -38,7 +40,6 @@ const submit = async () => {
 
 <template>
   <q-page padding>
-
     <q-form class="q-gutter-md" @submit="submit()">
       <div class="row self-center justify-evenly">
         <div class="col-8 col-md-6 q-mt-md">
@@ -66,6 +67,7 @@ const submit = async () => {
               />
               <q-input
                 v-model="password"
+                type="password"
                 label="*Mot de passe"
                 class="q-mb-md"
                 outlined
