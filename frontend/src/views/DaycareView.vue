@@ -2,29 +2,22 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 
-const pokemons = ref([]);
+const ownedPokemons = ref([]);
 
 const interval = ref(null);
 
-const fetchPokemons = async () => {
-  const result = await axios.get(
-    import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemons/"
-  );
-  pokemons.value = result.data;
+const fetchOwnedPokemons = async () => {
+  ownedPokemons.value = (await axios.get("owned-pokemons/my_pokemons")).data;
 };
 
 const pokemonTypes = ref([]);
 
 const fetchPokemonTypes = async () => {
-  pokemonTypes.value = (
-    await axios.get(
-      import.meta.env.VITE_DATABASE_SERVER_NAME + "/api/pokemon-types/"
-    )
-  ).data;
+  pokemonTypes.value = (await axios.get("pokemon-types/")).data;
 };
 
 onMounted(() => {
-  fetchPokemons();
+  fetchOwnedPokemons();
   fetchPokemonTypes();
   coroutine();
 });
@@ -57,11 +50,11 @@ const zones = [
 ];
 
 function pokemonRequest() {
-  const randomIndexPokemon = Math.floor(Math.random() * pokemons.value.length);
+  const randomIndexPokemon = Math.floor(Math.random() * ownedPokemons.value.length);
   const randomIndexZone = Math.floor(Math.random() * zones.length);
 
   document.getElementById("Request").innerText =
-    pokemons.value[randomIndexPokemon].name +
+    ownedPokemons.value.pokemon_object.value[randomIndexPokemon].name +
     " aimerait aller à la " +
     zones[randomIndexZone].alt +
     ".";
@@ -146,20 +139,20 @@ function coroutine() {
           <h5>Mes Pokémon</h5>
           <br />
           <!-- Card list -->
-          <div class="" v-for="(item, index) in pokemons" :key="index">
+          <div class="" v-for="(item, index) in ownedPokemons" :key="index">
             <q-card class="q-mb-sm">
               <div class="flex justify-center">
                 <q-card-section>
                   <div class="col justify-center items-center">
                     <div class="text-h7 row justify-center">
-                      {{ item.name }}
+                      {{ item.pokemon_object.name }}
                     </div>
                     <div
                       class="image-size-daycare row justify-center items-center q-ma-sm"
                     >
                       <q-img
-                        :src="item.display_image_url"
-                        :alt="item.name"
+                        :src="item.pokemon_object.display_image_url"
+                        :alt="item.pokemon_object.name"
                         class="image-max-size-parent"
                         fit="contain"
                       />
@@ -173,7 +166,11 @@ function coroutine() {
         </div>
         <br />
         <div class="text-center q-mb-md q-mt-md">
-          <q-btn color="green" :to="{ name: 'shop' }" @click="clearInterval(interval);">
+          <q-btn
+            color="green"
+            :to="{ name: 'shop' }"
+            @click="clearInterval(interval)"
+          >
             <q-icon left size="xl" name="add_circle_outline" />
             <div>Acheter un Pokémon</div>
           </q-btn>

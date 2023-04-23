@@ -202,6 +202,20 @@ class OwnedPokemonViewSet(viewsets.ModelViewSet):
         
         serializer = ComplexOwnedPokemonSerializer(owned_pokemon, context={'request': request})
         return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def my_pokemons(self, request):
+        connectedUserResponse = UserViewSet.current(self, request)
+        if connectedUserResponse.status_code != status.HTTP_200_OK:
+            return connectedUserResponse
+        
+        user = connectedUserResponse.data.get("id")
+        
+        player = Player.objects.get(user=user)
+        
+        queryset = OwnedPokemon.objects.filter(player=player)
+        serializer = ComplexOwnedPokemonSerializer(queryset, many=True, context={'request': request})
+        return Response(serializer.data)
         
 class AreaViewSet(viewsets.ModelViewSet):
     queryset = Area.objects.all()
