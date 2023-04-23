@@ -39,13 +39,11 @@ const removePokemon = async (id) => {
   await fetchPokemons();
 };
 
-const a = async () => {
-  let b = (
-    await axios.get("users/current/", {
-      withCredentials: true,
-    })
-  ).data.username;
-  console.log(b);
+const printLogin = async () => {
+  let username = (await axios.get("users/current/", {
+    withCredentials : true,
+  })).data.username;
+  console.log(username);
 };
 
 let showDelDialog = ref(false);
@@ -54,7 +52,7 @@ let removeItem = ref(null);
 onMounted(() => {
   fetchPokemons();
   fetchPokemonTypes();
-  a();
+  printLogin()
 });
 </script>
 
