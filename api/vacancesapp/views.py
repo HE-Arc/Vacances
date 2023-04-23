@@ -12,6 +12,7 @@ from .utils import *
 from rest_framework import viewsets, status
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
+from rest_framework.generics import get_object_or_404
 
 class PokemonViewSet(viewsets.ModelViewSet):
     """Registred pokemons in the app (the pokedex)"""
@@ -70,6 +71,18 @@ class PokemonViewSet(viewsets.ModelViewSet):
             return Response({"error": gotPokemon.data}, status=gotPokemon.status_code)
         
         return Response({"success": True})
+    
+    @action(detail=True, methods=["PUT"], url_path="update")
+    def update_pokemon(self, request, pk):
+        itemToUpdate = get_object_or_404(Pokemon, pk = pk)
+        data = request.data
+        serializer = self.get_serializer(itemToUpdate, data=data, partial=True)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 class PokemonTypeViewSet(viewsets.ModelViewSet):
     queryset = PokemonType.objects.all()

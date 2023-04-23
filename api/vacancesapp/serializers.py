@@ -53,6 +53,12 @@ class PokemonSerializer(serializers.HyperlinkedModelSerializer):
             "display_image_url"
         ]
         
+    read_only_fields = ['url', 'id']
+    extra_kwargs = {
+        'pokemon_type': {'required': True},
+        'name': {'required': True},
+    }
+        
     def get_display_image_url(self, obj):
         if not obj.image_url:
             return "https://www.pokepedia.fr/images/5/54/Sprite_MissingNo._RV.png"
