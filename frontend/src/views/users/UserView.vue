@@ -18,6 +18,7 @@ const submit = async () => {
     if (resultUser.data.success == null) {
       errors.value = true;
     } else {
+      sessionStorage.setItem("isAuth", true); // TODO A token will be better
       location.href = "/?success=true";
     }
   } catch (error) {

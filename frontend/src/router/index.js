@@ -18,22 +18,26 @@ const router = createRouter({
       path: "/daycare",
       name: "daycare",
       component: () => import("../views/DaycareView.vue"),
+      meta: { auth: true },
     },
     {
       path: "/pokemons:success?",
       name: "pokemons",
       props: true,
       component: () => import("../views/PokemonView.vue"),
+      meta: { auth: true },
     },
     {
       path: "/pokemons/create",
       name: "pokemons.create",
       component: () => import("../views/CreatePokemonView.vue"),
+      meta: { auth: true },
     },
     {
       path: "/pokemons/:id/edit",
       name: "pokemons.edit",
       component: () => import("../views/CreatePokemonView.vue"),
+      meta: { auth: true },
     },
 
     /* ====== SHOP ====== */
@@ -41,6 +45,7 @@ const router = createRouter({
       path: "/shop",
       name: "shop",
       component: () => import("../views/ShopView.vue"),
+      meta: { auth: true },
     },
 
     /* ====== USERS ====== */
@@ -55,6 +60,16 @@ const router = createRouter({
       component: () => import("../views/users/UserView.vue"),
     },
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  const auth = to.matched.some((record) => record.meta.auth);
+
+  if (auth && !localStorage.getItem("isAuth")) {
+    next({ name: "users" });
+  } else {
+    next();
+  }
 });
 
 export default router;

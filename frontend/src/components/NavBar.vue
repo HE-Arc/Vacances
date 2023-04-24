@@ -8,6 +8,13 @@ const isLogged = ref(false);
 const fetchConnected = async () => {
   user.value = (await axios.get("users/current/")).data;
   isLogged.value = user.value !== null;
+
+  if (isLogged.value) { // It is good to manage this "session item" here ?, should not be in top level (like App.vue) ?
+    sessionStorage.setItem("isAuth", true); // TODO A token will be better
+  }
+  else {
+    sessionStorage.removeItem("isAuth");
+  }
   console.log("logged = " + isLogged.value);
   console.log(user.value);
 };
