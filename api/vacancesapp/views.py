@@ -103,7 +103,17 @@ class UserViewSet(viewsets.ModelViewSet):
         
         serializer = None
         try:
+            # TODO Transaction ?
             user.save()
+            
+            # add the profile of the user (player instance)
+            player = Player(user=user)
+            player.username = user.username
+            player.is_manager = False
+            player.money = 50
+            
+            player.save()
+            
             serializer = UserSerializer(user, context={'request': request})
             return Response({'user' : serializer.data}, status=status.HTTP_201_CREATED)
         

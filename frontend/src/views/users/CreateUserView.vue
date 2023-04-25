@@ -49,36 +49,17 @@ const submit = async () => {
       username: username.value,
       password: password.value,
     })
-    .then(async (response) => {
-      console.log(response.data.user.url);
-      await axios
-        .post("players/", {
-          user: response.data.user.url,
-          username: username.value,
-          is_manager: false,
-          money: 10,
-        })
-        .then(() => {
-          successTitle.value = "Compte créer avec succès";
-          success.value.push(
-            "Vous pouvez maintenant vous connecter."
-          );
+    .then(() => {
+      successTitle.value = "Compte créer avec succès";
+      success.value.push("Vous pouvez maintenant vous connecter.");
 
-          sessionStorage.setItem(
-            varToString({ successTitle }),
-            successTitle.value
-          );
-          sessionStorage.setItem(
-            varToString({ success }),
-            JSON.stringify(success.value)
-          );
+      sessionStorage.setItem(varToString({ successTitle }), successTitle.value);
+      sessionStorage.setItem(
+        varToString({ success }),
+        JSON.stringify(success.value)
+      );
 
-          router.push("/users");
-        })
-        .catch(() => {
-          errorsTitle.value = "La création échouée";
-          errors.value.push("Votre profil n'a pas pu être créé.");
-        });
+      router.push("/users");
     })
     .catch(() => {
       errorsTitle.value = "La création échouée";
