@@ -75,22 +75,8 @@ class PokemonViewSet(viewsets.ModelViewSet):
         
         return Response({"success": True})
     
-    @action(detail=True, methods=["PUT"], url_path="update")
-    def update_pokemon(self, request, pk):
-        print("update_pokemon")
-        itemToUpdate = get_object_or_404(Pokemon, pk = pk)
-        data = request.data
-        serializer = self.get_serializer(itemToUpdate, data=data, partial=True)
-        
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
     @action(detail=True, methods=["DELETE"], url_path="delete-with-refund")
     def delete_with_refound(self, request, pk):
-        print("delete_pokemon")
         itemToDelete = get_object_or_404(Pokemon, pk = pk)
         
         players = Player.objects.filter(owned_pokemons__pokemon=itemToDelete)
