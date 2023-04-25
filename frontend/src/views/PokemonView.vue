@@ -38,7 +38,7 @@ const fetchPokemonTypes = async () => {
 
 const removePokemon = async (id) => {
   await axios
-    .delete(`pokemons/${id}/`)
+    .delete(`pokemons/${id}/delete-with-refund`)
     .then(() => {
       successTitle.value = "Succès";
       success.value = ["Le Pokémon a été supprimé avec succès."];
@@ -191,7 +191,10 @@ onMounted(() => {
             Si vous le supprimez, toutes les données associées le seront
             également.
           </p>
-          <!-- TODO When game implemented : change text to specify the refund the players and remove it -->
+          <p>
+            <q-icon name="redeem" size="sm" />
+            Les joueurs seront remboursé.
+          </p>
           <p class="text-red">
             <q-icon name="crisis_alert" size="sm" />
             Attention, cette action est irréversible.
