@@ -14,19 +14,19 @@ const fetchConnected = async () => {
     .then(async (response) => {
       user.value = response.data;
       isLogged.value = true;
-      sessionStorage.setItem("isAuth", true); // TODO A token will be better
+      localStorage.setItem("isAuth", true); // TODO A token will be better
 
       // Is manager
       await axios.get("players/my_data/").then((response) => {
         isManager.value = response.data.is_manager;
-        sessionStorage.setItem("isManager", isManager.value);
+        localStorage.setItem("isManager", isManager.value);
       });
     })
     .catch(() => {
       user.value = null;
       isLogged.value = false;
-      sessionStorage.removeItem("isAuth");
-      sessionStorage.removeItem("isManager");
+      localStorage.removeItem("isAuth");
+      localStorage.removeItem("isManager");
     });
 };
 

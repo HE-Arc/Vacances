@@ -72,13 +72,13 @@ router.beforeEach((to, from, next) => {
   const auth = to.matched.some((record) => record.meta.auth);
   const manager = to.matched.some((record) => record.meta.manager);
 
-  if (auth && !sessionStorage.getItem("isAuth")) {
-    // !session => session is null or undefined
+  if (auth && !localStorage.getItem("isAuth")) {
+    // !xStorage.get => item is null or undefined
     next({ name: "users" });
     return;
   }
 
-  if (manager && sessionStorage.getItem("isManager") == "false") {
+  if (manager && localStorage.getItem("isManager") == "false") {
     // Note : another way to check instead of "false" would be using !JSON.parse(...)
     next({ name: "pokemons" });
     return;
