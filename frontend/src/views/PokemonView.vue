@@ -30,7 +30,18 @@ const fetchPokemonTypes = async () => {
 };
 
 const removePokemon = async (id) => {
-  await axios.delete(`pokemons/${id}/`);
+  await axios
+    .delete(`pokemons/${id}/`)
+    .then(() => {
+      console.log("ABCD");
+      successTitle.value = "Succès";
+      success.value = ["Le Pokémon a été supprimé avec succès."];
+    })
+    .catch(() => {
+      console.log("ABCDGHI");
+      errorsTitle.value = "Erreur";
+      errors.value = ["Une erreur est survenue lors de la suppression."];
+    });
   await fetchPokemons();
 };
 
