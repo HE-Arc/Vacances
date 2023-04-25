@@ -5,16 +5,20 @@ import { ref, onMounted } from "vue";
 const user = ref(null);
 const isLogged = ref(false);
 
+// OnMounted we check if we are still connected
 const fetchConnected = async () => {
-  user.value = (await axios.get("users/current/")).data;
-  isLogged.value = user.value !== null;
-
-  if (isLogged.value) { // OnMounted we check if we are still connected
-    sessionStorage.setItem("isAuth", true); // TODO A token will be better
-  }
-  else {
-    sessionStorage.removeItem("isAuth");
-  }
+  await axios
+    .get("users/current/")
+    .then((response) => {
+      user.value = response.data;
+      isLogged.value = true;
+      sessionStorage.setItem("isAuth", true); // TODO A token will be better
+    })
+    .catch(() => {
+      user.value = null;
+      isLogged.value = false;
+      sessionStorage.removeItem("isAuth");
+    });
 };
 
 onMounted(() => {
