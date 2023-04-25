@@ -63,23 +63,51 @@ function pokemonRequest() {
 function coroutine() {
   interval.value = setInterval(pokemonRequest, 30000);
 }
+
+var imageElement = ref("https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg");
+
+function moveImage(event) {
+  imageElement.value = event.target;
+}
+
+function receiveImage(event) {
+
+  if(imageElement.value != "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg")
+  {
+    event.target.src = imageElement.value.src;
+    imageElement = ref("https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg");
+  }
+}
 </script>
 
 <template>
   <q-page>
     <h1>La pension</h1>
     <br />
-    <p id="Request" style="color: deeppink; font-size: 3em"></p>
+    <p id="Request" style="color: deeppink; font-size: 2em"></p>
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm">
             <q-img
-              src="../assets/images/Beach.jpg"
+               src="../assets/images/Beach.jpg"
               style="outline: solid; max-width: 300px; height: 150px"
               fit="cover"
               alt="plage"
-            ></q-img>
+            >
+              <q-img
+                style="
+                  outline: solid;
+                  max-width: 100px;
+                  height: 100px;
+                  margin-top: 2em;
+                  margin-left: 7em;
+                "
+                fit="cover"
+                src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
+               @click="receiveImage"
+              ></q-img>
+            </q-img>
           </div>
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm"></div>
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm">
@@ -88,7 +116,20 @@ function coroutine() {
               style="outline: solid; max-width: 300px; height: 150px"
               fit="cover"
               alt="montagne"
-            ></q-img>
+            >
+            <q-img
+                style="
+                  outline: solid;
+                  max-width: 100px;
+                  height: 100px;
+                  margin-top: 2em;
+                  margin-left: 7em;
+                "
+                fit="cover"
+                src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
+                @click="receiveImage"
+              ></q-img>
+            </q-img>
           </div>
         </div>
         <div class="row">
@@ -99,7 +140,20 @@ function coroutine() {
               style="outline: solid; max-width: 300px; height: 150px"
               fit="cover"
               alt="grotte"
-            ></q-img>
+            >
+            <q-img
+                style="
+                  outline: solid;
+                  max-width: 100px;
+                  height: 100px;
+                  margin-top: 2em;
+                  margin-left: 7em;
+                "
+                fit="cover"
+                src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
+               @click="receiveImage"
+              ></q-img>
+            </q-img>
           </div>
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm"></div>
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm">
@@ -108,7 +162,20 @@ function coroutine() {
               style="outline: solid; max-width: 300px; height: 150px"
               fit="cover"
               alt="forêt"
-            ></q-img>
+            >
+            <q-img
+                style="
+                  outline: solid;
+                  max-width: 100px;
+                  height: 100px;
+                  margin-top: 2em;
+                  margin-left: 7em;
+                "
+                fit="cover"
+               @click="receiveImage"
+                src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
+              ></q-img>
+            </q-img>
           </div>
         </div>
         <div class="row">
@@ -118,7 +185,20 @@ function coroutine() {
               style="outline: solid; max-width: 300px; height: 150px"
               fit="cover"
               alt="ville"
-            ></q-img>
+            >
+            <q-img
+                style="
+                  outline: solid;
+                  max-width: 100px;
+                  height: 100px;
+                  margin-top: 2em;
+                  margin-left: 7em;
+                "
+                fit="cover"
+                src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
+               @click="receiveImage"
+              ></q-img>
+            </q-img>
           </div>
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm"></div>
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm">
@@ -127,7 +207,20 @@ function coroutine() {
               style="outline: solid; max-width: 300px; height: 150px"
               fit="cover"
               alt="centrale"
-            ></q-img>
+            >
+            <q-img
+                style="
+                  outline: solid;
+                  max-width: 100px;
+                  height: 100px;
+                  margin-top: 2em;
+                  margin-left: 7em;
+                "
+                fit="cover"
+               @click="receiveImage"
+               src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
+              ></q-img>
+            </q-img>
           </div>
         </div>
       </div>
@@ -155,6 +248,7 @@ function coroutine() {
                         :alt="item.pokemon_object.name"
                         class="image-max-size-parent"
                         fit="contain"
+                        @click="moveImage"
                       />
                     </div>
                   </div>
