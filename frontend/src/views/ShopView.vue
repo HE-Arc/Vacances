@@ -184,7 +184,7 @@ onMounted(() => {
       </q-card>
     </div>
 
-    <!-- Delete dialog -->
+    <!-- Buy dialog -->
     <q-dialog v-model="showBuyDialog">
       <q-card class="confirm-border-information">
         <q-card-section>

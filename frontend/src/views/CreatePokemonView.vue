@@ -84,7 +84,7 @@ const submit = async () => {
     image_url: imageUrl.value,
   };
 
-  const uri = isEdit ? `pokemons/${pokemonEditId.value}/update/` : "pokemons/";
+  const uri = isEdit ? `pokemons/${pokemonEditId.value}/` : "pokemons/";
   const axiosMethod = isEdit ? axios.put : axios.post;
 
   await axiosMethod(uri, data)

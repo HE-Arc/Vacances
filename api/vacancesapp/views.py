@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import F
 from rest_framework.decorators import action
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -74,17 +75,18 @@ class PokemonViewSet(viewsets.ModelViewSet):
         
         return Response({"success": True})
     
-    @action(detail=True, methods=["PUT"], url_path="update")
-    def update_pokemon(self, request, pk):
-        itemToUpdate = get_object_or_404(Pokemon, pk = pk)
-        data = request.data
-        serializer = self.get_serializer(itemToUpdate, data=data, partial=True)
+    @action(detail=True, methods=["DELETE"], url_path="delete-with-refund")
+    def delete_with_refound(self, request, pk):
+        itemToDelete = get_object_or_404(Pokemon, pk = pk)
         
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+        players = Player.objects.filter(owned_pokemons__pokemon=itemToDelete)
+        refund = itemToDelete.pokemon_type.cost
         
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # TODO Transaction ?
+        players.update(money=F('money') + refund)
+        itemToDelete.delete()
+        
+        return Response(status=status.HTTP_204_NO_CONTENT)
         
 class PokemonTypeViewSet(viewsets.ModelViewSet):
     queryset = PokemonType.objects.all()
