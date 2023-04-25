@@ -3,13 +3,16 @@
 import axios from "axios";
 import { ref } from "vue";
 
-import { varToString } from "@/assets/js/utils.js"; // IMPORTANT : Need to be in { } to work !
+import { varToString, sessionGetAndRemove } from "@/assets/js/utils.js"; // IMPORTANT : Need to be in { } to work !
 import MessageBanner from "@/components/MessageBanner.vue";
 
 let successTitle = ref("");
 let success = ref([]);
 let errorsTitle = ref("");
 let errors = ref([]);
+
+successTitle.value = sessionGetAndRemove(varToString({ successTitle }));
+success.value = sessionGetAndRemove(varToString({ success }), true);
 
 const username = ref("");
 const password = ref("");
@@ -30,7 +33,7 @@ const submit = async () => {
     errorsTitle.value =
       "Erreur avec les données du formulaire, veuillez les corriger :";
 
-    return; // There is some error, stop the buy process
+    return; // There is some error, stop the process
   }
 
   // Send to backend
@@ -81,6 +84,13 @@ const submit = async () => {
             <q-card-section class="text-center">
               <div class="text-h5">Se connecter</div>
             </q-card-section>
+
+            <MessageBanner
+              :title="successTitle"
+              :items="success"
+              icon="check_circle"
+              color="green"
+            />
 
             <MessageBanner
               :title="errorsTitle"

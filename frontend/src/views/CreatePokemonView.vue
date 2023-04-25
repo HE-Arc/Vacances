@@ -73,7 +73,7 @@ const submit = async () => {
     errorsTitle.value =
       "Erreur avec les données du formulaire, veuillez les corriger :";
 
-    return; // There is some error, stop the buy process
+    return; // There is some error, stop the process
   }
 
   // Send to backend

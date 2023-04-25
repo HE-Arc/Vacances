@@ -62,7 +62,7 @@ const buyPokemon = async (id) => {
   if (errors.value.length) {
     errorsTitle.value = "Erreur lors de l'achat de " + buyedPokemon.name + " :";
 
-    return; // There is some error, stop the buy process
+    return; // There is some error, stop the process
   }
 
   // 2) Process buy (backend)
