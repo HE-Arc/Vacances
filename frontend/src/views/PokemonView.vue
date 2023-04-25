@@ -1,8 +1,10 @@
 <!-- eslint-disable prettier/prettier -->
 <script setup>
-import { varToString, sessionGetAndRemove } from "@/assets/js/utils.js";
 import axios from "axios";
 import { ref, onMounted } from "vue";
+
+import { varToString, sessionGetAndRemove } from "@/assets/js/utils.js";
+import MessageBanner from "@/components/MessageBanner.vue";
 
 const pokemons = ref([]);
 
@@ -28,7 +30,18 @@ const fetchPokemonTypes = async () => {
 };
 
 const removePokemon = async (id) => {
-  await axios.delete(`pokemons/${id}/`);
+  await axios
+    .delete(`pokemons/${id}/`)
+    .then(() => {
+      console.log("ABCD");
+      successTitle.value = "Succès";
+      success.value = ["Le Pokémon a été supprimé avec succès."];
+    })
+    .catch(() => {
+      console.log("ABCDGHI");
+      errorsTitle.value = "Erreur";
+      errors.value = ["Une erreur est survenue lors de la suppression."];
+    });
   await fetchPokemons();
 };
 
@@ -43,7 +56,7 @@ let removeItem = ref(null);
 onMounted(() => {
   fetchPokemons();
   fetchPokemonTypes();
-  printLogin()
+  printLogin();
 });
 </script>
 
@@ -51,43 +64,19 @@ onMounted(() => {
   <q-page>
     <h1>Pokédex</h1>
 
-    <q-banner
-      v-if="successTitle || success.length"
-      inline-actions
-      class="q-mb-lg text-white bg-green"
-    >
-      <div class="text-h6 flex">
-        <q-icon left size="md" name="check_circle" />
-        <div>
-          {{ successTitle }}
+    <MessageBanner
+      :title="successTitle"
+      :items="success"
+      icon="check_circle"
+      color="green"
+    />
 
-          <q-list dense class="text-subtitle2">
-            <q-item v-for="(item, index) in success" :key="index">
-              {{ item }}
-            </q-item>
-          </q-list>
-        </div>
-      </div>
-    </q-banner>
-
-    <q-banner
-      v-if="errorsTitle || errors.length"
-      inline-actions
-      class="q-mb-lg text-white bg-red"
-    >
-      <div class="text-h6 flex">
-        <q-icon left size="md" name="emoji_nature" />
-        <div>
-          {{ errorsTitle }}
-
-          <q-list dense class="text-subtitle2">
-            <q-item v-for="(item, index) in errors" :key="index">
-              {{ item }}
-            </q-item>
-          </q-list>
-        </div>
-      </div>
-    </q-banner>
+    <MessageBanner
+      :title="errorsTitle"
+      :items="errors"
+      icon="emoji_nature"
+      color="red"
+    />
 
     <div class="text-center q-mb-md q-mt-md">
       <q-btn color="green" :to="{ name: 'pokemons.create' }">

@@ -103,7 +103,17 @@ class UserViewSet(viewsets.ModelViewSet):
         
         serializer = None
         try:
+            # TODO Transaction ?
             user.save()
+            
+            # add the profile of the user (player instance)
+            player = Player(user=user)
+            player.username = user.username
+            player.is_manager = False
+            player.money = 50
+            
+            player.save()
+            
             serializer = UserSerializer(user, context={'request': request})
             return Response({'user' : serializer.data}, status=status.HTTP_201_CREATED)
         
@@ -119,9 +129,9 @@ class UserViewSet(viewsets.ModelViewSet):
         if user is not None:
             print(user)
             login(request, user)
-            return Response({'success': 'Login successful'})
+            return Response({'success': 'Login successful'}, status=status.HTTP_200_OK)
 
-        return Response({'error': 'error'})
+        return Response({'error': 'error'}, status=status.HTTP_401_UNAUTHORIZED)
     
     @action(detail=False, methods=['get'])
     def current(self, request):        

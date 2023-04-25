@@ -1,7 +1,21 @@
 <script setup>
 import axios from "axios";
 import { ref, onMounted } from "vue";
+
+import { varToString, sessionGetAndRemove } from "@/assets/js/utils.js";
+import MessageBanner from "@/components/MessageBanner.vue";
+
 const users = ref([]);
+
+let successTitle = ref("");
+let success = ref([]);
+let errorsTitle = ref("");
+let errors = ref([]);
+
+successTitle.value = sessionGetAndRemove(varToString({ successTitle }));
+success.value = sessionGetAndRemove(varToString({ success }), true);
+errorsTitle.value = sessionGetAndRemove(varToString({ errorsTitle }));
+errors.value = sessionGetAndRemove(varToString({ errors }), true);
 
 const fetchUsers = async () => {
   const res = await axios.get("users/");
@@ -16,9 +30,23 @@ onMounted(() => {
 <template>
   <main>
     <q-page padding>
+      <MessageBanner
+        :title="successTitle"
+        :items="success"
+        icon="check_circle"
+        color="green"
+      />
+
+      <MessageBanner
+        :title="errorsTitle"
+        :items="errors"
+        icon="emoji_nature"
+        color="red"
+      />
+
       <!-- "Catch phrase" -->
       <div class="text-center">
-        <img src="../assets/images/Logo.png" alt="Vacances ?" class="mw-100"/>
+        <img src="../assets/images/Logo.png" alt="Vacances ?" class="mw-100" />
         <p>Oui, mais pas pour vous !</p>
         <img src="../assets/images/Pika.gif" alt="Pikachu at the beach" />
       </div>
@@ -26,7 +54,7 @@ onMounted(() => {
       <!-- "Project information" -->
       <div>
         <h1>But du projet</h1>
-        <br>
+        <br />
         <p>Le projet choisi consiste à créer un jeu sur navigateur.</p>
         <p>
           Le joueur est le gérant d'une pension Pokémon. Son rôle est de veiller

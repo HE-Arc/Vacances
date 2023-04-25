@@ -1,5 +1,4 @@
 <script setup>
-import { varToString } from "@/assets/js/utils.js"; // IMPORTANT : Need to be in { } to work !
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -8,6 +7,9 @@ import { useRoute, useRouter } from "vue-router";
 //    sample :  obj = "abc"
 //              router.push({ path: "/a", query: { obj } });
 //          => Will redirect to /a?obj=abc
+
+import { varToString } from "@/assets/js/utils.js"; // IMPORTANT : Need to be in { } to work !
+import MessageBanner from "@/components/MessageBanner.vue";
 
 let successTitle = ref("");
 let success = ref([]);
@@ -71,7 +73,7 @@ const submit = async () => {
     errorsTitle.value =
       "Erreur avec les données du formulaire, veuillez les corriger :";
 
-    return; // There is some error, stop the buy process
+    return; // There is some error, stop the process
   }
 
   // Send to backend
@@ -97,7 +99,7 @@ const submit = async () => {
 
       router.push({ path: "/pokemons" });
     })
-    .catch((error) => {
+    .catch(() => {
       errorsTitle.value = "Erreur avec lors de la sauvegarde des données.";
       errors.value.push(
         "Une des cause possible est que l'URL de l'image n'est pas valide"
@@ -132,6 +134,13 @@ onMounted(() => {
               </div>
             </q-card-section>
 
+            <MessageBanner
+              :title="errorsTitle"
+              :items="errors"
+              icon="emoji_nature"
+              color="red"
+            />
+
             <q-card-section>
               <q-input v-model="name" label="*Nom" class="q-mb-md" outlined />
 
@@ -151,25 +160,6 @@ onMounted(() => {
                 />
               </div>
             </q-card-section>
-
-            <q-banner
-              v-if="errorsTitle || errors.length"
-              inline-actions
-              class="q-mb-lg text-white bg-red"
-            >
-              <div class="text-h6 flex">
-                <q-icon left size="md" name="emoji_nature" />
-                <div>
-                  {{ errorsTitle }}
-
-                  <q-list dense class="text-subtitle2">
-                    <q-item v-for="(item, index) in errors" :key="index">
-                      {{ item }}
-                    </q-item>
-                  </q-list>
-                </div>
-              </div>
-            </q-banner>
 
             <q-card-section class="q-gutter-y-sm">
               <div class="text-center">

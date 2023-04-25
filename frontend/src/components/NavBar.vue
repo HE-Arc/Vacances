@@ -6,18 +6,20 @@ import interval from "../views/DaycareView.vue";
 const user = ref(null);
 const isLogged = ref(false);
 
+// OnMounted we check if we are still connected
 const fetchConnected = async () => {
-  user.value = (await axios.get("users/current/")).data;
-  isLogged.value = user.value !== null;
-
-  if (isLogged.value) { // It is good to manage this "session item" here ?, should not be in top level (like App.vue) ?
-    sessionStorage.setItem("isAuth", true); // TODO A token will be better
-  }
-  else {
-    sessionStorage.removeItem("isAuth");
-  }
-  console.log("logged = " + isLogged.value);
-  console.log(user.value);
+  await axios
+    .get("users/current/")
+    .then((response) => {
+      user.value = response.data;
+      isLogged.value = true;
+      sessionStorage.setItem("isAuth", true); // TODO A token will be better
+    })
+    .catch(() => {
+      user.value = null;
+      isLogged.value = false;
+      sessionStorage.removeItem("isAuth");
+    });
 };
 
 onMounted(() => {

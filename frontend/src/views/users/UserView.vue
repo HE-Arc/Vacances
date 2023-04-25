@@ -3,28 +3,65 @@
 import axios from "axios";
 import { ref } from "vue";
 
-const errors = ref(false);
+import { varToString, sessionGetAndRemove } from "@/assets/js/utils.js"; // IMPORTANT : Need to be in { } to work !
+import MessageBanner from "@/components/MessageBanner.vue";
+
+let successTitle = ref("");
+let success = ref([]);
+let errorsTitle = ref("");
+let errors = ref([]);
+
+successTitle.value = sessionGetAndRemove(varToString({ successTitle }));
+success.value = sessionGetAndRemove(varToString({ success }), true);
 
 const username = ref("");
 const password = ref("");
 
 const submit = async () => {
-  try {
-    errors.value = false;
-    const resultUser = await axios.post("users/login/", {
+  errors.value = [];
+  errorsTitle.value = "";
+
+  // Validation
+  if (!username.value) {
+    errors.value.push("Le nom est obligatoire.");
+  }
+  if (!password.value) {
+    errors.value.push("Le mot de passe est obligatoire.");
+  }
+
+  if (errors.value.length) {
+    errorsTitle.value =
+      "Erreur avec les données du formulaire, veuillez les corriger :";
+
+    return; // There is some error, stop the process
+  }
+
+  // Send to backend
+  await axios
+    .post("users/login/", {
       username: username.value,
       password: password.value,
-    });
-    if (resultUser.data.success == null) {
-      errors.value = true;
-    } else {
+    })
+    .then(() => {
+      successTitle.value = "Connexion réussie !";
+      success.value.push("Vous êtes connecté avec le pseudo " + username.value);
+
+      sessionStorage.setItem(varToString({ successTitle }), successTitle.value);
+      sessionStorage.setItem(
+        varToString({ success }),
+        JSON.stringify(success.value)
+      );
+
       sessionStorage.setItem("isAuth", true); // TODO A token will be better
-      location.href = "/?success=true";
-    }
-  } catch (error) {
-    console.log(error);
-    errors.value = true;
-  }
+
+      window.location.href = "/"; // TODO Is there a way to use "router.push" ? (by doing with location, we force refresh and so remount the components, else the tabs are not changed)
+    })
+    .catch(() => {
+      errorsTitle.value = "Identification échouée";
+      errors.value.push("Est-ce le bon nom d'utilisateur et mot de passe ?");
+
+      sessionStorage.removeItem("isAuth");
+    });
 };
 </script>
 
@@ -39,14 +76,25 @@ const submit = async () => {
                 <q-icon left name="arrow_back_ios" />
                 Retour
               </q-btn>
-              <q-btn color="blue-grey" :to="{ name: 'users.create' }">
-                Créer un compte
-              </q-btn>
             </q-card-section>
 
             <q-card-section class="text-center">
               <div class="text-h5">Se connecter</div>
             </q-card-section>
+
+            <MessageBanner
+              :title="successTitle"
+              :items="success"
+              icon="check_circle"
+              color="green"
+            />
+
+            <MessageBanner
+              :title="errorsTitle"
+              :items="errors"
+              icon="emoji_nature"
+              color="red"
+            />
 
             <q-card-section>
               <q-input
@@ -64,22 +112,23 @@ const submit = async () => {
               />
             </q-card-section>
 
-            <q-banner
-              v-if="errors"
-              inline-actions
-              class="q-mb-lg text-white bg-red"
-            >
-              <div class="text-h6">
-                <q-icon left size="md" name="emoji_nature" />
-                Erreur! utilisateur incorrect!
-              </div>
-            </q-banner>
-
             <q-card-section class="q-gutter-y-sm">
               <div class="text-center">
-                <q-btn type="submit" color="green">
+                <q-btn type="submit" color="green" class="q-mr-sm">
                   <q-icon left name="fact_check" />
                   <div>Se connecter</div>
+                </q-btn>
+
+                <!-- Button to go on "user.create" page and add the current value of username to reuse it in the other page -->
+                <q-btn
+                  color="indigo"
+                  :to="{
+                    name: 'users.create',
+                    query: { username: username },
+                  }"
+                >
+                  <q-icon left name="person_add" />
+                  Créer un compte
                 </q-btn>
               </div>
             </q-card-section>
