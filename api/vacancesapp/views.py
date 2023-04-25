@@ -119,9 +119,9 @@ class UserViewSet(viewsets.ModelViewSet):
         if user is not None:
             print(user)
             login(request, user)
-            return Response({'success': 'Login successful'})
+            return Response({'success': 'Login successful'}, status=status.HTTP_200_OK)
 
-        return Response({'error': 'error'})
+        return Response({'error': 'error'}, status=status.HTTP_401_UNAUTHORIZED)
     
     @action(detail=False, methods=['get'])
     def current(self, request):        
