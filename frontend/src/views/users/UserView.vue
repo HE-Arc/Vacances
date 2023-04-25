@@ -76,9 +76,6 @@ const submit = async () => {
                 <q-icon left name="arrow_back_ios" />
                 Retour
               </q-btn>
-              <q-btn color="blue-grey" :to="{ name: 'users.create' }">
-                Créer un compte
-              </q-btn>
             </q-card-section>
 
             <q-card-section class="text-center">
@@ -117,9 +114,21 @@ const submit = async () => {
 
             <q-card-section class="q-gutter-y-sm">
               <div class="text-center">
-                <q-btn type="submit" color="green">
+                <q-btn type="submit" color="green" class="q-mr-sm">
                   <q-icon left name="fact_check" />
                   <div>Se connecter</div>
+                </q-btn>
+
+                <!-- Button to go on "user.create" page and add the current value of username to reuse it in the other page -->
+                <q-btn
+                  color="indigo"
+                  :to="{
+                    name: 'users.create',
+                    query: { username: username },
+                  }"
+                >
+                  <q-icon left name="person_add" />
+                  Créer un compte
                 </q-btn>
               </div>
             </q-card-section>

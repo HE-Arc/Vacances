@@ -2,11 +2,13 @@
 <script setup>
 import axios from "axios";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+
 
 import { varToString } from "@/assets/js/utils.js"; // IMPORTANT : Need to be in { } to work !
 import MessageBanner from "@/components/MessageBanner.vue";
 
+const route = useRoute();
 const router = useRouter();
 
 let successTitle = ref("");
@@ -17,6 +19,8 @@ let errors = ref([]);
 const username = ref("");
 const password = ref("");
 const confirmPassword = ref("");
+
+username.value = route.query.username;
 
 const submit = async () => {
   errors.value = [];
