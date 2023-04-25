@@ -65,7 +65,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const auth = to.matched.some((record) => record.meta.auth);
 
-  if (auth && !localStorage.getItem("isAuth")) {
+  if (auth && !sessionStorage.getItem("isAuth")) {
     next({ name: "users" });
   } else {
     next();
