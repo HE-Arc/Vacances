@@ -53,8 +53,9 @@ function pokemonRequest() {
   const randomIndexPokemon = Math.floor(Math.random() * ownedPokemons.value.length);
   const randomIndexZone = Math.floor(Math.random() * zones.length);
 
+  console.log(JSON.stringify(ownedPokemons.value.pokemon_object));
   document.getElementById("Request").innerText =
-    ownedPokemons.value.pokemon_object.value[randomIndexPokemon].name +
+    ownedPokemons.value[randomIndexPokemon].pokemon_object.name +
     " aimerait aller à la " +
     zones[randomIndexZone].alt +
     ".";
