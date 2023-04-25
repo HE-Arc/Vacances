@@ -13,10 +13,17 @@ let success = ref([]);
 let errorsTitle = ref("");
 let errors = ref([]);
 
+const isManager = ref(false);
+
 successTitle.value = sessionGetAndRemove(varToString({ successTitle }));
 success.value = sessionGetAndRemove(varToString({ success }), true);
 errorsTitle.value = sessionGetAndRemove(varToString({ errorsTitle }));
 errors.value = sessionGetAndRemove(varToString({ errors }), true);
+
+const fetchPlayer = async () => {
+  const result = await axios.get("players/my_data/");
+  isManager.value = result.data.is_manager;
+};
 
 const fetchPokemons = async () => {
   const result = await axios.get("pokemons/pokemons_of_user/");
@@ -33,21 +40,15 @@ const removePokemon = async (id) => {
   await axios
     .delete(`pokemons/${id}/`)
     .then(() => {
-      console.log("ABCD");
       successTitle.value = "Succès";
       success.value = ["Le Pokémon a été supprimé avec succès."];
     })
     .catch(() => {
-      console.log("ABCDGHI");
       errorsTitle.value = "Erreur";
       errors.value = ["Une erreur est survenue lors de la suppression."];
     });
-  await fetchPokemons();
-};
 
-const printLogin = async () => {
-  let username = (await axios.get("users/current/")).data.username;
-  console.log(username);
+  await fetchPokemons();
 };
 
 let showDelDialog = ref(false);
@@ -56,13 +57,14 @@ let removeItem = ref(null);
 onMounted(() => {
   fetchPokemons();
   fetchPokemonTypes();
-  printLogin();
+  fetchPlayer();
 });
 </script>
 
 <template>
   <q-page>
     <h1>Pokédex</h1>
+    <br />
 
     <MessageBanner
       :title="successTitle"
@@ -78,7 +80,7 @@ onMounted(() => {
       color="red"
     />
 
-    <div class="text-center q-mb-md q-mt-md">
+    <div v-if="isManager" class="text-center q-mb-md q-mt-md">
       <q-btn color="green" :to="{ name: 'pokemons.create' }">
         <q-icon left size="xl" name="add_circle_outline" />
         <div>Créer un Pokémon</div>
@@ -126,7 +128,7 @@ onMounted(() => {
               </q-card-section>
             </div>
             <!-- Buttons -->
-            <div class="flex column">
+            <div v-if="isManager" class="flex column">
               <div class="flex normal-btn-size">
                 <q-btn
                   color="orange-8"

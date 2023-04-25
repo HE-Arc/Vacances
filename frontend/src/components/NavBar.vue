@@ -5,20 +5,28 @@ import interval from "../views/DaycareView.vue";
 
 const user = ref(null);
 const isLogged = ref(false);
+const isManager = ref(false);
 
 // OnMounted we check if we are still connected
 const fetchConnected = async () => {
   await axios
     .get("users/current/")
-    .then((response) => {
+    .then(async (response) => {
       user.value = response.data;
       isLogged.value = true;
-      sessionStorage.setItem("isAuth", true); // TODO A token will be better
+      localStorage.setItem("isAuth", true); // TODO A token will be better
+
+      // Is manager
+      await axios.get("players/my_data/").then((response) => {
+        isManager.value = response.data.is_manager;
+        localStorage.setItem("isManager", isManager.value);
+      });
     })
     .catch(() => {
       user.value = null;
       isLogged.value = false;
-      sessionStorage.removeItem("isAuth");
+      localStorage.removeItem("isAuth");
+      localStorage.removeItem("isManager");
     });
 };
 
@@ -35,40 +43,57 @@ onMounted(() => {
       <q-separator vertical />
 
       <div v-if="isLogged" class="q-ml-auto">
-        <q-toolbar-title>{{ user.username }}</q-toolbar-title>
+        <q-toolbar-title>
+          {{ user.username }}
+          <span v-if="isManager">[manager]</span>
+        </q-toolbar-title>
       </div>
     </q-toolbar>
 
     <q-tabs align="left">
-      <q-route-tab :to="{ name: 'home' }"
-      @click="clearInterval(interval)">
+      <q-route-tab :to="{ name: 'home' }" @click="clearInterval(interval)">
         <q-icon name="cottage" />
         Accueil
       </q-route-tab>
-      <q-route-tab v-if="isLogged" :to="{ name: 'pokemons' }"
-      @click="clearInterval(interval)">
+      <q-route-tab
+        v-if="isLogged"
+        :to="{ name: 'pokemons' }"
+        @click="clearInterval(interval)"
+      >
         <q-icon name="auto_stories" />
         Pokédex
       </q-route-tab>
-      <q-route-tab v-if="isLogged" :to="{ name: 'daycare' }"
-      @click="clearInterval(interval)">
+      <q-route-tab
+        v-if="isLogged"
+        :to="{ name: 'daycare' }"
+        @click="clearInterval(interval)"
+      >
         <q-icon name="grass" />
         Pension
       </q-route-tab>
-      <q-route-tab v-if="isLogged" :to="{ name: 'shop' }"
-      @click="clearInterval(interval)">
+      <q-route-tab
+        v-if="isLogged"
+        :to="{ name: 'shop' }"
+        @click="clearInterval(interval)"
+      >
         <q-icon name="storefront" />
         Magasin
       </q-route-tab>
 
-      <q-route-tab v-if="isLogged" :to="{ name: 'users.logout' }"
-      @click="clearInterval(interval)">
+      <q-route-tab
+        v-if="isLogged"
+        :to="{ name: 'users.logout' }"
+        @click="clearInterval(interval)"
+      >
         <q-icon name="logout" />
         Deconnexion
       </q-route-tab>
 
-      <q-route-tab v-if="!isLogged" :to="{ name: 'users' }"
-      @click="clearInterval(interval)">
+      <q-route-tab
+        v-if="!isLogged"
+        :to="{ name: 'users' }"
+        @click="clearInterval(interval)"
+      >
         <q-icon name="login" />
         Connexion
       </q-route-tab>

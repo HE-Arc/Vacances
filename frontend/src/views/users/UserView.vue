@@ -42,7 +42,7 @@ const submit = async () => {
       username: username.value,
       password: password.value,
     })
-    .then(() => {
+    .then(async () => {
       successTitle.value = "Connexion réussie !";
       success.value.push("Vous êtes connecté avec le pseudo " + username.value);
 
@@ -52,7 +52,13 @@ const submit = async () => {
         JSON.stringify(success.value)
       );
 
-      sessionStorage.setItem("isAuth", true); // TODO A token will be better
+      localStorage.setItem("isAuth", true); // TODO A token will be better
+
+      // Is manager
+      await axios.get("players/my_data/").then((response) => {
+        const isManager = response.data.is_manager;
+        localStorage.setItem("isManager", isManager.value);
+      });
 
       window.location.href = "/"; // TODO Is there a way to use "router.push" ? (by doing with location, we force refresh and so remount the components, else the tabs are not changed)
     })
@@ -60,7 +66,8 @@ const submit = async () => {
       errorsTitle.value = "Identification échouée";
       errors.value.push("Est-ce le bon nom d'utilisateur et mot de passe ?");
 
-      sessionStorage.removeItem("isAuth");
+      localStorage.removeItem("isAuth");
+      localStorage.removeItem("isManager");
     });
 };
 </script>
