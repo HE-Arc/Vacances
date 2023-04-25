@@ -2,7 +2,6 @@
 <script setup>
 import axios from "axios";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 
 import { varToString } from "@/assets/js/utils.js"; // IMPORTANT : Need to be in { } to work !
 import MessageBanner from "@/components/MessageBanner.vue";
@@ -14,8 +13,6 @@ let errors = ref([]);
 
 const username = ref("");
 const password = ref("");
-
-const router = useRouter();
 
 const submit = async () => {
   errors.value = [];
@@ -53,7 +50,8 @@ const submit = async () => {
       );
 
       sessionStorage.setItem("isAuth", true); // TODO A token will be better
-      router.push({ path: "/" });
+
+      window.location.href = "/"; // TODO Is there a way to use "router.push" ? (by doing with location, we force refresh and so remount the components, else the tabs are not changed)
     })
     .catch(() => {
       errorsTitle.value = "Identification échouée";
