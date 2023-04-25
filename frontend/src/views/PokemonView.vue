@@ -1,9 +1,9 @@
 <!-- eslint-disable prettier/prettier -->
 <script setup>
-import { varToString, sessionGetAndRemove } from "@/assets/js/utils.js";
 import axios from "axios";
 import { ref, onMounted } from "vue";
 
+import { varToString, sessionGetAndRemove } from "@/assets/js/utils.js";
 import MessageBanner from "@/components/MessageBanner.vue";
 
 const pokemons = ref([]);
