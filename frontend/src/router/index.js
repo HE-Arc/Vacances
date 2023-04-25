@@ -31,13 +31,19 @@ const router = createRouter({
       path: "/pokemons/create",
       name: "pokemons.create",
       component: () => import("../views/CreatePokemonView.vue"),
-      meta: { auth: true },
+      meta: { 
+        auth: true,
+        manager: true,
+      },
     },
     {
       path: "/pokemons/:id/edit",
       name: "pokemons.edit",
       component: () => import("../views/CreatePokemonView.vue"),
-      meta: { auth: true },
+      meta: { 
+        auth: true,
+        manager: true,
+      },
     },
 
     /* ====== SHOP ====== */
@@ -64,12 +70,21 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const auth = to.matched.some((record) => record.meta.auth);
+  const manager = to.matched.some((record) => record.meta.manager);
 
   if (auth && !sessionStorage.getItem("isAuth")) {
+    // !session => session is null or undefined
     next({ name: "users" });
-  } else {
-    next();
+    return;
   }
+
+  if (manager && sessionStorage.getItem("isManager") == "false") {
+    // Note : another way to check instead of "false" would be using !JSON.parse(...)
+    next({ name: "pokemons" });
+    return;
+  }
+
+  next();
 });
 
 export default router;
