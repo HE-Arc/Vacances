@@ -99,7 +99,7 @@ const submit = async () => {
 
       router.push({ path: "/pokemons" });
     })
-    .catch((error) => {
+    .catch(() => {
       errorsTitle.value = "Erreur avec lors de la sauvegarde des données.";
       errors.value.push(
         "Une des cause possible est que l'URL de l'image n'est pas valide"

@@ -37,29 +37,30 @@ const submit = async () => {
   }
 
   // Send to backend
-  try {
-    const testConnection = await axios.post("users/login/", {
+  await axios
+    .post("users/login/", {
       username: username.value,
       password: password.value,
-    }); // If failed, will be http error and catched
+    })
+    .then(() => {
+      successTitle.value = "Connexion réussie !";
+      success.value.push("Vous êtes connecté avec le pseudo " + username.value);
 
-    successTitle.value = "Connexion réussie !";
-    success.value.push("Vous êtes connecté avec le pseudo " + username.value);
+      sessionStorage.setItem(varToString({ successTitle }), successTitle.value);
+      sessionStorage.setItem(
+        varToString({ success }),
+        JSON.stringify(success.value)
+      );
 
-    sessionStorage.setItem(varToString({ successTitle }), successTitle.value);
-    sessionStorage.setItem(
-      varToString({ success }),
-      JSON.stringify(success.value)
-    );
+      sessionStorage.setItem("isAuth", true); // TODO A token will be better
+      router.push({ path: "/" });
+    })
+    .catch(() => {
+      errorsTitle.value = "Identification échouée";
+      errors.value.push("Est-ce le bon nom d'utilisateur et mot de passe ?");
 
-    sessionStorage.setItem("isAuth", true); // TODO A token will be better
-    router.push({ path: "/" });
-  } catch (error) {
-    errorsTitle.value = "Identification échouée";
-    errors.value.push("Est-ce le bon nom d'utilisateur et mot de passe ?");
-
-    sessionStorage.removeItem("isAuth");
-  }
+      sessionStorage.removeItem("isAuth");
+    });
 };
 </script>
 
