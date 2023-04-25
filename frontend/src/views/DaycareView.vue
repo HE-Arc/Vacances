@@ -3,8 +3,11 @@ import axios from "axios";
 import { ref, onMounted } from "vue";
 
 const ownedPokemons = ref([]);
-
 const interval = ref(null);
+
+const isReceived = ref(true);
+
+const tag = ref("");
 
 const fetchOwnedPokemons = async () => {
   ownedPokemons.value = (await axios.get("owned-pokemons/my_pokemons")).data;
@@ -15,6 +18,8 @@ const pokemonTypes = ref([]);
 const fetchPokemonTypes = async () => {
   pokemonTypes.value = (await axios.get("pokemon-types/")).data;
 };
+
+const pokemonAlt = "pokemon";
 
 onMounted(() => {
   fetchOwnedPokemons();
@@ -55,39 +60,67 @@ function pokemonRequest() {
   );
   const randomIndexZone = Math.floor(Math.random() * zones.length);
 
-  console.log(JSON.stringify(ownedPokemons.value.pokemon_object));
   document.getElementById("Request").innerText =
     ownedPokemons.value[randomIndexPokemon].pokemon_object.name +
     " aimerait aller à la " +
     zones[randomIndexZone].alt +
     ".";
-
-  axios.get("owned-pokemons/update-request-zone/", {
-    owned_pokemons: ownedPokemons.value.id
-  });
 }
 
 function coroutine() {
   interval.value = setInterval(pokemonRequest, 5000); // 30000
 }
 
-var imageElement = ref(
-  "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-);
+function changeTag()
+{
+  tag.value = "pokemon";
+}
 
-function moveImage(event) {
+var imageElement = ref(null);
+
+function sendImage(event) {
   imageElement.value = event.target;
+  isReceived.value = false;
 }
 
 function receiveImage(event) {
-  if (
-    imageElement.value !=
-    "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-  ) {
-    event.target.src = imageElement.value.src;
+  if(imageElement.value != "")
+  {
+    if(tag.value == "pokemon")
+    {
+      event.target.src = imageElement.value.src;
+      tag.value = "";
+      isReceived.value = true;
+    }
+    else
+    {
+      if(isReceived.value)
+      {
+        if(event.target.src != "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg")
+        {
+          imageElement.value = event.target;
+          isReceived.value = false;
+        }
+      }
+      else
+      {
+        event.target.src = imageElement.value.src;
+        isReceived.value = true;
+      }
+    }
+  }
+}
+
+function takeAbreak() {
+  if(!isReceived.value)
+  {
+    imageElement.value.src =
+      "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg";
+
     imageElement = ref(
       "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
     );
+    isReceived.value = true;
   }
 }
 </script>
@@ -257,10 +290,10 @@ function receiveImage(event) {
                     >
                       <q-img
                         :src="item.pokemon_object.display_image_url"
-                        :alt="item.pokemon_object.name"
+                        :alt="pokemonAlt"
                         class="image-max-size-parent"
                         fit="contain"
-                        @click="moveImage"
+                        @click="sendImage($event); changeTag($event)"
                       />
                     </div>
                   </div>
@@ -271,6 +304,17 @@ function receiveImage(event) {
           </div>
         </div>
         <br />
+        <div>
+          <br />
+          <h5>Zone de repos</h5>
+          <q-img
+            style="outline: solid; max-width: 300px; height: 100px"
+            fit="cover"
+            @click="takeAbreak"
+            src="https://www.digitaltrends.com/wp-content/uploads/2023/02/Pokemon-sleep-art.jpg?p=1"
+          >
+          </q-img>
+        </div>
         <div class="text-center q-mb-md q-mt-md">
           <q-btn
             color="green"
