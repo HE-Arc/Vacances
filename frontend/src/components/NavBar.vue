@@ -1,6 +1,7 @@
 <script setup>
 import axios from "axios";
 import { ref, onMounted } from "vue";
+import interval from "../views/DaycareView.vue";
 
 const user = ref(null);
 const isLogged = ref(false);
@@ -37,29 +38,35 @@ onMounted(() => {
     </q-toolbar>
 
     <q-tabs align="left">
-      <q-route-tab :to="{ name: 'home' }">
+      <q-route-tab :to="{ name: 'home' }"
+      @click="clearInterval(interval)">
         <q-icon name="cottage" />
         Accueil
       </q-route-tab>
-      <q-route-tab v-if="isLogged" :to="{ name: 'pokemons' }">
+      <q-route-tab v-if="isLogged" :to="{ name: 'pokemons' }"
+      @click="clearInterval(interval)">
         <q-icon name="auto_stories" />
         Pokédex
       </q-route-tab>
-      <q-route-tab v-if="isLogged" :to="{ name: 'daycare' }">
+      <q-route-tab v-if="isLogged" :to="{ name: 'daycare' }"
+      @click="clearInterval(interval)">
         <q-icon name="grass" />
         Pension
       </q-route-tab>
-      <q-route-tab v-if="isLogged" :to="{ name: 'shop' }">
+      <q-route-tab v-if="isLogged" :to="{ name: 'shop' }"
+      @click="clearInterval(interval)">
         <q-icon name="storefront" />
         Magasin
       </q-route-tab>
 
-      <q-route-tab v-if="isLogged" :to="{ name: 'users.logout' }">
+      <q-route-tab v-if="isLogged" :to="{ name: 'users.logout' }"
+      @click="clearInterval(interval)">
         <q-icon name="logout" />
         Deconnexion
       </q-route-tab>
 
-      <q-route-tab v-if="!isLogged" :to="{ name: 'users' }">
+      <q-route-tab v-if="!isLogged" :to="{ name: 'users' }"
+      @click="clearInterval(interval)">
         <q-icon name="login" />
         Connexion
       </q-route-tab>

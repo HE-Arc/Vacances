@@ -50,7 +50,9 @@ const zones = [
 ];
 
 function pokemonRequest() {
-  const randomIndexPokemon = Math.floor(Math.random() * ownedPokemons.value.length);
+  const randomIndexPokemon = Math.floor(
+    Math.random() * ownedPokemons.value.length
+  );
   const randomIndexZone = Math.floor(Math.random() * zones.length);
 
   console.log(JSON.stringify(ownedPokemons.value.pokemon_object));
@@ -59,24 +61,33 @@ function pokemonRequest() {
     " aimerait aller à la " +
     zones[randomIndexZone].alt +
     ".";
+
+  axios.get("owned-pokemons/update-request-zone/", {
+    owned_pokemons: ownedPokemons.value.id
+  });
 }
 
 function coroutine() {
-  interval.value = setInterval(pokemonRequest, 30000);
+  interval.value = setInterval(pokemonRequest, 5000); // 30000
 }
 
-var imageElement = ref("https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg");
+var imageElement = ref(
+  "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
+);
 
 function moveImage(event) {
   imageElement.value = event.target;
 }
 
 function receiveImage(event) {
-
-  if(imageElement.value != "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg")
-  {
+  if (
+    imageElement.value !=
+    "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
+  ) {
     event.target.src = imageElement.value.src;
-    imageElement = ref("https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg");
+    imageElement = ref(
+      "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
+    );
   }
 }
 </script>
@@ -91,7 +102,7 @@ function receiveImage(event) {
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm">
             <q-img
-               src="../assets/images/Beach.jpg"
+              src="../assets/images/Beach.jpg"
               style="outline: solid; max-width: 300px; height: 150px"
               fit="cover"
               alt="plage"
@@ -106,7 +117,7 @@ function receiveImage(event) {
                 "
                 fit="cover"
                 src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-               @click="receiveImage"
+                @click="receiveImage"
               ></q-img>
             </q-img>
           </div>
@@ -118,7 +129,7 @@ function receiveImage(event) {
               fit="cover"
               alt="montagne"
             >
-            <q-img
+              <q-img
                 style="
                   outline: solid;
                   max-width: 100px;
@@ -142,7 +153,7 @@ function receiveImage(event) {
               fit="cover"
               alt="grotte"
             >
-            <q-img
+              <q-img
                 style="
                   outline: solid;
                   max-width: 100px;
@@ -152,7 +163,7 @@ function receiveImage(event) {
                 "
                 fit="cover"
                 src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-               @click="receiveImage"
+                @click="receiveImage"
               ></q-img>
             </q-img>
           </div>
@@ -164,7 +175,7 @@ function receiveImage(event) {
               fit="cover"
               alt="forêt"
             >
-            <q-img
+              <q-img
                 style="
                   outline: solid;
                   max-width: 100px;
@@ -173,7 +184,7 @@ function receiveImage(event) {
                   margin-left: 7em;
                 "
                 fit="cover"
-               @click="receiveImage"
+                @click="receiveImage"
                 src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
               ></q-img>
             </q-img>
@@ -187,7 +198,7 @@ function receiveImage(event) {
               fit="cover"
               alt="ville"
             >
-            <q-img
+              <q-img
                 style="
                   outline: solid;
                   max-width: 100px;
@@ -197,7 +208,7 @@ function receiveImage(event) {
                 "
                 fit="cover"
                 src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-               @click="receiveImage"
+                @click="receiveImage"
               ></q-img>
             </q-img>
           </div>
@@ -209,7 +220,7 @@ function receiveImage(event) {
               fit="cover"
               alt="centrale"
             >
-            <q-img
+              <q-img
                 style="
                   outline: solid;
                   max-width: 100px;
@@ -218,8 +229,8 @@ function receiveImage(event) {
                   margin-left: 7em;
                 "
                 fit="cover"
-               @click="receiveImage"
-               src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
+                @click="receiveImage"
+                src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
               ></q-img>
             </q-img>
           </div>
