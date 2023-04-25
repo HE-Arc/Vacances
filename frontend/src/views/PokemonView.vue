@@ -4,6 +4,8 @@ import { varToString, sessionGetAndRemove } from "@/assets/js/utils.js";
 import axios from "axios";
 import { ref, onMounted } from "vue";
 
+import MessageBanner from "@/components/MessageBanner.vue";
+
 const pokemons = ref([]);
 
 let successTitle = ref("");
@@ -43,7 +45,12 @@ let removeItem = ref(null);
 onMounted(() => {
   fetchPokemons();
   fetchPokemonTypes();
-  printLogin()
+  printLogin();
+
+  successTitle.value = "TMP TEST";
+  success.value.push("TMP TEST2");
+  success.value.push("TMP TEST3");
+  success.value.push("TMP TEST4");
 });
 </script>
 
@@ -51,24 +58,22 @@ onMounted(() => {
   <q-page>
     <h1>Pokédex</h1>
 
-    <q-banner
-      v-if="successTitle || success.length"
-      inline-actions
-      class="q-mb-lg text-white bg-green"
-    >
-      <div class="text-h6 flex">
-        <q-icon left size="md" name="check_circle" />
-        <div>
-          {{ successTitle }}
-
-          <q-list dense class="text-subtitle2">
-            <q-item v-for="(item, index) in success" :key="index">
-              {{ item }}
-            </q-item>
-          </q-list>
-        </div>
-      </div>
-    </q-banner>
+    <MessageBanner
+      :title="successTitle"
+      :items="success"
+      icon="check_circle"
+      color="green"
+    />
+    <MessageBanner
+      title="Achat réussi !"
+      :items="['Element 1', 'Element 2', 'Element 3']"
+      icon="check_circle"
+    />
+    <MessageBanner
+      title="Achat réussi !"
+      :items="['Element 1', 'Element 2', 'Element 3']"
+      fontColor="black"
+    />
 
     <q-banner
       v-if="errorsTitle || errors.length"
