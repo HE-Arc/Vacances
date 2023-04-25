@@ -8,7 +8,6 @@ from .serializers import *
 from .models import *
 from rest_framework.views import APIView
 from rest_framework import viewsets
-from .utils import *
 from rest_framework import viewsets, status
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
@@ -28,7 +27,11 @@ class PokemonViewSet(viewsets.ModelViewSet):
         Get all pokemons that are not owned by the connected user
         It's a shortcut to "pokemon_of_player", to avoid filter "is_owned == False" on the front side
         """
-        user = get_current_username(request)
+        connectedUserResponse = UserViewSet.current(self, request)
+        if connectedUserResponse.status_code != status.HTTP_200_OK:
+            return connectedUserResponse
+        
+        user = connectedUserResponse.data.get("id")
         
         # aaa__bbb__ccc means : aaa with relation (double _) to bbb with relation to ccc
         queryset = Pokemon.objects.exclude(owned_pokemons__player__user=user)
@@ -50,9 +53,8 @@ class PokemonViewSet(viewsets.ModelViewSet):
         """
         Perform the purchase of a pokemon by the connected user
         It will reduce the money of the user and add the pokemon to his list of owned pokemons
-        """
-        user = get_current_username(request)
-        pokemon = self.get_object()
+        """ 
+        pokemon = get_object_or_404(Pokemon, pk = pk)
         pokemonType = PokemonType.objects.get(id=pokemon.pokemon_type.id)
         
         print("buying pokemon " + str(pokemon) + " for " + str(pokemonType.cost))
@@ -122,7 +124,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response({'error': 'error'})
     
     @action(detail=False, methods=['get'])
-    def current(self, request):
+    def current(self, request):        
         if request.user.is_authenticated:
             serializer = UserSerializer(request.user, context={'request': request})
             return Response(serializer.data)
@@ -141,7 +143,11 @@ class PlayerViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def my_data(self, request):
-        user = get_current_username(request)
+        connectedUserResponse = UserViewSet.current(self, request)
+        if connectedUserResponse.status_code != status.HTTP_200_OK:
+            return connectedUserResponse
+        
+        user = connectedUserResponse.data.get("id")
         
         queryset = Player.objects.filter(user=user)
         serializer = ComplexPlayerSerializer(queryset, many=True, context={'request': request})
@@ -149,7 +155,11 @@ class PlayerViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['post'])
     def reduce_money(self, request, qty=0):
-        user = get_current_username(request)
+        connectedUserResponse = UserViewSet.current(self, request)
+        if connectedUserResponse.status_code != status.HTTP_200_OK:
+            return connectedUserResponse
+        
+        user = connectedUserResponse.data.get("id")
         
         player = Player.objects.get(user=user)
         
@@ -169,7 +179,11 @@ class OwnedPokemonViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['post'])
     def create_if_new(self, request, pokemon):
-        user = get_current_username(request)
+        connectedUserResponse = UserViewSet.current(self, request)
+        if connectedUserResponse.status_code != status.HTTP_200_OK:
+            return connectedUserResponse
+        
+        user = connectedUserResponse.data.get("id")
         
         player = Player.objects.get(user=user)
         
@@ -187,6 +201,20 @@ class OwnedPokemonViewSet(viewsets.ModelViewSet):
         owned_pokemon.save()
         
         serializer = ComplexOwnedPokemonSerializer(owned_pokemon, context={'request': request})
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def my_pokemons(self, request):
+        connectedUserResponse = UserViewSet.current(self, request)
+        if connectedUserResponse.status_code != status.HTTP_200_OK:
+            return connectedUserResponse
+        
+        user = connectedUserResponse.data.get("id")
+        
+        player = Player.objects.get(user=user)
+        
+        queryset = OwnedPokemon.objects.filter(player=player)
+        serializer = ComplexOwnedPokemonSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
         
 class AreaViewSet(viewsets.ModelViewSet):

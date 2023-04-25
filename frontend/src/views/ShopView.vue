@@ -65,7 +65,7 @@ const buyPokemon = async (id) => {
 
   // 2) Process buy (backend)
   await axios
-    .post(`pokemons/${id}/buy/`, {})
+    .post(`pokemons/${id}/buy/`)
     .then((response) => {
       successTitle.value = "Achat réussi !";
       success.value.push(buyedPokemon.name + " vous attend !");
@@ -149,35 +149,35 @@ onMounted(() => {
       <q-card class="q-mb-sm">
         <div class="flex justify-between">
           <div class="flex items-center q-ma-sm">
-              <!-- Image -->
-              <div
-                class="image-size-pokedex rrow justify-center items-center q-mr-sm"
-              >
-                <q-img
-                  :src="item.display_image_url"
-                  :alt="item.name"
-                  class="image-max-size-parent"
-                  fit="contain"
-                />
+            <!-- Image -->
+            <div
+              class="image-size-pokedex rrow justify-center items-center q-mr-sm"
+            >
+              <q-img
+                :src="item.display_image_url"
+                :alt="item.name"
+                class="image-max-size-parent"
+                fit="contain"
+              />
+            </div>
+            <q-card-section class="flex-auto">
+              <div class="text-h4">{{ item.name }}</div>
+              <div class="text-subtitle2">
+                {{ item.pokemon_type_object.name }}
               </div>
-          <q-card-section class="flex-auto">
-            <div class="text-h4">{{ item.name }}</div>
-            <div class="text-subtitle2">
-              {{ item.pokemon_type_object.name }}
-            </div>
 
-            <div class="q-mt-md">
-              <p>
-                <q-icon name="price_change" size="xs" /> Facteur de gain :
-                {{ item.pokemon_type_object.cash_factor }}
-              </p>
-              <p>
-                <q-icon name="sentiment_very_satisfied" size="xs" /> Bonheur max
-                : {{ item.pokemon_type_object.max_happiness }}
-              </p>
-            </div>
-          </q-card-section>
-</div>
+              <div class="q-mt-md">
+                <p>
+                  <q-icon name="price_change" size="xs" /> Facteur de gain :
+                  {{ item.pokemon_type_object.cash_factor }}
+                </p>
+                <p>
+                  <q-icon name="sentiment_very_satisfied" size="xs" /> Bonheur
+                  max : {{ item.pokemon_type_object.max_happiness }}
+                </p>
+              </div>
+            </q-card-section>
+          </div>
           <div class="flex normal-btn-size">
             <q-tooltip v-if="playerCash < item.pokemon_type_object.cost">
               Vous n'avez pas assez d'argent pour acheter ce Pokémon.
