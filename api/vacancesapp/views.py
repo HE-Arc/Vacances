@@ -108,6 +108,8 @@ class UserViewSet(viewsets.ModelViewSet):
             # TODO Transaction ?
             user.save()
             
+            login(request, user)
+            
             # add the profile of the user (player instance)
             player = Player(user=user)
             player.username = user.username
@@ -146,6 +148,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def logout(self, request):
         logout(request)
+        print("logout")
         return Response(status=status.HTTP_200_OK)
     
 

@@ -54,7 +54,7 @@ const submit = async () => {
       password: password.value,
     })
     .then(() => {
-      successTitle.value = "Compte créer avec succès";
+      successTitle.value = "Compte créé avec succès";
       success.value.push("Vous pouvez maintenant vous connecter.");
 
       sessionStorage.setItem(varToString({ successTitle }), successTitle.value);
@@ -63,10 +63,10 @@ const submit = async () => {
         JSON.stringify(success.value)
       );
 
-      router.push("/users");
+      window.location.href = "/";
     })
     .catch(() => {
-      errorsTitle.value = "La création échouée";
+      errorsTitle.value = "La création a échoué";
       errors.value.push("Ce nom est peut-être déjà pris ?");
     });
 };
