@@ -108,6 +108,8 @@ class UserViewSet(viewsets.ModelViewSet):
             # TODO Transaction ?
             user.save()
             
+            login(request, user)
+            
             # add the profile of the user (player instance)
             player = Player(user=user)
             player.username = user.username
