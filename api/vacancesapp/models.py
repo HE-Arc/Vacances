@@ -27,7 +27,7 @@ class Area(models.Model):
     image = models.CharField(max_length=200, default=None)
 
 class OwnedPokemon(models.Model):
-    pokemon = models.ForeignKey(Pokemon, null=True, related_name="owned_pokemons", on_delete=models.SET_NULL)
+    pokemon = models.ForeignKey(Pokemon, null=True, related_name="owned_pokemons", on_delete=models.CASCADE)
     player = models.ForeignKey(Player, related_name="owned_pokemons", on_delete=models.CASCADE)
     current_area = models.ForeignKey(Area, null=True, related_name="owned_pokemons_current", on_delete=models.SET_NULL)
     requested_area = models.ForeignKey(Area, null=True, related_name="owned_pokemons_requested", on_delete=models.SET_NULL)
