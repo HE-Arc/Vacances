@@ -8,10 +8,20 @@ const user = ref(null);
 const isLogged = ref(false);
 const isManager = ref(false);
 
+async function disconnect()
+{
+  await axios.get("users/logout/").then(() => {
+    user.value = null;
+    isLogged.value = false;
+    localStorage.removeItem("isAuth");
+    localStorage.removeItem("isManager");
+    window.location.href = "users?logout=true";
+  });
+}
+
 // OnMounted we check if we are still connected
 const fetchConnected = async () => {
   const route = useRoute();
-  console.log(route);
   if (route.query == "users") {
     return;
   }
@@ -88,8 +98,10 @@ onMounted(() => {
 
       <q-route-tab
         v-if="isLogged"
-        :to="{ name: 'users', query: { logout: 'true' } }"
-        @click="clearInterval(interval)"
+        @click="
+          disconnect();
+          clearInterval(interval);
+        "
       >
         <q-icon name="logout" />
         Deconnexion

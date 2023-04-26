@@ -89,13 +89,6 @@ onMounted(() => {
       varToString({ success }),
       JSON.stringify(success.value)
     );
-    axios.get("users/logout/",
-    {
-      withCredentials: true
-    }).then(() => {
-      localStorage.removeItem("isAuth");
-      localStorage.removeItem("isManager");
-    });
   }
 });
 </script>

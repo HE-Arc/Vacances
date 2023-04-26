@@ -61,7 +61,7 @@ const router = createRouter({
       component: () => import("../views/users/CreateUserView.vue"),
     },
     {
-      path: "/users:success?&:logout?",
+      path: "/users:success?:logout?",
       name: "users",
       component: () => import("../views/users/UserView.vue"),
     },
