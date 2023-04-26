@@ -71,7 +71,7 @@ class AreaSerializer(serializers.HyperlinkedModelSerializer):
             "url",
             "id",
             "name",
-            "size",
+            "image",
         ]
         
         

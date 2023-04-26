@@ -24,7 +24,7 @@ class Pokemon(models.Model):
 
 class Area(models.Model):
     name = models.CharField(max_length=100)
-    size = models.PositiveIntegerField()
+    image = models.CharField(max_length=200, default=None)
 
 class OwnedPokemon(models.Model):
     pokemon = models.ForeignKey(Pokemon, null=True, related_name="owned_pokemons", on_delete=models.SET_NULL)

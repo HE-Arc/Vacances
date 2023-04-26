@@ -220,4 +220,4 @@ class OwnedPokemonViewSet(viewsets.ModelViewSet):
 class AreaViewSet(viewsets.ModelViewSet):
     queryset = Area.objects.all()
     serializer_class = AreaSerializer
-        
+    
