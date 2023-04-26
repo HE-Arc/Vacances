@@ -66,7 +66,7 @@ const submit = async () => {
       router.push("/users");
     })
     .catch(() => {
-      errorsTitle.value = "La création échouée";
+      errorsTitle.value = "La création a échoué";
       errors.value.push("Ce nom est peut-être déjà pris ?");
     });
 };
