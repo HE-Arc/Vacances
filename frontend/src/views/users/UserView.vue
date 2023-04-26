@@ -81,7 +81,7 @@ onMounted(() => {
   if(logout == "true")
   {
     successTitle.value = "Déconnexion réussie !";
-    success.value.pop();
+    success.value = [];
     success.value.push("Vous êtes déconnecté.");
 
     sessionStorage.setItem(varToString({ successTitle }), successTitle.value);
