@@ -22,24 +22,21 @@ const fetchPokemonTypes = async () => {
 const areas = ref([]);
 const areasPairs = ref([]);
 
+const tempImage = ref(null);
+
 const fetchAreas = async () => {
   areas.value = (await axios.get("areas/")).data;
   let odd = true;
-  for (let i = 0; i + 1 < areas.value.length; i += 2)
-  {
-    if (odd == true)
-    {
+  for (let i = 0; i + 1 < areas.value.length; i += 2) {
+    if (odd == true) {
       areasPairs.value.push([areas.value[i], 0, areas.value[i + 1]]);
-    }
-    else
-    {
+    } else {
       areasPairs.value.push([0, areas.value[i], 0, areas.value[i + 1]]);
     }
     odd = !odd;
   }
   console.log(areas.value);
 };
-
 
 const pokemonAlt = "pokemon";
 
@@ -63,54 +60,65 @@ function pokemonRequest() {
     ".";
 }
 
-function coroutine()
-{
+function coroutine() {
   interval.value = setInterval(pokemonRequest, 5000); // 30000
 }
 
-function changeTag()
-{
+function changeTag() {
   tag.value = "pokemon";
 }
 
 var imageElement = ref(null);
 
 function sendImage(event) {
-  imageElement.value = event.target;
-  isReceived.value = false;
+  const cursorStyle = window.getComputedStyle(event.target).cursor;
+
+  console.log(cursorStyle);
+
+  if(cursorStyle === "pointer")
+  {
+    imageElement.value = event.target;
+    isReceived.value = false;
+  }
+  else
+  {
+    imageElement.value = "";
+  }
 }
 
 function receiveImage(event) {
-  if(imageElement.value != "")
-  {
-    if(tag.value == "pokemon")
-    {
+  if (imageElement.value != "") {
+    if (tag.value == "pokemon") {
       event.target.src = imageElement.value.src;
+
       tag.value = "";
+
       isReceived.value = true;
-    }
-    else
-    {
-      if(isReceived.value)
-      {
-        if(event.target.src != "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg")
-        {
+
+      imageElement.value.style="filter: grayscale(100%); cursor: default;"
+    } else {
+      if (isReceived.value) {
+        if (
+          event.target.src !=
+          "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
+        ) {
           imageElement.value = event.target;
           isReceived.value = false;
         }
-      }
-      else
-      {
+      } else {
+        tempImage.value = event.target.src;
         event.target.src = imageElement.value.src;
+
         isReceived.value = true;
+
+        imageElement.value.src = tempImage.value;
       }
     }
   }
 }
 
 function takeAbreak() {
-  if(!isReceived.value)
-  {
+  if (!isReceived.value) {
     imageElement.value.src =
       "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg";
 
@@ -129,28 +137,33 @@ function takeAbreak() {
     <p id="Request" style="color: deeppink; font-size: 2em"></p>
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-        <div v-for="items in areasPairs" class="row">
-          <div v-for="item in items" class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm">
+        <div v-for="(items, index) in areasPairs" :key="index" class="row">
+          <div
+            v-for="(item, index) in items"
+            :key="index"
+            class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm"
+          >
+            <q-img
+              v-if="item != 0"
+              :src="item.image"
+              style="outline: solid; max-width: 300px; height: 150px"
+              fit="cover"
+              :alt="item.name"
+            >
               <q-img
-                v-if="item != 0"
-                :src="item.image"
-                style="outline: solid; max-width: 300px; height: 150px"
+                style="
+                  outline: solid;
+                  max-width: 100px;
+                  height: 100px;
+                  margin-top: 2em;
+                  margin-left: 7em;
+                "
                 fit="cover"
-                :alt="item.name"
-              >
-                <q-img
-                  style="
-                    outline: solid;
-                    max-width: 100px;
-                    height: 100px;
-                    margin-top: 2em;
-                    margin-left: 7em;
-                  "
-                  fit="cover"
-                  src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-                  @click="receiveImage"
-                ></q-img>
-              </q-img>
+                src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
+                @click="receiveImage"
+                class="hover-image"
+              ></q-img>
+            </q-img>
           </div>
         </div>
       </div>
@@ -176,9 +189,15 @@ function takeAbreak() {
                       <q-img
                         :src="item.pokemon_object.display_image_url"
                         :alt="pokemonAlt"
-                        class="image-max-size-parent"
+                        class="image-max-size-parent hover-image"
                         fit="contain"
-                        @click="sendImage($event); changeTag($event)"
+                        @click="
+                          sendImage($event);
+                          changeTag($event);
+                        "
+                        @mouseover="onMouseOver"
+                        @mouseout="onMouseOut"
+                        :style="{ cursor: cursorStyle }"
                       />
                     </div>
                   </div>
