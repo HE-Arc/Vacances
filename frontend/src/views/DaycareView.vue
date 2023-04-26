@@ -46,22 +46,11 @@ const fetchAreas = async () => {
   }
 };
 
-function initializeScrollbar()
-{
-  const { getScrollTarget } = scroll;
-  const element = document.getElementById("scrolltarget");
-  const scrollTarget = getScrollTarget(element);
-  console.log(element);
-}
-
-const pokemonAlt = "pokemon";
-
 onMounted(() => {
   fetchOwnedPokemons();
   fetchPokemonTypes();
   fetchAreas();
   coroutine();
-  initializeScrollbar();
 });
 
 var randomIndexPokemon = null;
@@ -284,6 +273,7 @@ function takeAbreak() {
                             changeTag($event);
                           "
                         />
+                      </div>
                     </div>
                   </q-card-section>
                 </div>
