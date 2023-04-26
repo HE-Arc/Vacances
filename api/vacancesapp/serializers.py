@@ -121,18 +121,14 @@ class ComplexPlayerSerializer(PlayerSerializer):
             "user_object",
         ]
         
-class ComplexOwnedPokemonSerializer(PlayerSerializer):
-    # TODO : Uncomment "current_area_object" and "requested_area_object" when area is done (4 lines below)
-    
-    pokemon_object = PokemonSerializer(source="pokemon", read_only=True)
+class ComplexOwnedPokemonSerializer(PlayerSerializer):    
+    pokemon_object = ComplexPokemonSerializer(source="pokemon", read_only=True)
     player_object = PlayerSerializer(source="player", read_only=True)
-    # current_area_object = AreaSerializer(source="current_area", read_only=True)
-    # requested_area_object = AreaSerializer(source="requested_ared", read_only=True)
+    #pokemon_type_object = PokemonTypeSerializer(source="pokemon__pokemon_type", read_only=True)
     class Meta:
         model = OwnedPokemon
         fields = OwnedPokemonSerializer.Meta.fields + [
             "pokemon_object",
             "player_object",
-            # "current_area_object",
-            # "requested_area_object",
+            #"pokemon_type_object",
         ]

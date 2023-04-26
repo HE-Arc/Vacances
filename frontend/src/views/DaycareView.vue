@@ -18,7 +18,9 @@ const tempImage = ref(null);
 
 var imageElement = ref(null);
 
-//var listPokemonMoved = ref(null);
+var listPokemonMoved = ref([]);
+
+var pokemonCurrent = null;
 
 const pokemonAlt = "pokemon";
 
@@ -50,17 +52,22 @@ onMounted(() => {
   coroutine();
 });
 
-function pokemonRequest() {
-  const randomIndexPokemon = Math.floor(
-    Math.random() * ownedPokemons.value.length
-  );
-  const randomIndexZone = Math.floor(Math.random() * areas.value.length);
+var randomIndexPokemon = null;
+var randomIndexZone = null;
 
-  document.getElementById("Request").innerText =
-    ownedPokemons.value[randomIndexPokemon].pokemon_object.name +
-    " aimerait aller à la " +
-    areas.value[randomIndexZone].name +
-    ".";
+function pokemonRequest() {
+  if (listPokemonMoved.value.length > 0) {
+    randomIndexPokemon = Math.floor(
+      Math.random() * listPokemonMoved.value.length
+    );
+    randomIndexZone = Math.floor(Math.random() * areas.value.length);
+
+    document.getElementById("Request").innerText =
+      listPokemonMoved.value[randomIndexPokemon].pokemon_object.name +
+      " aimerait aller à la " +
+      areas.value[randomIndexZone].name +
+      ".";
+  }
 }
 
 function coroutine() {
@@ -75,12 +82,13 @@ function changeTag() {
   }
 }
 
-function sendImage(event) {
+function sendImage(event, item) {
   const cursorStyle = window.getComputedStyle(event.target).cursor;
 
   if (cursorStyle === "pointer") {
     imageElement.value = event.target;
     isReceived.value = false;
+    pokemonCurrent = item;
   } else {
     imageElement.value = "";
     isReceived.value = true;
@@ -88,7 +96,7 @@ function sendImage(event) {
   }
 }
 
-function receiveImage(event) {
+function receiveImage(event, image) {
   if (imageElement.value != "") {
     if (tag.value == "pokemon") {
       event.target.src = imageElement.value.src;
@@ -99,8 +107,7 @@ function receiveImage(event) {
 
       imageElement.value.style = "filter: grayscale(100%); cursor: default;";
 
-      // listPokemonMoved.push() -> mettre dans la liste, le pokémon posé pour le random des requests
-
+      listPokemonMoved.value.push(pokemonCurrent);
     } else {
       if (isReceived.value) {
         if (
@@ -117,6 +124,37 @@ function receiveImage(event) {
         isReceived.value = true;
 
         imageElement.value.src = tempImage.value;
+
+        if (randomIndexZone != null) {
+          if (areas.value[randomIndexZone].image == image) {
+            const id = listPokemonMoved.value[randomIndexPokemon].id;
+            axios
+              .get(`owned-pokemons/${id}/increment-happiness/`)
+              .then((ownedpkm) => {
+                listPokemonMoved.value[randomIndexPokemon].current_happiness =
+                  ownedpkm.data.current_happiness;
+                randomIndexZone = null;
+                document.getElementById("Request").innerText = "";
+
+                if (
+                  listPokemonMoved.value[randomIndexPokemon]
+                    .current_happiness == 0
+                ) {
+                  document.getElementsByClassName("money")[0].innerText =
+                    "Vous avez gagné " +
+                    listPokemonMoved.value[randomIndexPokemon].pokemon_object
+                      .pokemon_type_object.cash_factor *
+                      10 +
+                    " ₽ grâce au bonheur de " +
+                    listPokemonMoved.value[randomIndexPokemon].pokemon_object
+                      .name +
+                    " !";
+                } else {
+                  document.getElementsByClassName("money")[0].innerText = "";
+                }
+              });
+          }
+        }
       }
     }
   } else {
@@ -134,6 +172,15 @@ function takeAbreak() {
           "filter: grayscale(0%); cursor: pointer;";
       }
     }
+
+    for (var j = 0; j < listPokemonMoved.value.length; j++) {
+      if (
+        listPokemonMoved.value[j].display_image_url == imageElement.value.src
+      ) {
+        listPokemonMoved.value.splice(j, 1);
+        document.getElementById("Request").innerText = "";
+      }
+    }
     imageElement.value.src =
       "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg";
 
@@ -148,6 +195,7 @@ function takeAbreak() {
 <template>
   <q-page>
     <h1>La pension</h1>
+    <p class="money"></p>
     <br />
     <p id="Request" style="color: deeppink; font-size: 2em"></p>
     <div class="row">
@@ -175,7 +223,7 @@ function takeAbreak() {
                 "
                 fit="cover"
                 src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-                @click="receiveImage"
+                @click="receiveImage($event, item.image)"
                 class="hover-image"
               ></q-img>
             </q-img>
@@ -198,6 +246,12 @@ function takeAbreak() {
                     <div class="text-h7 row justify-center">
                       {{ item.pokemon_object.name }}
                     </div>
+                    <div class="text-h7 row justify-left">
+                      {{ item.current_happiness }} /
+                      {{
+                        item.pokemon_object.pokemon_type_object.max_happiness
+                      }}
+                    </div>
                     <div
                       class="image-size-daycare row justify-center items-center q-ma-sm"
                     >
@@ -207,7 +261,7 @@ function takeAbreak() {
                         class="image-max-size-parent hover-image rightImages"
                         fit="contain"
                         @click="
-                          sendImage($event);
+                          sendImage($event, item);
                           changeTag($event);
                         "
                       />
