@@ -19,55 +19,52 @@ const fetchPokemonTypes = async () => {
   pokemonTypes.value = (await axios.get("pokemon-types/")).data;
 };
 
+const areas = ref([]);
+const areasPairs = ref([]);
+
+const fetchAreas = async () => {
+  areas.value = (await axios.get("areas/")).data;
+  let odd = true;
+  for (let i = 0; i + 1 < areas.value.length; i += 2)
+  {
+    if (odd == true)
+    {
+      areasPairs.value.push([areas.value[i], 0, areas.value[i + 1]]);
+    }
+    else
+    {
+      areasPairs.value.push([0, areas.value[i], 0, areas.value[i + 1]]);
+    }
+    odd = !odd;
+  }
+  console.log(areas.value);
+};
+
+
 const pokemonAlt = "pokemon";
 
 onMounted(() => {
   fetchOwnedPokemons();
   fetchPokemonTypes();
+  fetchAreas();
   coroutine();
 });
-
-const zones = [
-  {
-    source: "../assets/images/Beach.jpg",
-    alt: "plage",
-  },
-  {
-    source: "../assets/images/Forest.jpg",
-    alt: "forêt",
-  },
-  {
-    source: "../assets/images/Mountain.jpg",
-    alt: "montagne",
-  },
-  {
-    source: "../assets/images/Town.jpg",
-    alt: "ville",
-  },
-  {
-    source: "../assets/images/Cave.jpg",
-    alt: "grotte",
-  },
-  {
-    source: "../assets/images/PowerPlant.jpg",
-    alt: "centrale",
-  },
-];
 
 function pokemonRequest() {
   const randomIndexPokemon = Math.floor(
     Math.random() * ownedPokemons.value.length
   );
-  const randomIndexZone = Math.floor(Math.random() * zones.length);
+  const randomIndexZone = Math.floor(Math.random() * areas.value.length);
 
   document.getElementById("Request").innerText =
     ownedPokemons.value[randomIndexPokemon].pokemon_object.name +
     " aimerait aller à la " +
-    zones[randomIndexZone].alt +
+    areas.value[randomIndexZone].name +
     ".";
 }
 
-function coroutine() {
+function coroutine()
+{
   interval.value = setInterval(pokemonRequest, 5000); // 30000
 }
 
@@ -132,140 +129,28 @@ function takeAbreak() {
     <p id="Request" style="color: deeppink; font-size: 2em"></p>
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-        <div class="row">
-          <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm">
-            <q-img
-              src="../assets/images/Beach.jpg"
-              style="outline: solid; max-width: 300px; height: 150px"
-              fit="cover"
-              alt="plage"
-            >
+        <div v-for="items in areasPairs" class="row">
+          <div v-for="item in items" class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm">
               <q-img
-                style="
-                  outline: solid;
-                  max-width: 100px;
-                  height: 100px;
-                  margin-top: 2em;
-                  margin-left: 7em;
-                "
+                v-if="item != 0"
+                :src="item.image"
+                style="outline: solid; max-width: 300px; height: 150px"
                 fit="cover"
-                src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-                @click="receiveImage"
-              ></q-img>
-            </q-img>
-          </div>
-          <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm"></div>
-          <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm">
-            <q-img
-              src="../assets/images/Mountain.jpg"
-              style="outline: solid; max-width: 300px; height: 150px"
-              fit="cover"
-              alt="montagne"
-            >
-              <q-img
-                style="
-                  outline: solid;
-                  max-width: 100px;
-                  height: 100px;
-                  margin-top: 2em;
-                  margin-left: 7em;
-                "
-                fit="cover"
-                src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-                @click="receiveImage"
-              ></q-img>
-            </q-img>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm"></div>
-          <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm">
-            <q-img
-              src="../assets/images/Cave.jpg"
-              style="outline: solid; max-width: 300px; height: 150px"
-              fit="cover"
-              alt="grotte"
-            >
-              <q-img
-                style="
-                  outline: solid;
-                  max-width: 100px;
-                  height: 100px;
-                  margin-top: 2em;
-                  margin-left: 7em;
-                "
-                fit="cover"
-                src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-                @click="receiveImage"
-              ></q-img>
-            </q-img>
-          </div>
-          <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm"></div>
-          <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm">
-            <q-img
-              src="../assets/images/Forest.jpg"
-              style="outline: solid; max-width: 300px; height: 150px"
-              fit="cover"
-              alt="forêt"
-            >
-              <q-img
-                style="
-                  outline: solid;
-                  max-width: 100px;
-                  height: 100px;
-                  margin-top: 2em;
-                  margin-left: 7em;
-                "
-                fit="cover"
-                @click="receiveImage"
-                src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-              ></q-img>
-            </q-img>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm">
-            <q-img
-              src="../assets/images/Town.jpg"
-              style="outline: solid; max-width: 300px; height: 150px"
-              fit="cover"
-              alt="ville"
-            >
-              <q-img
-                style="
-                  outline: solid;
-                  max-width: 100px;
-                  height: 100px;
-                  margin-top: 2em;
-                  margin-left: 7em;
-                "
-                fit="cover"
-                src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-                @click="receiveImage"
-              ></q-img>
-            </q-img>
-          </div>
-          <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm"></div>
-          <div class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm">
-            <q-img
-              src="../assets/images/PowerPlant.jpg"
-              style="outline: solid; max-width: 300px; height: 150px"
-              fit="cover"
-              alt="centrale"
-            >
-              <q-img
-                style="
-                  outline: solid;
-                  max-width: 100px;
-                  height: 100px;
-                  margin-top: 2em;
-                  margin-left: 7em;
-                "
-                fit="cover"
-                @click="receiveImage"
-                src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-              ></q-img>
-            </q-img>
+                :alt="item.name"
+              >
+                <q-img
+                  style="
+                    outline: solid;
+                    max-width: 100px;
+                    height: 100px;
+                    margin-top: 2em;
+                    margin-left: 7em;
+                  "
+                  fit="cover"
+                  src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
+                  @click="receiveImage"
+                ></q-img>
+              </q-img>
           </div>
         </div>
       </div>

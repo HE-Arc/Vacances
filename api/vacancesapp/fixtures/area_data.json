@@ -1,0 +1,50 @@
+[
+    {
+        "model": "vacancesapp.area",
+        "pk": 1,
+        "fields": {
+            "name": "Plage",
+            "image": "src/assets/images/Beach.jpg"
+        }
+    },
+    {
+        "model": "vacancesapp.area",
+        "pk": 2,
+        "fields": {
+            "name": "Montagne",
+            "image": "src/assets/images/Mountain.jpg"
+        }
+    },
+    {
+        "model": "vacancesapp.area",
+        "pk": 3,
+        "fields": {
+            "name": "Grotte",
+            "image": "src/assets/images/Cave.jpg"
+        }
+    },
+    {
+        "model": "vacancesapp.area",
+        "pk": 4,
+        "fields": {
+            "name": "Forêt",
+            "image": "src/assets/images/Forest.jpg"
+        }
+    },
+    {
+        "model": "vacancesapp.area",
+        "pk": 5,
+        "fields": {
+            "name": "Ville",
+            "image": "src/assets/images/Town.jpg"
+        }
+    },
+    {
+        "model": "vacancesapp.area",
+        "pk": 6,
+        "fields": {
+            "name": "Centrale",
+            "image": "src/assets/images/PowerPlant.jpg"
+        }
+    }
+]
