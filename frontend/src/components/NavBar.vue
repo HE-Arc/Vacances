@@ -103,7 +103,7 @@ onMounted(() => {
           clearInterval(interval);
         "
       >
-        <q-icon name="logout" />
+        <q-icon name="logout" @click="clearInterval(interval)" />
         Deconnexion
       </q-route-tab>
 
@@ -112,7 +112,7 @@ onMounted(() => {
         :to="{ name: 'users' }"
         @click="clearInterval(interval)"
       >
-        <q-icon name="login" />
+        <q-icon name="login" @click="clearInterval(interval)" />
         Connexion
       </q-route-tab>
     </q-tabs>

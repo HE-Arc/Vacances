@@ -231,6 +231,25 @@ class OwnedPokemonViewSet(viewsets.ModelViewSet):
         queryset = OwnedPokemon.objects.filter(player=player)
         serializer = ComplexOwnedPokemonSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
+    
+    @action(detail=True, methods=['get'], url_path='increment-happiness')
+    def increment_happiness(self, request, pk=None):
+        owned_pokemon = get_object_or_404(OwnedPokemon, pk = pk)
+        owned_pokemon.current_happiness += 1
+        
+        pokemon_type = owned_pokemon.pokemon.pokemon_type
+        
+        if owned_pokemon.current_happiness >= pokemon_type.max_happiness:
+            owned_pokemon.current_happiness = 0
+            player=owned_pokemon.player
+            player.money += pokemon_type.cash_factor * 10
+            
+            player.save()
+            
+        owned_pokemon.save()
+        
+        serializer = ComplexOwnedPokemonSerializer(owned_pokemon, context={'request': request})
+        return Response(serializer.data)
         
 class AreaViewSet(viewsets.ModelViewSet):
     queryset = Area.objects.all()

@@ -10,30 +10,36 @@ const isReceived = ref(true);
 
 const tag = ref("");
 
-const fetchOwnedPokemons = async () => {
-  ownedPokemons.value = (await axios.get("owned-pokemons/my_pokemons")).data;
-};
-
 const pokemonTypes = ref([]);
+
+const areas = ref([]);
+const areasPairs = ref([]);
+
+const tempImage = ref(null);
+
+var imageElement = ref(null);
+
+var listPokemonMoved = ref([]);
+
+var pokemonCurrent = null;
+
+const pokemonAlt = "pokemon";
 
 const fetchPokemonTypes = async () => {
   pokemonTypes.value = (await axios.get("pokemon-types/")).data;
 };
 
-const areas = ref([]);
-const areasPairs = ref([]);
+const fetchOwnedPokemons = async () => {
+  ownedPokemons.value = (await axios.get("owned-pokemons/my_pokemons")).data;
+};
 
 const fetchAreas = async () => {
   areas.value = (await axios.get("areas/")).data;
   let odd = true;
-  for (let i = 0; i + 1 < areas.value.length; i += 2)
-  {
-    if (odd == true)
-    {
+  for (let i = 0; i + 1 < areas.value.length; i += 2) {
+    if (odd == true) {
       areasPairs.value.push([areas.value[i], 0, areas.value[i + 1]]);
-    }
-    else
-    {
+    } else {
       areasPairs.value.push([0, areas.value[i], 0, areas.value[i + 1]]);
     }
     odd = !odd;
@@ -48,7 +54,6 @@ function initializeScrollbar()
   console.log(element);
 }
 
-
 const pokemonAlt = "pokemon";
 
 onMounted(() => {
@@ -59,67 +64,135 @@ onMounted(() => {
   initializeScrollbar();
 });
 
-function pokemonRequest() {
-  const randomIndexPokemon = Math.floor(
-    Math.random() * ownedPokemons.value.length
-  );
-  const randomIndexZone = Math.floor(Math.random() * areas.value.length);
+var randomIndexPokemon = null;
+var randomIndexZone = null;
 
-  document.getElementById("Request").innerText =
-    ownedPokemons.value[randomIndexPokemon].pokemon_object.name +
-    " aimerait aller à la " +
-    areas.value[randomIndexZone].name +
-    ".";
+function pokemonRequest() {
+  if (listPokemonMoved.value.length > 0) {
+    randomIndexPokemon = Math.floor(
+      Math.random() * listPokemonMoved.value.length
+    );
+    randomIndexZone = Math.floor(Math.random() * areas.value.length);
+
+    document.getElementById("Request").innerText =
+      listPokemonMoved.value[randomIndexPokemon].pokemon_object.name +
+      " aimerait aller à la " +
+      areas.value[randomIndexZone].name +
+      ".";
+  }
 }
 
-function coroutine()
-{
+function coroutine() {
   interval.value = setInterval(pokemonRequest, 5000); // 30000
 }
 
-function changeTag()
-{
-  tag.value = "pokemon";
+function changeTag() {
+  const cursorStyle = window.getComputedStyle(event.target).cursor;
+
+  if (cursorStyle === "pointer") {
+    tag.value = "pokemon";
+  }
 }
 
-var imageElement = ref(null);
+function sendImage(event, item) {
+  const cursorStyle = window.getComputedStyle(event.target).cursor;
 
-function sendImage(event) {
-  imageElement.value = event.target;
-  isReceived.value = false;
+  if (cursorStyle === "pointer") {
+    imageElement.value = event.target;
+    isReceived.value = false;
+    pokemonCurrent = item;
+  } else {
+    imageElement.value = "";
+    isReceived.value = true;
+    tag.value = "";
+  }
 }
 
-function receiveImage(event) {
-  if(imageElement.value != "")
-  {
-    if(tag.value == "pokemon")
-    {
+function receiveImage(event, image) {
+  if (imageElement.value != "") {
+    if (tag.value == "pokemon") {
       event.target.src = imageElement.value.src;
+
       tag.value = "";
+
       isReceived.value = true;
-    }
-    else
-    {
-      if(isReceived.value)
-      {
-        if(event.target.src != "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg")
-        {
+
+      imageElement.value.style = "filter: grayscale(100%); cursor: default;";
+
+      listPokemonMoved.value.push(pokemonCurrent);
+    } else {
+      if (isReceived.value) {
+        if (
+          event.target.src !=
+          "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
+        ) {
           imageElement.value = event.target;
           isReceived.value = false;
         }
-      }
-      else
-      {
+      } else {
+        tempImage.value = event.target.src;
         event.target.src = imageElement.value.src;
+
         isReceived.value = true;
+
+        imageElement.value.src = tempImage.value;
+
+        if (randomIndexZone != null) {
+          if (areas.value[randomIndexZone].image == image) {
+            const id = listPokemonMoved.value[randomIndexPokemon].id;
+            axios
+              .get(`owned-pokemons/${id}/increment-happiness/`)
+              .then((ownedpkm) => {
+                listPokemonMoved.value[randomIndexPokemon].current_happiness =
+                  ownedpkm.data.current_happiness;
+                randomIndexZone = null;
+                document.getElementById("Request").innerText = "";
+
+                if (
+                  listPokemonMoved.value[randomIndexPokemon]
+                    .current_happiness == 0
+                ) {
+                  document.getElementsByClassName("money")[0].innerText =
+                    "Vous avez gagné " +
+                    listPokemonMoved.value[randomIndexPokemon].pokemon_object
+                      .pokemon_type_object.cash_factor *
+                      10 +
+                    " ₽ grâce au bonheur de " +
+                    listPokemonMoved.value[randomIndexPokemon].pokemon_object
+                      .name +
+                    " !";
+                } else {
+                  document.getElementsByClassName("money")[0].innerText = "";
+                }
+              });
+          }
+        }
       }
     }
+  } else {
+    imageElement.value = event.target;
+    isReceived.value = false;
   }
 }
 
 function takeAbreak() {
-  if(!isReceived.value)
-  {
+  if (!isReceived.value) {
+    var elements = document.getElementsByClassName("rightImages");
+    for (var i = 0; i < elements.length; i++) {
+      if (elements[i].children[1].children[0].src == imageElement.value.src) {
+        elements[i].children[1].children[0].style =
+          "filter: grayscale(0%); cursor: pointer;";
+      }
+    }
+
+    for (var j = 0; j < listPokemonMoved.value.length; j++) {
+      if (
+        listPokemonMoved.value[j].display_image_url == imageElement.value.src
+      ) {
+        listPokemonMoved.value.splice(j, 1);
+        document.getElementById("Request").innerText = "";
+      }
+    }
     imageElement.value.src =
       "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg";
 
@@ -134,32 +207,38 @@ function takeAbreak() {
 <template>
   <q-page>
     <h1>La pension</h1>
+    <p class="money"></p>
     <br />
     <p id="Request" style="color: deeppink; font-size: 2em"></p>
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-        <div v-for="items in areasPairs" class="row">
-          <div v-for="item in items" class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm">
+        <div v-for="(items, index) in areasPairs" :key="index" class="row">
+          <div
+            v-for="(item, index) in items"
+            :key="index"
+            class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm"
+          >
+            <q-img
+              v-if="item != 0"
+              :src="item.image"
+              style="outline: solid; max-width: 300px; height: 150px"
+              fit="cover"
+              :alt="item.name"
+            >
               <q-img
-                v-if="item != 0"
-                :src="item.image"
-                style="outline: solid; max-width: 300px; height: 150px"
+                style="
+                  outline: solid;
+                  max-width: 100px;
+                  height: 100px;
+                  margin-top: 2em;
+                  margin-left: 7em;
+                "
                 fit="cover"
-                :alt="item.name"
-              >
-                <q-img
-                  style="
-                    outline: solid;
-                    max-width: 100px;
-                    height: 100px;
-                    margin-top: 2em;
-                    margin-left: 7em;
-                  "
-                  fit="cover"
-                  src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-                  @click="receiveImage"
-                ></q-img>
-              </q-img>
+                src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
+                @click="receiveImage($event, item.image)"
+                class="hover-image"
+              ></q-img>
+            </q-img>
           </div>
         </div>
       </div>
@@ -186,17 +265,25 @@ function takeAbreak() {
                       <div class="text-h7 row justify-center">
                         {{ item.pokemon_object.name }}
                       </div>
+                      <div class="text-h7 row justify-left">
+                        {{ item.current_happiness }} /
+                        {{
+                          item.pokemon_object.pokemon_type_object.max_happiness
+                        }}
+                      </div>
                       <div
                         class="image-size-daycare row justify-center items-center q-ma-sm"
                       >
                         <q-img
                           :src="item.pokemon_object.display_image_url"
                           :alt="pokemonAlt"
-                          class="image-max-size-parent"
+                          class="image-max-size-parent hover-image rightImages"
                           fit="contain"
-                          @click="sendImage($event); changeTag($event)"
+                          @click="
+                            sendImage($event, item);
+                            changeTag($event);
+                          "
                         />
-                      </div>
                     </div>
                   </q-card-section>
                 </div>
