@@ -2,6 +2,7 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import interval from "../views/DaycareView.vue";
+import { useRoute } from "vue-router";
 
 const user = ref(null);
 const isLogged = ref(false);
@@ -9,6 +10,11 @@ const isManager = ref(false);
 
 // OnMounted we check if we are still connected
 const fetchConnected = async () => {
+  const route = useRoute();
+  console.log(route);
+  if (route.query == "users") {
+    return;
+  }
   await axios
     .get("users/current/")
     .then(async (response) => {
@@ -82,7 +88,7 @@ onMounted(() => {
 
       <q-route-tab
         v-if="isLogged"
-        :to="{ name: 'users.logout' }"
+        :to="{ name: 'users', query: { logout: 'true' } }"
         @click="clearInterval(interval)"
       >
         <q-icon name="logout" />

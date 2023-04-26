@@ -146,6 +146,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def logout(self, request):
         logout(request)
+        print("logout")
         return Response(status=status.HTTP_200_OK)
     
 

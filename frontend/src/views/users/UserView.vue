@@ -1,15 +1,19 @@
 <!-- eslint-disable prettier/prettier -->
 <script setup>
 import axios from "axios";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 import { varToString, sessionGetAndRemove } from "@/assets/js/utils.js"; // IMPORTANT : Need to be in { } to work !
 import MessageBanner from "@/components/MessageBanner.vue";
+
+import { useRouter } from "vue-router";
 
 let successTitle = ref("");
 let success = ref([]);
 let errorsTitle = ref("");
 let errors = ref([]);
+
+const router = useRouter();
 
 successTitle.value = sessionGetAndRemove(varToString({ successTitle }));
 success.value = sessionGetAndRemove(varToString({ success }), true);
@@ -70,6 +74,30 @@ const submit = async () => {
       localStorage.removeItem("isManager");
     });
 };
+
+onMounted(() => {
+  const logout = router.currentRoute.value.query.logout;
+
+  if(logout == "true")
+  {
+    successTitle.value = "Déconnexion réussie !";
+    success.value.pop();
+    success.value.push("Vous êtes déconnecté.");
+
+    sessionStorage.setItem(varToString({ successTitle }), successTitle.value);
+    sessionStorage.setItem(
+      varToString({ success }),
+      JSON.stringify(success.value)
+    );
+    axios.get("users/logout/",
+    {
+      withCredentials: true
+    }).then(() => {
+      localStorage.removeItem("isAuth");
+      localStorage.removeItem("isManager");
+    });
+  }
+});
 </script>
 
 <template>
