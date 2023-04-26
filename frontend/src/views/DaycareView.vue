@@ -1,6 +1,7 @@
 <script setup>
 import axios from "axios";
 import { ref, onMounted } from "vue";
+import { scroll } from 'quasar'
 
 const ownedPokemons = ref([]);
 const interval = ref(null);
@@ -37,8 +38,15 @@ const fetchAreas = async () => {
     }
     odd = !odd;
   }
-  console.log(areas.value);
 };
+
+function initializeScrollbar()
+{
+  const { getScrollTarget } = scroll;
+  const element = document.getElementById("scrolltarget");
+  const scrollTarget = getScrollTarget(element);
+  console.log(element);
+}
 
 
 const pokemonAlt = "pokemon";
@@ -48,6 +56,7 @@ onMounted(() => {
   fetchPokemonTypes();
   fetchAreas();
   coroutine();
+  initializeScrollbar();
 });
 
 function pokemonRequest() {
@@ -155,38 +164,46 @@ function takeAbreak() {
         </div>
       </div>
       <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 q-pl-xl">
+        
         <div
+          id="scrolltarget"
           class="container"
-          style="outline: solid; outline-offset: 2em; margin-top: 3em"
+          style="
+            outline: solid;
+            outline-offset: 2em;
+            margin-top: 3em;
+          "
         >
-          <h5>Mes Pokémon</h5>
-          <br />
-          <!-- Card list -->
-          <div class="" v-for="(item, index) in ownedPokemons" :key="index">
-            <q-card class="q-mb-sm">
-              <div class="flex justify-center">
-                <q-card-section>
-                  <div class="col justify-center items-center">
-                    <div class="text-h7 row justify-center">
-                      {{ item.pokemon_object.name }}
+          <q-scroll-area style="height: 20em">
+            <h5>Mes Pokémon</h5>
+            <br />
+            <!-- Card list -->
+            <div class="" v-for="(item, index) in ownedPokemons" :key="index">
+              <q-card class="q-mb-sm">
+                <div class="flex justify-center">
+                  <q-card-section>
+                    <div class="col justify-center items-center">
+                      <div class="text-h7 row justify-center">
+                        {{ item.pokemon_object.name }}
+                      </div>
+                      <div
+                        class="image-size-daycare row justify-center items-center q-ma-sm"
+                      >
+                        <q-img
+                          :src="item.pokemon_object.display_image_url"
+                          :alt="pokemonAlt"
+                          class="image-max-size-parent"
+                          fit="contain"
+                          @click="sendImage($event); changeTag($event)"
+                        />
+                      </div>
                     </div>
-                    <div
-                      class="image-size-daycare row justify-center items-center q-ma-sm"
-                    >
-                      <q-img
-                        :src="item.pokemon_object.display_image_url"
-                        :alt="pokemonAlt"
-                        class="image-max-size-parent"
-                        fit="contain"
-                        @click="sendImage($event); changeTag($event)"
-                      />
-                    </div>
-                  </div>
-                </q-card-section>
-              </div>
-              <q-separator inset />
-            </q-card>
-          </div>
+                  </q-card-section>
+                </div>
+                <q-separator inset />
+              </q-card>
+            </div>
+          </q-scroll-area>
         </div>
         <br />
         <div>
