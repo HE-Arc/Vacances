@@ -9,20 +9,26 @@ const isReceived = ref(true);
 
 const tag = ref("");
 
-const fetchOwnedPokemons = async () => {
-  ownedPokemons.value = (await axios.get("owned-pokemons/my_pokemons")).data;
-};
-
 const pokemonTypes = ref([]);
-
-const fetchPokemonTypes = async () => {
-  pokemonTypes.value = (await axios.get("pokemon-types/")).data;
-};
 
 const areas = ref([]);
 const areasPairs = ref([]);
 
 const tempImage = ref(null);
+
+var imageElement = ref(null);
+
+//var listPokemonMoved = ref(null);
+
+const pokemonAlt = "pokemon";
+
+const fetchPokemonTypes = async () => {
+  pokemonTypes.value = (await axios.get("pokemon-types/")).data;
+};
+
+const fetchOwnedPokemons = async () => {
+  ownedPokemons.value = (await axios.get("owned-pokemons/my_pokemons")).data;
+};
 
 const fetchAreas = async () => {
   areas.value = (await axios.get("areas/")).data;
@@ -35,10 +41,7 @@ const fetchAreas = async () => {
     }
     odd = !odd;
   }
-  console.log(areas.value);
 };
-
-const pokemonAlt = "pokemon";
 
 onMounted(() => {
   fetchOwnedPokemons();
@@ -65,24 +68,23 @@ function coroutine() {
 }
 
 function changeTag() {
-  tag.value = "pokemon";
-}
+  const cursorStyle = window.getComputedStyle(event.target).cursor;
 
-var imageElement = ref(null);
+  if (cursorStyle === "pointer") {
+    tag.value = "pokemon";
+  }
+}
 
 function sendImage(event) {
   const cursorStyle = window.getComputedStyle(event.target).cursor;
 
-  console.log(cursorStyle);
-
-  if(cursorStyle === "pointer")
-  {
+  if (cursorStyle === "pointer") {
     imageElement.value = event.target;
     isReceived.value = false;
-  }
-  else
-  {
+  } else {
     imageElement.value = "";
+    isReceived.value = true;
+    tag.value = "";
   }
 }
 
@@ -95,7 +97,10 @@ function receiveImage(event) {
 
       isReceived.value = true;
 
-      imageElement.value.style="filter: grayscale(100%); cursor: default;"
+      imageElement.value.style = "filter: grayscale(100%); cursor: default;";
+
+      // listPokemonMoved.push() -> mettre dans la liste, le pokémon posé pour le random des requests
+
     } else {
       if (isReceived.value) {
         if (
@@ -114,11 +119,21 @@ function receiveImage(event) {
         imageElement.value.src = tempImage.value;
       }
     }
+  } else {
+    imageElement.value = event.target;
+    isReceived.value = false;
   }
 }
 
 function takeAbreak() {
   if (!isReceived.value) {
+    var elements = document.getElementsByClassName("rightImages");
+    for (var i = 0; i < elements.length; i++) {
+      if (elements[i].children[1].children[0].src == imageElement.value.src) {
+        elements[i].children[1].children[0].style =
+          "filter: grayscale(0%); cursor: pointer;";
+      }
+    }
     imageElement.value.src =
       "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg";
 
@@ -189,15 +204,12 @@ function takeAbreak() {
                       <q-img
                         :src="item.pokemon_object.display_image_url"
                         :alt="pokemonAlt"
-                        class="image-max-size-parent hover-image"
+                        class="image-max-size-parent hover-image rightImages"
                         fit="contain"
                         @click="
                           sendImage($event);
                           changeTag($event);
                         "
-                        @mouseover="onMouseOver"
-                        @mouseout="onMouseOut"
-                        :style="{ cursor: cursorStyle }"
                       />
                     </div>
                   </div>
