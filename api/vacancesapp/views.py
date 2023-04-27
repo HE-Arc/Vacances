@@ -28,11 +28,9 @@ class PokemonViewSet(viewsets.ModelViewSet):
         Get all pokemons that are not owned by the connected user
         It's a shortcut to "pokemon_of_player", to avoid filter "is_owned == False" on the front side
         """
-        connectedUserResponse = UserViewSet.current(self, request)
-        if connectedUserResponse.status_code != status.HTTP_200_OK:
-            return connectedUserResponse
-        
-        user = connectedUserResponse.data.get("id")
+        user = request.user
+        if user.is_anonymous:
+            return Response({"error": "You must be logged to get your unowned pokemons"}, status=status.HTTP_401_UNAUTHORIZED)
         
         # aaa__bbb__ccc means : aaa with relation (double _) to bbb with relation to ccc
         queryset = Pokemon.objects.exclude(owned_pokemons__player__user=user)
@@ -55,25 +53,27 @@ class PokemonViewSet(viewsets.ModelViewSet):
         Perform the purchase of a pokemon by the connected user
         It will reduce the money of the user and add the pokemon to his list of owned pokemons
         """ 
+        user = request.user
+        if not user.is_authenticated:
+            return Response({"error": "You must be logged to buy a pokemon"}, status=status.HTTP_401_UNAUTHORIZED)
+        
         pokemon = get_object_or_404(Pokemon, pk = pk)
         pokemonType = PokemonType.objects.get(id=pokemon.pokemon_type.id)
-        
-        print("buying pokemon " + str(pokemon) + " for " + str(pokemonType.cost))
+
+        player = Player.objects.get(user=user)
         
         # TODO Transaction ?
-        paid = PlayerViewSet.reduce_money(self, request, pokemonType.cost)
-        print("Payment info :", paid.data, " => ", paid)
+        try:
+            OwnedPokemon.create_if_new(pokemon, player)
+        except:
+            return Response({"error": "Pokemon already owned"}, status=status.HTTP_409_CONFLICT)
         
-        if (paid.status_code != 200):
-            return Response({"error": paid.data}, status=paid.status_code)
+        try:
+            player.reduce_money(pokemonType.cost)
+        except:
+            return Response({"error": "Not enough money"}, status=status.HTTP_402_PAYMENT_REQUIRED)
         
-        gotPokemon = OwnedPokemonViewSet.create_if_new(self, request, pokemon)
-        print("Got pokemon info :", gotPokemon.data, " => ", gotPokemon)
-        
-        if (gotPokemon.status_code != 200):
-            return Response({"error": gotPokemon.data}, status=gotPokemon.status_code)
-        
-        return Response({"success": True})
+        return Response({"success": True}, status=status.HTTP_200_OK)
     
     @action(detail=True, methods=["DELETE"], url_path="delete-with-refund")
     def delete_with_refound(self, request, pk):
@@ -107,16 +107,10 @@ class UserViewSet(viewsets.ModelViewSet):
         try:
             # TODO Transaction ?
             user.save()
+            # add the profile of the user (player instance)
+            Player.create_for(user)
             
             login(request, user)
-            
-            # add the profile of the user (player instance)
-            player = Player(user=user)
-            player.username = user.username
-            player.is_manager = False
-            player.money = 50
-            
-            player.save()
             
             serializer = UserSerializer(user, context={'request': request})
             return Response({'user' : serializer.data}, status=status.HTTP_201_CREATED)
@@ -131,8 +125,8 @@ class UserViewSet(viewsets.ModelViewSet):
         password = data.get('password')
         user = authenticate(username=username, password=password)
         if user is not None:
-            print(user)
             login(request, user)
+            print("logged of :", user)
             return Response({'success': 'Login successful'}, status=status.HTTP_200_OK)
 
         return Response({'error': 'error'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -147,9 +141,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def logout(self, request):
+        print("logged out of :", request.user)
         logout(request)
-        print("logout")
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
     
 
 class PlayerViewSet(viewsets.ModelViewSet):
@@ -158,33 +152,12 @@ class PlayerViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def my_data(self, request):
-        connectedUserResponse = UserViewSet.current(self, request)
-        if connectedUserResponse.status_code != status.HTTP_200_OK:
-            return connectedUserResponse
+        user = request.user
+        if user.is_anonymous:
+            return Response({"error": "You must be logged to get your data"}, status=status.HTTP_401_UNAUTHORIZED)
         
-        user = connectedUserResponse.data.get("id")
-        
-        queryset = Player.objects.filter(user=user)
-        serializer = ComplexPlayerSerializer(queryset, many=True, context={'request': request})
-        return Response(serializer.data[0])
-    
-    @action(detail=False, methods=['post'])
-    def reduce_money(self, request, qty=0):
-        connectedUserResponse = UserViewSet.current(self, request)
-        if connectedUserResponse.status_code != status.HTTP_200_OK:
-            return connectedUserResponse
-        
-        user = connectedUserResponse.data.get("id")
-        
-        player = Player.objects.get(user=user)
-        
-        if player.money < qty:
-            return Response("Error : not enough money", status=status.HTTP_402_PAYMENT_REQUIRED)
-        
-        player.money -= qty
-        player.save()
-        
-        serializer = ComplexPlayerSerializer(player, context={'request': request})
+        queryset = Player.objects.get(user=user)
+        serializer = ComplexPlayerSerializer(queryset, many=False, context={'request': request})
         return Response(serializer.data)
         
     
@@ -192,43 +165,13 @@ class OwnedPokemonViewSet(viewsets.ModelViewSet):
     queryset = OwnedPokemon.objects.all()
     serializer_class = ComplexOwnedPokemonSerializer
     
-    @action(detail=False, methods=['post'])
-    def create_if_new(self, request, pokemon):
-        connectedUserResponse = UserViewSet.current(self, request)
-        if connectedUserResponse.status_code != status.HTTP_200_OK:
-            return connectedUserResponse
-        
-        user = connectedUserResponse.data.get("id")
-        
-        player = Player.objects.get(user=user)
-        
-        if OwnedPokemon.objects.filter(player=player, pokemon=pokemon).exists():
-            return Response("Error : pokemon already owned", status=status.HTTP_409_CONFLICT)
-        
-        # Create new entry
-        owned_pokemon = OwnedPokemon()
-        owned_pokemon.player = player
-        owned_pokemon.pokemon = pokemon
-        owned_pokemon.current_area = Area.objects.first() # TODO : get the default area (the one without limit)
-        owned_pokemon.requested_area = Area.objects.first() # TODO : get the default area (the one without limit)
-        owned_pokemon.current_happiness = 0
-        
-        owned_pokemon.save()
-        
-        serializer = ComplexOwnedPokemonSerializer(owned_pokemon, context={'request': request})
-        return Response(serializer.data)
-    
     @action(detail=False, methods=['get'])
     def my_pokemons(self, request):
-        connectedUserResponse = UserViewSet.current(self, request)
-        if connectedUserResponse.status_code != status.HTTP_200_OK:
-            return connectedUserResponse
+        user = request.user
+        if user.is_anonymous:
+            return Response({"error": "You must be logged to get your pokemons"}, status=status.HTTP_401_UNAUTHORIZED)
         
-        user = connectedUserResponse.data.get("id")
-        
-        player = Player.objects.get(user=user)
-        
-        queryset = OwnedPokemon.objects.filter(player=player)
+        queryset = OwnedPokemon.objects.filter(player__user=user)
         serializer = ComplexOwnedPokemonSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
     
@@ -239,6 +182,7 @@ class OwnedPokemonViewSet(viewsets.ModelViewSet):
         
         pokemon_type = owned_pokemon.pokemon.pokemon_type
         
+        # Max happiness reached => reset happiness and give money to the player
         if owned_pokemon.current_happiness >= pokemon_type.max_happiness:
             owned_pokemon.current_happiness = 0
             player=owned_pokemon.player
