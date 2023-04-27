@@ -59,7 +59,7 @@ const submit = async () => {
       localStorage.setItem("isAuth", true); // TODO A token will be better
 
       // Is manager
-      await axios.get("players/my_data/").then((response) => {
+      await axios.get("players/my-data/").then((response) => {
         const isManager = response.data.is_manager;
         localStorage.setItem("isManager", isManager.value);
       });

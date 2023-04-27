@@ -12,7 +12,7 @@ let errorsTitle = ref("");
 let errors = ref([]);
 
 const fetchPokemons = async () => {
-  const result = await axios.get("pokemons/unowned_by_user/");
+  const result = await axios.get("pokemons/unowned-by-user/");
   pokemons.value = result.data;
 };
 
@@ -25,7 +25,7 @@ const fetchPokemonTypes = async () => {
 const playerCash = ref(0);
 
 const fetchPlayerCash = async () => {
-  playerCash.value = (await axios.get("players/my_data/")).data.money;
+  playerCash.value = (await axios.get("players/my-data/")).data.money;
 };
 
 const fetchPokemon = async (id) => {

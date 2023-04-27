@@ -22,7 +22,7 @@ class PokemonViewSet(viewsets.ModelViewSet):
     # Note : the @auth & @perm doesn't seem to work, so we check if user is authenticated in the method
     # @authentication_classes([SessionAuthentication])
     # @permission_classes([IsAuthenticated])
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], url_path="unowned-by-user")
     def unowned_by_user(self, request):
         """
         Get all pokemons that are not owned by the connected user
@@ -37,8 +37,8 @@ class PokemonViewSet(viewsets.ModelViewSet):
         serializer = ComplexPokemonSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
     
-    @action(detail=False, methods=['get'])
-    def pokemons_of_user(self, request):
+    @action(detail=False, methods=['get'], url_path="is-owned-by-user")
+    def with_is_owned_by_user(self, request):
         """
         Get all pokemons in the app with an indication if it is owned by the connected user
         """
@@ -150,7 +150,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
     serializer_class = ComplexPlayerSerializer
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], url_path="my-data")
     def my_data(self, request):
         user = request.user
         if not user.is_authenticated:
@@ -168,14 +168,14 @@ class OwnedPokemonViewSet(viewsets.ModelViewSet):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], url_path="my-pokemons")
     def my_pokemons(self, request):
         user = request.user
         queryset = OwnedPokemon.objects.filter(player__user=user)
         serializer = ComplexOwnedPokemonSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
     
-    @action(detail=True, methods=['get'], url_path='increment-happiness')
+    @action(detail=True, methods=['post'], url_path='increment-happiness')
     def increment_happiness(self, request, pk=None):
         owned_pokemon = get_object_or_404(OwnedPokemon, pk = pk)
         owned_pokemon.current_happiness += 1

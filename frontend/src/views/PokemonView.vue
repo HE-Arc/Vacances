@@ -21,12 +21,12 @@ errorsTitle.value = sessionGetAndRemove(varToString({ errorsTitle }));
 errors.value = sessionGetAndRemove(varToString({ errors }), true);
 
 const fetchPlayer = async () => {
-  const result = await axios.get("players/my_data/");
+  const result = await axios.get("players/my-data/");
   isManager.value = result.data.is_manager;
 };
 
 const fetchPokemons = async () => {
-  const result = await axios.get("pokemons/pokemons_of_user/");
+  const result = await axios.get("pokemons/is-owned-by-user/");
   pokemons.value = result.data;
 };
 

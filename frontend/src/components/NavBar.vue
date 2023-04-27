@@ -33,7 +33,7 @@ const fetchConnected = async () => {
       localStorage.setItem("isAuth", true); // TODO A token will be better
 
       // Is manager
-      await axios.get("players/my_data/").then((response) => {
+      await axios.get("players/my-data/").then((response) => {
         isManager.value = response.data.is_manager;
         localStorage.setItem("isManager", isManager.value);
       });
