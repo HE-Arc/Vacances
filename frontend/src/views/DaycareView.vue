@@ -1,7 +1,9 @@
 <script setup>
 import axios from "axios";
 import { ref, onMounted } from "vue";
-import { scroll } from 'quasar'
+import { scroll } from "quasar";
+
+import transparentImg from "@/assets/images/transparent.png";
 
 const ownedPokemons = ref([]);
 const interval = ref(null);
@@ -106,15 +108,13 @@ function receiveImage(event, image) {
 
       isReceived.value = true;
 
-      imageElement.value.style = "filter: grayscale(100%); cursor: default;";
+      imageElement.value.style.filter = "grayscale(100%)";
+      imageElement.value.style.cursor = "default";
 
       listPokemonMoved.value.push(pokemonCurrent);
     } else {
       if (isReceived.value) {
-        if (
-          event.target.src !=
-          "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-        ) {
+        if (event.target.src != transparentImg) {
           imageElement.value = event.target;
           isReceived.value = false;
         }
@@ -169,8 +169,9 @@ function takeAbreak() {
     var elements = document.getElementsByClassName("rightImages");
     for (var i = 0; i < elements.length; i++) {
       if (elements[i].children[1].children[0].src == imageElement.value.src) {
-        elements[i].children[1].children[0].style =
-          "filter: grayscale(0%); cursor: pointer;";
+        let styleElem = elements[i].children[1].children[0].style;
+        styleElem.filter = "grayscale(0%)";
+        styleElem.cursor = "pointer";
       }
     }
 
@@ -182,12 +183,9 @@ function takeAbreak() {
         document.getElementById("Request").innerText = "";
       }
     }
-    imageElement.value.src =
-      "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg";
+    imageElement.value.src = transparentImg;
 
-    imageElement = ref(
-      "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-    );
+    imageElement = ref(transparentImg);
     isReceived.value = true;
   }
 }
@@ -222,8 +220,8 @@ function takeAbreak() {
                   margin-top: 2em;
                   margin-left: 7em;
                 "
-                fit="cover"
-                src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
+                fit="contain"
+                :src="transparentImg"
                 @click="receiveImage($event, item.image)"
                 class="hover-image"
               ></q-img>
@@ -232,15 +230,10 @@ function takeAbreak() {
         </div>
       </div>
       <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 q-pl-xl">
-        
         <div
           id="scrolltarget"
           class="container"
-          style="
-            outline: solid;
-            outline-offset: 2em;
-            margin-top: 3em;
-          "
+          style="outline: solid; outline-offset: 2em; margin-top: 3em"
         >
           <q-scroll-area style="height: 20em">
             <h5>Mes Pokémon</h5>
@@ -288,7 +281,7 @@ function takeAbreak() {
           <h5>Zone de repos</h5>
           <q-img
             style="outline: solid; max-width: 300px; height: 100px"
-            fit="cover"
+            fit="contain"
             @click="takeAbreak"
             src="https://www.digitaltrends.com/wp-content/uploads/2023/02/Pokemon-sleep-art.jpg?p=1"
           >
