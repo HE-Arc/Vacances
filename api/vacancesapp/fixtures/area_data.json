@@ -4,7 +4,7 @@
         "pk": 1,
         "fields": {
             "name": "Plage",
-            "image": "src/assets/images/Beach.jpg"
+            "image": "areas/Beach.jpg"
         }
     },
     {
@@ -12,7 +12,7 @@
         "pk": 2,
         "fields": {
             "name": "Montagne",
-            "image": "src/assets/images/Mountain.jpg"
+            "image": "areas/Mountain.jpg"
         }
     },
     {
@@ -20,7 +20,7 @@
         "pk": 3,
         "fields": {
             "name": "Grotte",
-            "image": "src/assets/images/Cave.jpg"
+            "image": "areas/Cave.jpg"
         }
     },
     {
@@ -28,7 +28,7 @@
         "pk": 4,
         "fields": {
             "name": "Forêt",
-            "image": "src/assets/images/Forest.jpg"
+            "image": "areas/Forest.jpg"
         }
     },
     {
@@ -36,7 +36,7 @@
         "pk": 5,
         "fields": {
             "name": "Ville",
-            "image": "src/assets/images/Town.jpg"
+            "image": "areas/Town.jpg"
         }
     },
     {
@@ -44,7 +44,7 @@
         "pk": 6,
         "fields": {
             "name": "Centrale",
-            "image": "src/assets/images/PowerPlant.jpg"
+            "image": "areas/PowerPlant.jpg"
         }
     }
 ]
