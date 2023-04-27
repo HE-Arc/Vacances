@@ -10,7 +10,7 @@ from .models import *
 from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework import viewsets, status
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 
@@ -18,10 +18,10 @@ class PokemonViewSet(viewsets.ModelViewSet):
     """Registred pokemons in the app (the pokedex)"""
     queryset = Pokemon.objects.all()
     serializer_class = ComplexPokemonSerializer
-    
-    #authentication_classes = [SessionAuthentication]
-    #permission_classes = [IsAuthenticated]
-    
+        
+    # Note : the @auth & @perm doesn't seem to work, so we check if user is authenticated in the method
+    # @authentication_classes([SessionAuthentication])
+    # @permission_classes([IsAuthenticated])
     @action(detail=False, methods=['get'])
     def unowned_by_user(self, request):
         """
@@ -29,7 +29,7 @@ class PokemonViewSet(viewsets.ModelViewSet):
         It's a shortcut to "pokemon_of_player", to avoid filter "is_owned == False" on the front side
         """
         user = request.user
-        if user.is_anonymous:
+        if not user.is_authenticated:
             return Response({"error": "You must be logged to get your unowned pokemons"}, status=status.HTTP_401_UNAUTHORIZED)
         
         # aaa__bbb__ccc means : aaa with relation (double _) to bbb with relation to ccc
@@ -153,7 +153,7 @@ class PlayerViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def my_data(self, request):
         user = request.user
-        if user.is_anonymous:
+        if not user.is_authenticated:
             return Response({"error": "You must be logged to get your data"}, status=status.HTTP_401_UNAUTHORIZED)
         
         queryset = Player.objects.get(user=user)
@@ -165,12 +165,12 @@ class OwnedPokemonViewSet(viewsets.ModelViewSet):
     queryset = OwnedPokemon.objects.all()
     serializer_class = ComplexOwnedPokemonSerializer
     
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     @action(detail=False, methods=['get'])
     def my_pokemons(self, request):
         user = request.user
-        if user.is_anonymous:
-            return Response({"error": "You must be logged to get your pokemons"}, status=status.HTTP_401_UNAUTHORIZED)
-        
         queryset = OwnedPokemon.objects.filter(player__user=user)
         serializer = ComplexOwnedPokemonSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
