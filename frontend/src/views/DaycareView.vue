@@ -1,7 +1,9 @@
 <script setup>
 import axios from "axios";
 import { ref, onMounted } from "vue";
-import { scroll } from 'quasar'
+import { scroll } from "quasar";
+
+import transparentImg from "@/assets/images/transparent.png";
 
 const ownedPokemons = ref([]);
 const interval = ref(null);
@@ -111,10 +113,7 @@ function receiveImage(event, image) {
       listPokemonMoved.value.push(pokemonCurrent);
     } else {
       if (isReceived.value) {
-        if (
-          event.target.src !=
-          "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-        ) {
+        if (event.target.src != transparentImg) {
           imageElement.value = event.target;
           isReceived.value = false;
         }
@@ -182,12 +181,9 @@ function takeAbreak() {
         document.getElementById("Request").innerText = "";
       }
     }
-    imageElement.value.src =
-      "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg";
+    imageElement.value.src = transparentImg;
 
-    imageElement = ref(
-      "https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
-    );
+    imageElement = ref(transparentImg);
     isReceived.value = true;
   }
 }
@@ -223,7 +219,7 @@ function takeAbreak() {
                   margin-left: 7em;
                 "
                 fit="cover"
-                src="https://upload.wikimedia.org/wikipedia/commons/4/49/Draw-1-black-line.svg"
+                :src="transparentImg"
                 @click="receiveImage($event, item.image)"
                 class="hover-image"
               ></q-img>
@@ -232,15 +228,10 @@ function takeAbreak() {
         </div>
       </div>
       <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 q-pl-xl">
-        
         <div
           id="scrolltarget"
           class="container"
-          style="
-            outline: solid;
-            outline-offset: 2em;
-            margin-top: 3em;
-          "
+          style="outline: solid; outline-offset: 2em; margin-top: 3em"
         >
           <q-scroll-area style="height: 20em">
             <h5>Mes Pokémon</h5>
