@@ -130,14 +130,6 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({'success': 'Login successful'}, status=status.HTTP_200_OK)
 
         return Response({'error': 'error'}, status=status.HTTP_401_UNAUTHORIZED)
-    
-    @action(detail=False, methods=['get'])
-    def current(self, request):        
-        if request.user.is_authenticated:
-            serializer = UserSerializer(request.user, context={'request': request})
-            return Response(serializer.data)
-        else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     @action(detail=False, methods=['get'])
     def logout(self, request):
