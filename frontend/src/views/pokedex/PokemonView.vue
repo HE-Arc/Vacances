@@ -182,7 +182,7 @@ onMounted(() => {
         <q-card-section>
           <p>
             Souhaitez-vous réellement supprimer le pokémon
-            <span class="text-teal">{{ removeItem.name }}</span>
+            <span class="text-teal">{{ removeItem.name }}</span> ?
           </p>
           <p>
             Si vous le supprimez, toutes les données associées le seront

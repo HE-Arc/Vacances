@@ -119,7 +119,7 @@ onMounted(() => {
   <q-page padding>
     <q-form class="q-gutter-md" @submit="submit()">
       <div class="row self-center justify-evenly">
-        <div class="col-8 col-md-6 q-mt-md">
+        <div class="col-12 col-sm-10 col-md-8">
           <q-card class="q-pa-lg">
             <q-card-section class="">
               <q-btn color="blue-grey" :to="{ name: 'pokemons' }">
@@ -162,8 +162,12 @@ onMounted(() => {
             </q-card-section>
 
             <q-card-section class="q-gutter-y-sm">
-              <div class="text-center">
-                <q-btn type="submit" color="green">
+              <div class="row justify-center q-gutter-sm">
+                <q-btn
+                  type="submit"
+                  color="green"
+                  class="col-12 col-sm-8 col-md-6"
+                >
                   <q-icon left name="fact_check" />
                   <div>{{ isEdit ? "Modifier" : "Créer" }}</div>
                 </q-btn>
