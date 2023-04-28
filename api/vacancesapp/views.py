@@ -186,8 +186,4 @@ class OwnedPokemonViewSet(viewsets.ModelViewSet):
         
         serializer = ComplexOwnedPokemonSerializer(owned_pokemon, context={'request': request})
         return Response(serializer.data)
-        
-class AreaViewSet(viewsets.ModelViewSet):
-    queryset = Area.objects.all()
-    serializer_class = AreaSerializer
     
