@@ -32,7 +32,7 @@ const fetchPokemonTypes = async () => {
 };
 
 const fetchOwnedPokemons = async () => {
-  ownedPokemons.value = (await axios.get("owned-pokemons/my_pokemons")).data;
+  ownedPokemons.value = (await axios.get("owned-pokemons/my-pokemons")).data;
 };
 
 const fetchAreas = async () => {
@@ -130,7 +130,7 @@ function receiveImage(event, image) {
           if (areas.value[randomIndexZone].image == image) {
             const id = listPokemonMoved.value[randomIndexPokemon].id;
             axios
-              .get(`owned-pokemons/${id}/increment-happiness/`)
+              .post(`owned-pokemons/${id}/increment-happiness/`)
               .then((ownedpkm) => {
                 listPokemonMoved.value[randomIndexPokemon].current_happiness =
                   ownedpkm.data.current_happiness;

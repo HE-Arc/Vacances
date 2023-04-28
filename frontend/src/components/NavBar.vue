@@ -4,14 +4,13 @@ import { ref, onMounted } from "vue";
 import interval from "../views/DaycareView.vue";
 import { useRoute } from "vue-router";
 
-const user = ref(null);
+const player = ref(null);
 const isLogged = ref(false);
-const isManager = ref(false);
 
 async function disconnect()
 {
   await axios.get("users/logout/").then(() => {
-    user.value = null;
+    player.value = null;
     isLogged.value = false;
     localStorage.removeItem("isAuth");
     localStorage.removeItem("isManager");
@@ -26,20 +25,16 @@ const fetchConnected = async () => {
     return;
   }
   await axios
-    .get("users/current/")
+    .get("players/my-data/")
     .then(async (response) => {
-      user.value = response.data;
+      player.value = response.data;
       isLogged.value = true;
-      localStorage.setItem("isAuth", true); // TODO A token will be better
 
-      // Is manager
-      await axios.get("players/my_data/").then((response) => {
-        isManager.value = response.data.is_manager;
-        localStorage.setItem("isManager", isManager.value);
-      });
+      localStorage.setItem("isAuth", true); // TODO A token will be better
+      localStorage.setItem("isManager", player.value.is_manager);
     })
     .catch(() => {
-      user.value = null;
+      player.value = null;
       isLogged.value = false;
       localStorage.removeItem("isAuth");
       localStorage.removeItem("isManager");
@@ -60,8 +55,8 @@ onMounted(() => {
 
       <div v-if="isLogged" class="q-ml-auto">
         <q-toolbar-title>
-          {{ user.username }}
-          <span v-if="isManager">[manager]</span>
+          {{ player.username }}
+          <span v-if="player.is_manager">[manager]</span>
         </q-toolbar-title>
       </div>
     </q-toolbar>

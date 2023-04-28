@@ -9,6 +9,16 @@ class Player(models.Model):
     money = models.PositiveIntegerField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    
+    def create_for(user: User):
+        Player.objects.create(user=user, username=user.username, is_manager=False, money=50)
+        
+    def reduce_money(self, amount):
+        if self.money < amount:
+            raise Exception("Not enough money")
+        
+        self.money -= amount
+        self.save()
 
 class PokemonType(models.Model):
     name = models.CharField(max_length=100)
@@ -34,3 +44,9 @@ class OwnedPokemon(models.Model):
     current_happiness = models.PositiveIntegerField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    
+    def create_if_new(pokemon : Pokemon, player : Player):
+        if not OwnedPokemon.objects.filter(pokemon=pokemon, player=player).exists():
+            OwnedPokemon.objects.create(pokemon=pokemon, player=player, current_happiness=0)
+        else:
+            raise Exception("Pokemon already owned")
