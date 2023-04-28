@@ -97,7 +97,7 @@ onMounted(() => {
   <q-page padding>
     <q-form class="q-gutter-md" @submit="submit()">
       <div class="row self-center justify-evenly">
-        <div class="col-8 col-md-6 q-mt-md">
+        <div class="col-12 col-sm-10 col-md-8">
           <q-card class="q-pa-lg">
             <q-card-section class="">
               <q-btn color="blue-grey" :to="{ name: 'home' }">
@@ -140,20 +140,21 @@ onMounted(() => {
               />
             </q-card-section>
 
-            <q-card-section class="q-gutter-y-sm">
-              <div class="text-center">
-                <q-btn type="submit" color="green" class="q-mr-sm">
+            <q-card-section>
+              <div class="row">
+                <q-btn type="submit" color="green" class="q-mb-sm col-12">
                   <q-icon left name="fact_check" />
                   <div>Se connecter</div>
                 </q-btn>
 
-                <!-- Button to go on "user.create" page and add the current value of username to reuse it in the other page -->
+                <!-- using query to keep the username on the "create page" -->
                 <q-btn
                   color="indigo"
                   :to="{
                     name: 'users.create',
                     query: { username: username },
                   }"
+                  class="col-12"
                 >
                   <q-icon left name="person_add" />
                   Créer un compte
