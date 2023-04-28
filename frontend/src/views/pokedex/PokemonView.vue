@@ -117,7 +117,7 @@ onMounted(() => {
 
           <!-- Info -->
           <q-card-section class="col-10">
-            <div class="text-h4 flex">
+            <div class="text-h4">
               {{ item.name }}
             </div>
             <div class="text-subtitle2">
@@ -142,10 +142,8 @@ onMounted(() => {
               :to="{ name: 'pokemons.edit', params: { id: item.id } }"
               class="col-12"
             >
-              <div>
-                <q-icon left size="xs" name="edit" />
-                Modifier
-              </div>
+              <q-icon left size="xs" name="edit" />
+              Modifier
             </q-btn>
 
             <q-btn
@@ -157,10 +155,8 @@ onMounted(() => {
               "
               class="col-12"
             >
-              <div>
-                <q-icon left size="xs" name="delete_outline" />
-                Supprimer
-              </div>
+              <q-icon left size="xs" name="delete_outline" />
+              Supprimer
             </q-btn>
           </div>
         </q-card-actions>
