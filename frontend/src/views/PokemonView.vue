@@ -93,15 +93,16 @@ onMounted(() => {
         v-for="(item, index) in pokemons"
         :key="index"
         :class="{ 'bg-green-3': item.is_owned, 'bg-grey-4': !item.is_owned }"
-        class="col-xs-12 col-sm-5 col-lg-3"
+        class="col-xs-12 col-sm-5 col-lg-3 column"
       >
-        <div class="row">
+        <div class="row q-ma-sm col-grow items-center">
           <!-- Image -->
           <q-img
             :src="item.display_image_url"
             :alt="item.name"
-            class="col-2"
+            class="col-2 full-height"
             fit="contain"
+            :ratio="1"
           />
 
           <!-- Info -->
@@ -124,39 +125,41 @@ onMounted(() => {
             </div>
             <div class="text-subtitle2"></div>
           </q-card-section>
-
-          <q-card-section v-if="isManager" class="q-gutter-y-sm col-12">
-            <!-- Buttons -->
-            <div class="row justify-center q-gutter-sm">
-              <q-btn
-                color="orange-8"
-                push
-                :to="{ name: 'pokemons.edit', params: { id: item.id } }"
-                class="col-12"
-              >
-                <div>
-                  <q-icon left size="xs" name="edit" />
-                  Modifier
-                </div>
-              </q-btn>
-
-              <q-btn
-                color="red"
-                push
-                @click="
-                  showDelDialog = true;
-                  removeItem = item;
-                "
-                class="col-12"
-              >
-                <div>
-                  <q-icon left size="xs" name="delete_outline" />
-                  Supprimer
-                </div>
-              </q-btn>
-            </div>
-          </q-card-section>
         </div>
+
+        <q-separator v-if="isManager" />
+
+        <q-card-actions v-if="isManager" class="q-gutter-y-sm col-auto" align="around">
+          <!-- Buttons -->
+          <div class="row justify-center q-gutter-sm">
+            <q-btn
+              color="orange-8"
+              push
+              :to="{ name: 'pokemons.edit', params: { id: item.id } }"
+              class="col-12"
+            >
+              <div>
+                <q-icon left size="xs" name="edit" />
+                Modifier
+              </div>
+            </q-btn>
+
+            <q-btn
+              color="red"
+              push
+              @click="
+                showDelDialog = true;
+                removeItem = item;
+              "
+              class="col-12"
+            >
+              <div>
+                <q-icon left size="xs" name="delete_outline" />
+                Supprimer
+              </div>
+            </q-btn>
+          </div>
+        </q-card-actions>
       </q-card>
     </div>
 
