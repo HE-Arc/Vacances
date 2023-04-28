@@ -61,19 +61,7 @@ class PokemonSerializer(serializers.HyperlinkedModelSerializer):
     def get_display_image_url(self, obj):
         if not obj.image_url:
             return "https://www.pokepedia.fr/images/5/54/Sprite_MissingNo._RV.png"
-        return obj.image_url
-        
-        
-class AreaSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Area
-        fields = [
-            "url",
-            "id",
-            "name",
-            "image",
-        ]
-        
+        return obj.image_url        
         
 class OwnedPokemonSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -83,8 +71,6 @@ class OwnedPokemonSerializer(serializers.HyperlinkedModelSerializer):
             "id",
             "pokemon",
             "player",
-            # "current_area", # TODO : uncomment when area is done
-            # "requested_area", # TODO : uncomment when area is done
             "current_happiness",
         ]
 
