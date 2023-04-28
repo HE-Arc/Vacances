@@ -1,8 +1,8 @@
 <script setup>
 import axios from "axios";
 import { ref, onMounted, onUnmounted } from "vue";
-import { scroll } from "quasar";
 
+import { areas } from "@/assets/js/areasData.js";
 import transparentImg from "@/assets/images/transparent.png";
 
 const ownedPokemons = ref([]);
@@ -14,7 +14,6 @@ const tag = ref("");
 
 const pokemonTypes = ref([]);
 
-const areas = ref([]);
 const areasPairs = ref([]);
 
 const tempImage = ref(null);
@@ -35,14 +34,13 @@ const fetchOwnedPokemons = async () => {
   ownedPokemons.value = (await axios.get("owned-pokemons/my-pokemons")).data;
 };
 
-const fetchAreas = async () => {
-  areas.value = (await axios.get("areas/")).data;
+const placeAreas = async () => {
   let odd = true;
-  for (let i = 0; i + 1 < areas.value.length; i += 2) {
+  for (let i = 0; i + 1 < areas.length; i += 2) {
     if (odd == true) {
-      areasPairs.value.push([areas.value[i], 0, areas.value[i + 1]]);
+      areasPairs.value.push([areas[i], 0, areas[i + 1]]);
     } else {
-      areasPairs.value.push([0, areas.value[i], 0, areas.value[i + 1]]);
+      areasPairs.value.push([0, areas[i], 0, areas[i + 1]]);
     }
     odd = !odd;
   }
@@ -56,12 +54,12 @@ function pokemonRequest() {
     randomIndexPokemon = Math.floor(
       Math.random() * listPokemonMoved.value.length
     );
-    randomIndexZone = Math.floor(Math.random() * areas.value.length);
+    randomIndexZone = Math.floor(Math.random() * areas.length);
 
     document.getElementById("Request").innerText =
       listPokemonMoved.value[randomIndexPokemon].pokemon_object.name +
       " aimerait aller à la " +
-      areas.value[randomIndexZone].name +
+      areas[randomIndexZone].name +
       ".";
   }
 }
@@ -120,7 +118,7 @@ function receiveImage(event, image) {
         imageElement.value.src = tempImage.value;
 
         if (randomIndexZone != null) {
-          if (areas.value[randomIndexZone].image == image) {
+          if (areas[randomIndexZone].image == image) {
             const id = listPokemonMoved.value[randomIndexPokemon].id;
             axios
               .post(`owned-pokemons/${id}/increment-happiness/`)
@@ -183,11 +181,10 @@ function takeAbreak() {
   }
 }
 
-
 onMounted(() => {
   fetchOwnedPokemons();
   fetchPokemonTypes();
-  fetchAreas();
+  placeAreas();
   coroutine();
 });
 
