@@ -118,7 +118,7 @@ const submit = async () => {
             </q-card-section>
 
             <q-card-section class="q-gutter-y-sm">
-              <div class="row justify-center q-gutter-y-sm">
+              <div class="row justify-center q-gutter-sm">
                 <q-btn
                   type="submit"
                   color="green"
