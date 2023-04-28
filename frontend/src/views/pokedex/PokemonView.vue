@@ -137,7 +137,7 @@ onMounted(() => {
           <!-- Buttons -->
           <div class="row justify-center q-gutter-sm">
             <q-btn
-              color="orange-8"
+              color="amber-8"
               push
               :to="{ name: 'pokemons.edit', params: { id: item.id } }"
               class="col-12"
