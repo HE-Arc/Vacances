@@ -7,8 +7,7 @@ import { useRoute } from "vue-router";
 const player = ref(null);
 const isLogged = ref(false);
 
-async function disconnect()
-{
+async function disconnect() {
   await axios.get("users/logout/").then(() => {
     player.value = null;
     isLogged.value = false;
@@ -62,52 +61,33 @@ onMounted(() => {
     </q-toolbar>
 
     <q-tabs align="left">
-      <q-route-tab :to="{ name: 'home' }" @click="clearInterval(interval)">
+      <q-route-tab :to="{ name: 'home' }">
         <q-icon name="cottage" />
         Accueil
       </q-route-tab>
-      <q-route-tab
-        v-if="isLogged"
-        :to="{ name: 'pokemons' }"
-        @click="clearInterval(interval)"
-      >
+      <q-route-tab v-if="isLogged" :to="{ name: 'pokemons' }">
         <q-icon name="auto_stories" />
         Pokédex
       </q-route-tab>
-      <q-route-tab
-        v-if="isLogged"
-        :to="{ name: 'daycare' }"
-        @click="clearInterval(interval)"
-      >
+      <q-route-tab v-if="isLogged" :to="{ name: 'daycare' }">
         <q-icon name="grass" />
         Pension
       </q-route-tab>
-      <q-route-tab
-        v-if="isLogged"
-        :to="{ name: 'shop' }"
-        @click="clearInterval(interval)"
-      >
+      <q-route-tab v-if="isLogged" :to="{ name: 'shop' }">
         <q-icon name="storefront" />
         Magasin
       </q-route-tab>
 
-      <q-route-tab
-        v-if="isLogged"
-        @click="
-          disconnect();
-          clearInterval(interval);
-        "
-      >
-        <q-icon name="logout" @click="clearInterval(interval)" />
+      <q-route-tab v-if="isLogged" @click="disconnect()">
+        <q-icon name="logout" />
         Deconnexion
       </q-route-tab>
 
       <q-route-tab
         v-if="!isLogged"
         :to="{ name: 'users' }"
-        @click="clearInterval(interval)"
       >
-        <q-icon name="login" @click="clearInterval(interval)" />
+        <q-icon name="login" />
         Connexion
       </q-route-tab>
     </q-tabs>

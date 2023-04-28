@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { scroll } from "quasar";
 
 import transparentImg from "@/assets/images/transparent.png";
@@ -47,13 +47,6 @@ const fetchAreas = async () => {
     odd = !odd;
   }
 };
-
-onMounted(() => {
-  fetchOwnedPokemons();
-  fetchPokemonTypes();
-  fetchAreas();
-  coroutine();
-});
 
 var randomIndexPokemon = null;
 var randomIndexZone = null;
@@ -189,6 +182,18 @@ function takeAbreak() {
     isReceived.value = true;
   }
 }
+
+
+onMounted(() => {
+  fetchOwnedPokemons();
+  fetchPokemonTypes();
+  fetchAreas();
+  coroutine();
+});
+
+onUnmounted(() => {
+  clearInterval(interval.value);
+});
 </script>
 
 <template>
@@ -288,11 +293,7 @@ function takeAbreak() {
           </q-img>
         </div>
         <div class="text-center q-mb-md q-mt-md">
-          <q-btn
-            color="green"
-            :to="{ name: 'shop' }"
-            @click="clearInterval(interval)"
-          >
+          <q-btn color="green" :to="{ name: 'shop' }">
             <q-icon left size="xl" name="add_circle_outline" />
             <div>Acheter un Pokémon</div>
           </q-btn>
