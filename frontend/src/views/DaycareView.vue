@@ -12,6 +12,14 @@ const lblMoneyDefault =
 let lblRequest = null;
 let lblMoney = null;
 
+const colorNoRequest = "blue-grey-13";
+const colorRequest = "pink-14";
+const colorMoneyDefault = "blue-grey-13";
+const colorEarnMoney = "green-14";
+
+const currentColorRequest = ref(colorNoRequest);
+const currentColorMoney = ref(colorMoneyDefault);
+
 const ownedPokemons = ref([]);
 const interval = ref(null);
 
@@ -68,6 +76,8 @@ function pokemonRequest() {
       " aimerait aller à la " +
       areas[randomIndexZone].name +
       ".";
+
+    currentColorRequest.value = colorRequest;
   }
 }
 
@@ -134,6 +144,7 @@ function receiveImage(event, image) {
                   ownedpkm.data.current_happiness;
                 randomIndexZone = null;
                 lblRequest.innerText = lblRequestEmpty;
+                currentColorRequest.value = colorNoRequest;
 
                 if (
                   listPokemonMoved.value[randomIndexPokemon]
@@ -148,8 +159,10 @@ function receiveImage(event, image) {
                     listPokemonMoved.value[randomIndexPokemon].pokemon_object
                       .name +
                     " !";
+                  currentColorMoney.value = colorEarnMoney;
                 } else {
                   lblMoney.innerText = lblMoneyDefault;
+                  currentColorMoney.value = colorMoneyDefault;
                 }
               });
           }
@@ -179,6 +192,7 @@ function takeAbreak() {
       ) {
         listPokemonMoved.value.splice(j, 1);
         lblRequest.innerText = lblRequestEmpty;
+        currentColorRequest.value = colorNoRequest;
       }
     }
     imageElement.value.src = transparentImg;
@@ -206,8 +220,10 @@ onUnmounted(() => {
   <q-page>
     <h1>La pension</h1>
     <br />
-    <p id="money">{{ lblMoneyDefault }}</p>
-    <p id="request" style="color: deeppink; font-size: 2em">
+    <p id="money" :class="`text-${currentColorMoney} text-h6`">
+      {{ lblMoneyDefault }}
+    </p>
+    <p id="request" :class="`text-${currentColorRequest} text-h5`">
       {{ lblRequestEmpty }}
     </p>
     <div class="row">
