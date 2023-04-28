@@ -122,22 +122,24 @@ onMounted(() => {
     />
 
     <!-- Card list -->
-    <div class="" v-for="(item, index) in pokemons" :key="index">
-      <q-card class="q-mb-sm">
-        <div class="flex justify-between">
-          <div class="flex items-center q-ma-sm">
-            <!-- Image -->
-            <div
-              class="image-size-pokedex rrow justify-center items-center q-mr-sm"
-            >
-              <q-img
-                :src="item.display_image_url"
-                :alt="item.name"
-                class="image-max-size-parent"
-                fit="contain"
-              />
-            </div>
-            <q-card-section class="flex-auto">
+    <div class="q-pa-md row q-gutter-md justify-center">
+      <q-card
+        v-for="(item, index) in pokemons"
+        :key="index"
+        :class="{ 'bg-green-3': item.is_owned, 'bg-grey-4': !item.is_owned }"
+        class="col-xs-12 col-sm-5 col-lg-3 column"
+      >
+        <div class="row q-ma-sm col-grow items-center">
+          <!-- Image -->
+          <q-img
+            :src="item.display_image_url"
+            :alt="item.name"
+            class="col-2 full-height no-native-menu"
+            fit="contain"
+            :ratio="1"
+          />
+          <!-- </div> -->
+          <!-- <q-card-section class="flex-auto">
               <div class="text-h4">{{ item.name }}</div>
               <div class="text-subtitle2">
                 {{ item.pokemon_type_object.name }}
@@ -154,8 +156,23 @@ onMounted(() => {
                 </p>
               </div>
             </q-card-section>
-          </div>
-          <div class="flex normal-btn-size">
+          </div> -->
+          <q-card-section class="col-10">
+            <div class="text-h4">
+              {{ item.name }}
+            </div>
+            <div class="text-subtitle2">
+              {{ item.pokemon_type_object.name }}
+            </div>
+            <div class="text-subtitle2"></div>
+          </q-card-section>
+        </div>
+
+        <q-separator />
+
+        <!-- Buttons -->
+        <q-card-actions class="q-gutter-y-sm" align="around">
+          <div class="row justify-center col-12">
             <q-tooltip v-if="playerCash < item.pokemon_type_object.cost">
               Vous n'avez pas assez d'argent pour acheter ce Pokémon.
             </q-tooltip>
@@ -166,21 +183,18 @@ onMounted(() => {
                 showBuyDialog = true;
                 buyItem = item;
               "
-              class="q-ma-xs"
-              dense
               :disable="playerCash < item.pokemon_type_object.cost"
+              class="col-8"
             >
-              <div>
-                <q-icon left size="xs" name="price_check" />
+              <div class="q-pa-sm">
+                <q-icon left name="price_check" />
                 Acheter<br />
                 {{ item.pokemon_type_object.cost }}
                 <q-icon name="currency_ruble" size="xs" />
               </div>
             </q-btn>
           </div>
-        </div>
-
-        <q-separator inset />
+        </q-card-actions>
       </q-card>
     </div>
 
