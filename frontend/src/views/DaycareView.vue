@@ -5,6 +5,13 @@ import { ref, onMounted, onUnmounted } from "vue";
 import { areas } from "@/assets/js/areasData.js";
 import transparentImg from "@/assets/images/transparent.png";
 
+const lblRequestEmpty = "Aucune demande pour le moment.";
+const lblMoneyDefault =
+  "Montez un Pokémon à son bonheur max pour gagner de l'argent !";
+
+let lblRequest = null;
+let lblMoney = null;
+
 const ownedPokemons = ref([]);
 const interval = ref(null);
 
@@ -56,7 +63,7 @@ function pokemonRequest() {
     );
     randomIndexZone = Math.floor(Math.random() * areas.length);
 
-    document.getElementById("Request").innerText =
+    lblRequest.innerText =
       listPokemonMoved.value[randomIndexPokemon].pokemon_object.name +
       " aimerait aller à la " +
       areas[randomIndexZone].name +
@@ -126,13 +133,13 @@ function receiveImage(event, image) {
                 listPokemonMoved.value[randomIndexPokemon].current_happiness =
                   ownedpkm.data.current_happiness;
                 randomIndexZone = null;
-                document.getElementById("Request").innerText = "";
+                lblRequest.innerText = lblRequestEmpty;
 
                 if (
                   listPokemonMoved.value[randomIndexPokemon]
                     .current_happiness == 0
                 ) {
-                  document.getElementsByClassName("money")[0].innerText =
+                  lblMoney.innerText =
                     "Vous avez gagné " +
                     listPokemonMoved.value[randomIndexPokemon].pokemon_object
                       .pokemon_type_object.cash_factor *
@@ -142,7 +149,7 @@ function receiveImage(event, image) {
                       .name +
                     " !";
                 } else {
-                  document.getElementsByClassName("money")[0].innerText = "";
+                  lblMoney.innerText = lblMoneyDefault;
                 }
               });
           }
@@ -171,7 +178,7 @@ function takeAbreak() {
         listPokemonMoved.value[j].display_image_url == imageElement.value.src
       ) {
         listPokemonMoved.value.splice(j, 1);
-        document.getElementById("Request").innerText = "";
+        lblRequest.innerText = lblRequestEmpty;
       }
     }
     imageElement.value.src = transparentImg;
@@ -182,6 +189,8 @@ function takeAbreak() {
 }
 
 onMounted(() => {
+  lblRequest = document.getElementById("request");
+  lblMoney = document.getElementById("money");
   fetchOwnedPokemons();
   fetchPokemonTypes();
   placeAreas();
@@ -196,9 +205,11 @@ onUnmounted(() => {
 <template>
   <q-page>
     <h1>La pension</h1>
-    <p class="money"></p>
     <br />
-    <p id="Request" style="color: deeppink; font-size: 2em"></p>
+    <p id="money">{{ lblMoneyDefault }}</p>
+    <p id="request" style="color: deeppink; font-size: 2em">
+      {{ lblRequestEmpty }}
+    </p>
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
         <div v-for="(items, index) in areasPairs" :key="index" class="row">
