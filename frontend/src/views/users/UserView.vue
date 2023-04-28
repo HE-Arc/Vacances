@@ -78,8 +78,7 @@ const submit = async () => {
 onMounted(() => {
   const logout = router.currentRoute.value.query.logout;
 
-  if(logout == "true")
-  {
+  if (logout == "true") {
     successTitle.value = "Déconnexion réussie !";
     success.value = [];
     success.value.push("Vous êtes déconnecté.");
@@ -140,9 +139,13 @@ onMounted(() => {
               />
             </q-card-section>
 
-            <q-card-section>
-              <div class="row">
-                <q-btn type="submit" color="green" class="q-mb-sm col-12">
+            <q-card-section class="q-gutter-y-sm">
+              <div class="row justify-center q-gutter-y-sm">
+                <q-btn
+                  type="submit"
+                  color="green"
+                  class="col-12 col-sm-8 col-md-6"
+                >
                   <q-icon left name="fact_check" />
                   <div>Se connecter</div>
                 </q-btn>
@@ -154,7 +157,7 @@ onMounted(() => {
                     name: 'users.create',
                     query: { username: username },
                   }"
-                  class="col-12"
+                  class="col-12 col-sm-8 col-md-6"
                 >
                   <q-icon left name="person_add" />
                   Créer un compte
