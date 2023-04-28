@@ -100,24 +100,24 @@ onMounted(() => {
           <q-img
             :src="item.display_image_url"
             :alt="item.name"
-            class="col-2 full-height"
+            class="col-2 full-height no-native-menu"
             fit="contain"
             :ratio="1"
-          />
+          >
+            <q-img
+              class="transparent"
+              :src="`icons/pokeball-icon${item.is_owned ? '' : '-white'}.png`"
+              style="max-width: 1px; padding: 10px"
+            >
+              <!-- We need to set maxwidth (value isn't important) to "force" the padding
+            Without setting padding, nested image have a minimal size of "padding = 16"
+             -->
+            </q-img>
+          </q-img>
 
           <!-- Info -->
           <q-card-section class="col-10">
             <div class="text-h4 flex">
-              <div class="flex items-center q-mr-sm icon-size-pokedex">
-                <q-img
-                  v-if="item.is_owned"
-                  src="../assets/images/pokeball-icon.png"
-                />
-                <q-img
-                  v-if="!item.is_owned"
-                  src="../assets/images/pokeball-icon-white.png"
-                />
-              </div>
               {{ item.name }}
             </div>
             <div class="text-subtitle2">
@@ -129,7 +129,11 @@ onMounted(() => {
 
         <q-separator v-if="isManager" />
 
-        <q-card-actions v-if="isManager" class="q-gutter-y-sm col-auto" align="around">
+        <q-card-actions
+          v-if="isManager"
+          class="q-gutter-y-sm col-auto"
+          align="around"
+        >
           <!-- Buttons -->
           <div class="row justify-center q-gutter-sm">
             <q-btn
