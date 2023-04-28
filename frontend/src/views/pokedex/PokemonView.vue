@@ -88,85 +88,78 @@ onMounted(() => {
     </div>
 
     <!-- Card list -->
-    <div class="" v-for="(item, index) in pokemons" :key="index">
+    <div class="q-pa-md row q-gutter-md justify-center">
       <q-card
-        class="q-mb-sm"
+        v-for="(item, index) in pokemons"
+        :key="index"
         :class="{ 'bg-green-3': item.is_owned, 'bg-grey-4': !item.is_owned }"
+        class="col-xs-12 col-sm-5 col-lg-3 column"
       >
-        <div>
-          <div class="flex justify-between">
-            <div class="flex items-center q-ma-sm">
-              <!-- Image -->
-              <div
-                class="image-size-pokedex row justify-center items-center q-mr-sm"
-              >
-                <q-img
-                  :src="item.display_image_url"
-                  :alt="item.name"
-                  class="image-max-size-parent"
-                  fit="contain"
-                />
-              </div>
-              <q-card-section class="flex-auto">
-                <div class="text-h4 flex">
-                  <div class="flex items-center q-mr-sm icon-size-pokedex">
-                    <q-img
-                      v-if="item.is_owned"
-                      src="../assets/images/pokeball-icon.png"
-                    />
-                    <q-img
-                      v-if="!item.is_owned"
-                      src="../assets/images/pokeball-icon-white.png"
-                    />
-                  </div>
-                  {{ item.name }}
-                </div>
-                <div class="text-subtitle2">
-                  {{ item.pokemon_type_object.name }}
-                </div>
-                <div class="text-subtitle2"></div>
-              </q-card-section>
+        <div class="row q-ma-sm col-grow items-center">
+          <!-- Image -->
+          <q-img
+            :src="item.display_image_url"
+            :alt="item.name"
+            class="col-2 full-height no-native-menu"
+            fit="contain"
+            :ratio="1"
+          >
+            <q-img
+              class="transparent"
+              :src="`icons/pokeball-icon${item.is_owned ? '' : '-white'}.png`"
+              style="max-width: 1px; padding: 10px"
+            >
+              <!-- We need to set maxwidth (value isn't important) to "force" the padding
+            Without setting padding, nested image have a minimal size of "padding = 16"
+             -->
+            </q-img>
+          </q-img>
+
+          <!-- Info -->
+          <q-card-section class="col-10">
+            <div class="text-h4">
+              {{ item.name }}
             </div>
-            <!-- Buttons -->
-            <div v-if="isManager" class="flex column">
-              <div class="flex normal-btn-size">
-                <q-btn
-                  color="orange-8"
-                  push
-                  :to="{ name: 'pokemons.edit', params: { id: item.id } }"
-                  class="q-ma-xs"
-                  style="width: 100%"
-                  dense
-                >
-                  <div>
-                    <q-icon left size="xs" name="edit" />
-                    Modifier
-                  </div>
-                </q-btn>
-              </div>
-              <div class="flex normal-btn-size">
-                <q-btn
-                  color="red"
-                  push
-                  @click="
-                    showDelDialog = true;
-                    removeItem = item;
-                  "
-                  class="q-ma-xs"
-                  style="width: 100%"
-                  dense
-                >
-                  <div>
-                    <q-icon left size="xs" name="delete_outline" />
-                    Supprimer
-                  </div>
-                </q-btn>
-              </div>
+            <div class="text-subtitle2">
+              {{ item.pokemon_type_object.name }}
             </div>
-          </div>
+            <div class="text-subtitle2"></div>
+          </q-card-section>
         </div>
 
-        <q-separator inset />
+        <q-separator v-if="isManager" />
+
+        <q-card-actions
+          v-if="isManager"
+          class="q-gutter-y-sm col-auto"
+          align="around"
+        >
+          <!-- Buttons -->
+          <div class="row justify-center q-gutter-sm">
+            <q-btn
+              color="amber-8"
+              push
+              :to="{ name: 'pokemons.edit', params: { id: item.id } }"
+              class="col-12"
+            >
+              <q-icon left size="xs" name="edit" />
+              Modifier
+            </q-btn>
+
+            <q-btn
+              color="red"
+              push
+              @click="
+                showDelDialog = true;
+                removeItem = item;
+              "
+              class="col-12"
+            >
+              <q-icon left size="xs" name="delete_outline" />
+              Supprimer
+            </q-btn>
+          </div>
+        </q-card-actions>
       </q-card>
     </div>
 
@@ -185,7 +178,7 @@ onMounted(() => {
         <q-card-section>
           <p>
             Souhaitez-vous réellement supprimer le pokémon
-            <span class="text-teal">{{ removeItem.name }}</span>
+            <span class="text-teal">{{ removeItem.name }}</span> ?
           </p>
           <p>
             Si vous le supprimez, toutes les données associées le seront

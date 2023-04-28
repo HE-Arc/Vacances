@@ -24,13 +24,13 @@ const router = createRouter({
       path: "/pokemons:success?",
       name: "pokemons",
       props: true,
-      component: () => import("../views/PokemonView.vue"),
+      component: () => import("../views/pokedex/PokemonView.vue"),
       meta: { auth: true },
     },
     {
       path: "/pokemons/create",
       name: "pokemons.create",
-      component: () => import("../views/CreatePokemonView.vue"),
+      component: () => import("../views/pokedex/CreatePokemonView.vue"),
       meta: { 
         auth: true,
         manager: true,
@@ -39,7 +39,7 @@ const router = createRouter({
     {
       path: "/pokemons/:id/edit",
       name: "pokemons.edit",
-      component: () => import("../views/CreatePokemonView.vue"),
+      component: () => import("../views/pokedex/CreatePokemonView.vue"),
       meta: { 
         auth: true,
         manager: true,
