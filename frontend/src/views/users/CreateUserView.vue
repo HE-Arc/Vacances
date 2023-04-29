@@ -2,12 +2,15 @@
 <script setup>
 import axios from "axios";
 import { ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+
+import { onConnect } from "@/assets/js/persistanceLoginInfo";
 
 import { varToString } from "@/assets/js/utils.js"; // IMPORTANT : Need to be in { } to work !
 import MessageBanner from "@/components/MessageBanner.vue";
 
 const route = useRoute();
+const router = useRouter();
 
 let successTitle = ref("");
 let success = ref([]);
@@ -53,7 +56,7 @@ const submit = async () => {
     })
     .then(() => {
       successTitle.value = "Compte créé avec succès";
-      success.value.push("Vous pouvez maintenant vous connecter.");
+      success.value.push("Vous êtes automatiquement connecté.");
 
       sessionStorage.setItem(varToString({ successTitle }), successTitle.value);
       sessionStorage.setItem(
@@ -61,9 +64,12 @@ const submit = async () => {
         JSON.stringify(success.value)
       );
 
-      window.location.href = "/";
+      onConnect(true, false, username.value);
+
+      router.push({ name: "home" });
     })
-    .catch(() => {
+    .catch((error) => {
+      console.log(error);
       errorsTitle.value = "La création a échoué";
       errors.value.push("Ce nom est peut-être déjà pris ?");
     });

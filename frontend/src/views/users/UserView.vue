@@ -3,6 +3,7 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 
+import { onConnect, onDisconnect } from "@/assets/js/persistanceLoginInfo";
 import { varToString, sessionGetAndRemove } from "@/assets/js/utils.js"; // IMPORTANT : Need to be in { } to work !
 import MessageBanner from "@/components/MessageBanner.vue";
 
@@ -56,22 +57,20 @@ const submit = async () => {
         JSON.stringify(success.value)
       );
 
-      localStorage.setItem("isAuth", true); // TODO A token will be better
-
-      // Is manager
       await axios.get("players/my-data/").then((response) => {
         const isManager = response.data.is_manager;
-        localStorage.setItem("isManager", isManager.value);
+        const playerName = response.data.username;
+
+        onConnect(true, isManager, playerName);
       });
 
-      window.location.href = "/"; // TODO Is there a way to use "router.push" ? (by doing with location, we force refresh and so remount the components, else the tabs are not changed)
+      router.push({ name: "home" });
     })
     .catch(() => {
       errorsTitle.value = "Identification échouée";
       errors.value.push("Est-ce le bon nom d'utilisateur et mot de passe ?");
 
-      localStorage.removeItem("isAuth");
-      localStorage.removeItem("isManager");
+      onDisconnect();
     });
 };
 
