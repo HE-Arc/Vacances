@@ -103,10 +103,10 @@ class UserViewSet(viewsets.ModelViewSet):
         # set password and hash it
         user.set_password(values['password'])
         
-        serializer = None
         try:
             # TODO Transaction ?
             user.save()
+            
             # add the profile of the user (player instance)
             Player.create_for(user)
             
@@ -116,7 +116,7 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({'user' : serializer.data}, status=status.HTTP_201_CREATED)
         
         except:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error' : 'could not create user'}, status=status.HTTP_400_BAD_REQUEST)
         
     @action(detail=False, methods=['post'])
     def login(self, request):

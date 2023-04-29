@@ -24,7 +24,7 @@ axios.interceptors.response.use(
 
       router.push("users");
     }
-    return error;
+    return Promise.reject(error);
   }
 );
 </script>
