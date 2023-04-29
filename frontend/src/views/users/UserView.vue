@@ -57,7 +57,6 @@ const submit = async () => {
       );
 
       localStorage.setItem("isAuth", true); // TODO A token will be better
-
       // Is manager
       await axios.get("players/my-data/").then((response) => {
         const isManager = response.data.is_manager;
@@ -66,7 +65,7 @@ const submit = async () => {
         localStorage.setItem("playerName", playerName);
       });
 
-      window.location.href = "/"; // TODO Is there a way to use "router.push" ? (by doing with location, we force refresh and so remount the components, else the tabs are not changed)
+      router.push({ name: "home" });
     })
     .catch(() => {
       errorsTitle.value = "Identification échouée";
