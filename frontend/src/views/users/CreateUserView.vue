@@ -100,21 +100,40 @@ const submit = async () => {
                 label="*Nom"
                 class="q-mb-md"
                 outlined
-              />
+                autofocus
+                maxlength="30"
+                :rules="[(val) => !!val || 'Champs requis']"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="badge" />
+                </template>
+              </q-input>
               <q-input
                 v-model="password"
                 type="password"
                 label="*Mot de passe"
                 class="q-mb-md"
                 outlined
-              />
+                maxlength="50"
+                :rules="[(val) => !!val || 'Champs requis']"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="password" />
+                </template>
+              </q-input>
               <q-input
                 v-model="confirmPassword"
                 type="password"
                 label="*Confirmation de mot de passe"
                 class="q-mb-md"
                 outlined
-              />
+                maxlength="50"
+                :rules="[(val) => !!val || 'Champs requis']"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="password" />
+                </template>
+              </q-input>
             </q-card-section>
 
             <q-card-section class="q-gutter-y-sm">

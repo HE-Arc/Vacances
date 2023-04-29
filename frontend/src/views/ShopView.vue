@@ -138,33 +138,24 @@ onMounted(() => {
             fit="contain"
             :ratio="1"
           />
-          <!-- </div> -->
-          <!-- <q-card-section class="flex-auto">
-              <div class="text-h4">{{ item.name }}</div>
-              <div class="text-subtitle2">
-                {{ item.pokemon_type_object.name }}
-              </div>
-
-              <div class="q-mt-md">
-                <p>
-                  <q-icon name="price_change" size="xs" /> Facteur de gain :
-                  {{ item.pokemon_type_object.cash_factor }}
-                </p>
-                <p>
-                  <q-icon name="sentiment_very_satisfied" size="xs" /> Bonheur
-                  max : {{ item.pokemon_type_object.max_happiness }}
-                </p>
-              </div>
-            </q-card-section>
-          </div> -->
           <q-card-section class="col-10">
-            <div class="text-h4">
+            <div class="text-h4" style="word-break: break-word">
               {{ item.name }}
             </div>
             <div class="text-subtitle2">
               {{ item.pokemon_type_object.name }}
             </div>
             <div class="text-subtitle2"></div>
+            <div class="q-mt-md">
+              <p>
+                <q-icon name="price_change" size="xs" /> Facteur de gain :
+                {{ item.pokemon_type_object.cash_factor }}
+              </p>
+              <p>
+                <q-icon name="sentiment_very_satisfied" size="xs" /> Bonheur max
+                : {{ item.pokemon_type_object.max_happiness }}
+              </p>
+            </div>
           </q-card-section>
         </div>
 
@@ -230,7 +221,6 @@ onMounted(() => {
             </span>
             .
           </p>
-          <!-- TODO When game implemented : change text to specify the refund the players and remove it -->
         </q-card-section>
 
         <hr />
