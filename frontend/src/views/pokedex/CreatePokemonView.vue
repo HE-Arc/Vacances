@@ -142,14 +142,30 @@ onMounted(() => {
             />
 
             <q-card-section>
-              <q-input v-model="name" label="*Nom" class="q-mb-md" outlined />
+              <q-input
+                v-model="name"
+                label="*Nom"
+                class="q-mb-md"
+                outlined
+                autofocus
+                maxlength="50"
+                :rules="[(val) => !!val || 'Champs requis']"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="badge" />
+                </template>
+              </q-input>
 
               <q-select
                 v-model="selectedPokemonType"
                 :options="options"
                 label="Sélectionnez un type"
                 class="q-mb-md"
-              />
+              >
+                <template v-slot:prepend>
+                  <q-icon name="category" />
+                </template>
+              </q-select>
 
               <div>
                 <q-input
@@ -157,7 +173,11 @@ onMounted(() => {
                   label="URL d'une image"
                   class="q-mb-md"
                   outlined
-                />
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="wallpaper" />
+                  </template>
+                </q-input>
               </div>
             </q-card-section>
 
