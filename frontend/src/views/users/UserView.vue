@@ -3,6 +3,7 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 
+import { onConnect, onDisconnect } from "@/assets/js/persistanceLoginInfo";
 import { varToString, sessionGetAndRemove } from "@/assets/js/utils.js"; // IMPORTANT : Need to be in { } to work !
 import MessageBanner from "@/components/MessageBanner.vue";
 
@@ -56,13 +57,11 @@ const submit = async () => {
         JSON.stringify(success.value)
       );
 
-      localStorage.setItem("isAuth", true); // TODO A token will be better
-      // Is manager
       await axios.get("players/my-data/").then((response) => {
         const isManager = response.data.is_manager;
         const playerName = response.data.username;
-        localStorage.setItem("isManager", isManager);
-        localStorage.setItem("playerName", playerName);
+
+        onConnect(true, isManager, playerName);
       });
 
       router.push({ name: "home" });
@@ -71,9 +70,7 @@ const submit = async () => {
       errorsTitle.value = "Identification échouée";
       errors.value.push("Est-ce le bon nom d'utilisateur et mot de passe ?");
 
-      localStorage.removeItem("isAuth");
-      localStorage.removeItem("isManager");
-      localStorage.removeItem("playerName");
+      onDisconnect();
     });
 };
 

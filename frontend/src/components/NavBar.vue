@@ -2,15 +2,14 @@
 import axios from "axios";
 import { useRouter } from "vue-router";
 
+import { onDisconnect } from "@/assets/js/persistanceLoginInfo";
 import { player } from "@/router/index.js";
 
 const router = useRouter();
 
 async function disconnect() {
   await axios.get("users/logout/").then(() => {
-    localStorage.removeItem("isAuth");
-    localStorage.removeItem("isManager");
-    localStorage.removeItem("playerName");
+    onDisconnect();
 
     router.push({ name: "users", query: { logout: "true" } });
   });

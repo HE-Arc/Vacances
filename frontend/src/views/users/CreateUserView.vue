@@ -4,6 +4,8 @@ import axios from "axios";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+import { onConnect } from "@/assets/js/persistanceLoginInfo";
+
 import { varToString } from "@/assets/js/utils.js"; // IMPORTANT : Need to be in { } to work !
 import MessageBanner from "@/components/MessageBanner.vue";
 
@@ -62,9 +64,7 @@ const submit = async () => {
         JSON.stringify(success.value)
       );
 
-      localStorage.setItem("isAuth", true); // TODO A token will be better
-      localStorage.setItem("isManager", false);
-      localStorage.setItem("playerName", username.value);
+      onConnect(true, false, username.value);
 
       router.push({ name: "home" });
     })

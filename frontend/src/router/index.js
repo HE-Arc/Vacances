@@ -2,6 +2,9 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import { ref } from "vue";
 
+import { getConnectedInfo } from "@/assets/js/persistanceLoginInfo";
+
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -70,14 +73,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  player.value = {
-    isLogged: localStorage.getItem("isAuth") == "true",
-    isManager: localStorage.getItem("isManager") == "true",
-    // !xStorage.get => item is null or undefined
-    // Note : another way to check if boolean would be using !JSON.parse(...)
-
-    name: localStorage.getItem("playerName"),
-  };
+  player.value = getConnectedInfo();
 
   const auth = to.matched.some((record) => record.meta.auth);
   const manager = to.matched.some((record) => record.meta.manager);
