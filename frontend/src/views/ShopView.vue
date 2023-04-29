@@ -158,7 +158,7 @@ onMounted(() => {
             </q-card-section>
           </div> -->
           <q-card-section class="col-10">
-            <div class="text-h4">
+            <div class="text-h4" style="word-break: break-word">
               {{ item.name }}
             </div>
             <div class="text-subtitle2">
@@ -230,7 +230,6 @@ onMounted(() => {
             </span>
             .
           </p>
-          <!-- TODO When game implemented : change text to specify the refund the players and remove it -->
         </q-card-section>
 
         <hr />
