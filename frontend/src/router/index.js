@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import { ref } from "vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -69,6 +70,13 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  tmpTest.value = to.name;
+  console.log("tmpTest", tmpTest)
+
+  isLogged.value = localStorage.getItem("isAuth") == "true";
+  isManager.value = localStorage.getItem("isManager") == "true";
+  playerName.value = localStorage.getItem("playerName");
+
   const auth = to.matched.some((record) => record.meta.auth);
   const manager = to.matched.some((record) => record.meta.manager);
 
@@ -87,4 +95,9 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
+
+export const tmpTest = ref("abc");
+export const isLogged = ref(false);
+export const isManager = ref(false);
+export const playerName = ref("");
 export default router;

@@ -61,7 +61,9 @@ const submit = async () => {
       // Is manager
       await axios.get("players/my-data/").then((response) => {
         const isManager = response.data.is_manager;
-        localStorage.setItem("isManager", isManager.value);
+        const playerName = response.data.username;
+        localStorage.setItem("isManager", isManager);
+        localStorage.setItem("playerName", playerName);
       });
 
       window.location.href = "/"; // TODO Is there a way to use "router.push" ? (by doing with location, we force refresh and so remount the components, else the tabs are not changed)
@@ -72,6 +74,7 @@ const submit = async () => {
 
       localStorage.removeItem("isAuth");
       localStorage.removeItem("isManager");
+      localStorage.removeItem("playerName");
     });
 };
 

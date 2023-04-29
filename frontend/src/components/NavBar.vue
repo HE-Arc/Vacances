@@ -1,48 +1,26 @@
 <script setup>
 import axios from "axios";
-import { ref, onMounted } from "vue";
-import interval from "../views/DaycareView.vue";
-import { useRoute } from "vue-router";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+
+import {isLogged, isManager, playerName} from "@/router/index.js";
 
 const player = ref(null);
-const isLogged = ref(false);
+
+const router = useRouter();
 
 async function disconnect() {
   await axios.get("users/logout/").then(() => {
     player.value = null;
     isLogged.value = false;
+
     localStorage.removeItem("isAuth");
     localStorage.removeItem("isManager");
-    window.location.href = "users?logout=true";
+    localStorage.removeItem("playerName");
+
+    router.push({ name: "users", query: { logout: "true" } });
   });
 }
-
-// OnMounted we check if we are still connected
-const fetchConnected = async () => {
-  const route = useRoute();
-  if (route.query == "users") {
-    return;
-  }
-  await axios
-    .get("players/my-data/")
-    .then(async (response) => {
-      player.value = response.data;
-      isLogged.value = true;
-
-      localStorage.setItem("isAuth", true); // TODO A token will be better
-      localStorage.setItem("isManager", player.value.is_manager);
-    })
-    .catch(() => {
-      player.value = null;
-      isLogged.value = false;
-      localStorage.removeItem("isAuth");
-      localStorage.removeItem("isManager");
-    });
-};
-
-onMounted(() => {
-  fetchConnected();
-});
 </script>
 
 <template>
@@ -54,8 +32,8 @@ onMounted(() => {
 
       <div v-if="isLogged" class="q-ml-auto">
         <q-toolbar-title>
-          {{ player.username }}
-          <span v-if="player.is_manager">[manager]</span>
+          {{ playerName }}
+          <span v-if="isManager">[manager]</span>
         </q-toolbar-title>
       </div>
     </q-toolbar>
@@ -83,10 +61,7 @@ onMounted(() => {
         Deconnexion
       </q-route-tab>
 
-      <q-route-tab
-        v-if="!isLogged"
-        :to="{ name: 'users' }"
-      >
+      <q-route-tab v-if="!isLogged" :to="{ name: 'users' }">
         <q-icon name="login" />
         Connexion
       </q-route-tab>
