@@ -19,7 +19,7 @@ async function disconnect() {
 <template>
   <q-header reveal elevated class="bg-grey-10 text-white" height-hint="98">
     <q-toolbar>
-      <q-toolbar-title>Vacances ? {{ player }}</q-toolbar-title>
+      <q-toolbar-title>Vacances ?</q-toolbar-title>
 
       <q-separator vertical />
 

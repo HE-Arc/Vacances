@@ -4,7 +4,6 @@ import { ref } from "vue";
 
 import { getConnectedInfo } from "@/assets/js/persistanceLoginInfo";
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -12,11 +11,6 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
-    },
-    {
-      path: "/about",
-      name: "about",
-      component: () => import("../views/AboutView.vue"),
     },
     {
       path: "/daycare",

@@ -4,8 +4,8 @@ import App from "./App.vue";
 import router from "./router";
 
 import "./assets/css/main.css";
-import '@quasar/extras/material-icons/material-icons.css'
-import 'quasar/src/css/index.sass'
+import "@quasar/extras/material-icons/material-icons.css";
+import "quasar/src/css/index.sass";
 
 //import "@quasar/extras/mdi-v6/mdi-v6.css";
 import "quasar/dist/quasar.css";

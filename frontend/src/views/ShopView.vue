@@ -68,11 +68,11 @@ const buyPokemon = async (id) => {
   // 2) Process buy (backend)
   await axios
     .post(`pokemons/${id}/buy/`)
-    .then((response) => {
+    .then(() => {
       successTitle.value = "Achat réussi !";
       success.value.push(buyedPokemon.name + " vous attend !");
     })
-    .catch((error) => {
+    .catch(() => {
       errorsTitle.value =
         "Erreur lors de l'achat de " + buyedPokemon.name + " :";
       errors.value.push("Une erreur est survenue lors de l'achat.");
