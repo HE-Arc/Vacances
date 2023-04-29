@@ -32,7 +32,7 @@ const router = createRouter({
       path: "/pokemons/create",
       name: "pokemons.create",
       component: () => import("../views/pokedex/CreatePokemonView.vue"),
-      meta: { 
+      meta: {
         auth: true,
         manager: true,
       },
@@ -41,7 +41,7 @@ const router = createRouter({
       path: "/pokemons/:id/edit",
       name: "pokemons.edit",
       component: () => import("../views/pokedex/CreatePokemonView.vue"),
-      meta: { 
+      meta: {
         auth: true,
         manager: true,
       },
@@ -70,24 +70,24 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  tmpTest.value = to.name;
-  console.log("tmpTest", tmpTest)
+  player.value = {
+    isLogged: localStorage.getItem("isAuth") == "true",
+    isManager: localStorage.getItem("isManager") == "true",
+    // !xStorage.get => item is null or undefined
+    // Note : another way to check if boolean would be using !JSON.parse(...)
 
-  isLogged.value = localStorage.getItem("isAuth") == "true";
-  isManager.value = localStorage.getItem("isManager") == "true";
-  playerName.value = localStorage.getItem("playerName");
+    name: localStorage.getItem("playerName"),
+  };
 
   const auth = to.matched.some((record) => record.meta.auth);
   const manager = to.matched.some((record) => record.meta.manager);
 
-  if (auth && !localStorage.getItem("isAuth")) {
-    // !xStorage.get => item is null or undefined
+  if (auth && !player.value.isLogged) {
     next({ name: "users" });
     return;
   }
 
-  if (manager && localStorage.getItem("isManager") == "false") {
-    // Note : another way to check instead of "false" would be using !JSON.parse(...)
+  if (manager && !player.value.isManager) {
     next({ name: "pokemons" });
     return;
   }
@@ -95,9 +95,5 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
-
-export const tmpTest = ref("abc");
-export const isLogged = ref(false);
-export const isManager = ref(false);
-export const playerName = ref("");
+export const player = ref({});
 export default router;
