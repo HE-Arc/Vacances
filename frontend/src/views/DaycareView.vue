@@ -1,3 +1,4 @@
+<!-- eslint-disable prettier/prettier -->
 <script setup>
 import axios from "axios";
 import { ref, onMounted, onUnmounted } from "vue";
@@ -34,8 +35,8 @@ const areasPairs = ref([]);
 const tempImage = ref(null);
 
 var imageElement = ref(null);
-
-var listPokemonMoved = ref([]);
+const lastAreaClicked = ref(null);
+const mapAreaPokemon = new Map();
 
 var pokemonCurrent = null;
 
@@ -62,17 +63,23 @@ const placeAreas = async () => {
 };
 
 var randomIndexPokemon = null;
+var randomPokemon =  null;
 var randomIndexZone = null;
 
 function pokemonRequest() {
-  if (listPokemonMoved.value.length > 0) {
+  if (mapAreaPokemon.size > 0) {
+    let keys = Array.from(mapAreaPokemon.keys());
+
     randomIndexPokemon = Math.floor(
-      Math.random() * listPokemonMoved.value.length
+      Math.random() * mapAreaPokemon.size
     );
+
+    randomPokemon = mapAreaPokemon.get(keys[randomIndexPokemon]);
+
     randomIndexZone = Math.floor(Math.random() * areas.length);
 
     lblRequest.innerText =
-      listPokemonMoved.value[randomIndexPokemon].pokemon_object.name +
+      randomPokemon.pokemon_object.name +
       " aimerait aller à la " +
       areas[randomIndexZone].name +
       ".";
@@ -96,20 +103,26 @@ function changeTag() {
 function sendImage(event, item) {
   const cursorStyle = window.getComputedStyle(event.target).cursor;
 
-  if (cursorStyle === "pointer") {
+  if (cursorStyle === "pointer")
+  {
     imageElement.value = event.target;
     isReceived.value = false;
     pokemonCurrent = item;
-  } else {
+  }
+  else
+  {
     imageElement.value = "";
     isReceived.value = true;
     tag.value = "";
   }
 }
 
-function receiveImage(event, image) {
-  if (imageElement.value != "") {
-    if (tag.value == "pokemon") {
+function receiveImage(event, area)
+{
+  if (imageElement.value != "")
+  {
+    if (tag.value == "pokemon")
+    {
       event.target.src = imageElement.value.src;
 
       tag.value = "";
@@ -119,14 +132,22 @@ function receiveImage(event, image) {
       imageElement.value.style.filter = "grayscale(100%)";
       imageElement.value.style.cursor = "default";
 
-      listPokemonMoved.value.push(pokemonCurrent);
-    } else {
-      if (isReceived.value) {
-        if (event.target.src != transparentImg) {
+      mapAreaPokemon.set(area.name, pokemonCurrent)
+    }
+    else 
+    {
+
+      if (isReceived.value)
+      {
+        if (event.target.src != transparentImg)
+        {
           imageElement.value = event.target;
+          lastAreaClicked.value = area;
           isReceived.value = false;
         }
-      } else {
+      }
+      else
+      {
         tempImage.value = event.target.src;
         event.target.src = imageElement.value.src;
 
@@ -134,43 +155,64 @@ function receiveImage(event, image) {
 
         imageElement.value.src = tempImage.value;
 
-        if (randomIndexZone != null) {
-          if (areas[randomIndexZone].image == image) {
-            const id = listPokemonMoved.value[randomIndexPokemon].id;
+        let tempPokemon = mapAreaPokemon.get(lastAreaClicked.value.name);
+        mapAreaPokemon.set(lastAreaClicked.value.name, mapAreaPokemon.get(area.name));
+        mapAreaPokemon.set(area.name, tempPokemon);
+        if(mapAreaPokemon.get(area.name) == null)
+        {
+          mapAreaPokemon.delete(area.name);
+        }
+        if(mapAreaPokemon.get(lastAreaClicked.value.name) == null)
+        {
+          mapAreaPokemon.delete(lastAreaClicked.value.name);
+        }
+
+        //lastAreaClicked.value = area;
+
+        if (randomIndexZone != null)
+        {
+          if (areas[randomIndexZone].name == area.name && mapAreaPokemon.get(area.name) == randomPokemon)
+          {
+            const id = mapAreaPokemon.get(area.name).id;
+            //const id = listPokemonMoved.value[randomIndexPokemon].id;
             axios
               .post(`owned-pokemons/${id}/increment-happiness/`)
               .then((ownedpkm) => {
-                listPokemonMoved.value[randomIndexPokemon].current_happiness =
+                mapAreaPokemon.get(area.name).current_happiness =
                   ownedpkm.data.current_happiness;
                 randomIndexZone = null;
                 lblRequest.innerText = lblRequestEmpty;
                 currentColorRequest.value = colorNoRequest;
 
                 if (
-                  listPokemonMoved.value[randomIndexPokemon]
-                    .current_happiness == 0
-                ) {
+                  mapAreaPokemon.get(area.name).current_happiness == 0
+                )
+                {
                   lblMoney.innerText =
                     "Vous avez gagné " +
-                    listPokemonMoved.value[randomIndexPokemon].pokemon_object
+                    mapAreaPokemon.get(area.name).pokemon_object
                       .pokemon_type_object.cash_factor *
                       10 +
                     " ₽ grâce au bonheur de " +
-                    listPokemonMoved.value[randomIndexPokemon].pokemon_object
+                    mapAreaPokemon.get(area.name).pokemon_object
                       .name +
                     " !";
                   currentColorMoney.value = colorEarnMoney;
-                } else {
+                }
+                else
+                {
                   lblMoney.innerText = lblMoneyDefault;
                   currentColorMoney.value = colorMoneyDefault;
                 }
-              });
+              }
+              );
           }
         }
       }
     }
   } else {
     imageElement.value = event.target;
+    lastAreaClicked.value = area;
     isReceived.value = false;
   }
 }
@@ -178,23 +220,21 @@ function receiveImage(event, image) {
 function takeAbreak() {
   if (!isReceived.value) {
     var elements = document.getElementsByClassName("rightImages");
+    var nameElements = document.getElementsByClassName("pokemonName");
     for (var i = 0; i < elements.length; i++) {
-      if (elements[i].children[1].children[0].src == imageElement.value.src) {
+      if (nameElements[i].textContent == pokemonCurrent.pokemon_object.name) {
         let styleElem = elements[i].children[1].children[0].style;
         styleElem.filter = "grayscale(0%)";
         styleElem.cursor = "pointer";
       }
     }
-
-    for (var j = 0; j < listPokemonMoved.value.length; j++) {
-      if (
-        listPokemonMoved.value[j].display_image_url == imageElement.value.src
-      ) {
-        listPokemonMoved.value.splice(j, 1);
-        lblRequest.innerText = lblRequestEmpty;
-        currentColorRequest.value = colorNoRequest;
-      }
+    if(mapAreaPokemon.get(lastAreaClicked.value.name) != null)
+    {
+      mapAreaPokemon.delete(lastAreaClicked.value.name);
+      lblRequest.innerText = lblRequestEmpty;
+      currentColorRequest.value = colorNoRequest;
     }
+
     imageElement.value.src = transparentImg;
 
     imageElement = ref(transparentImg);
@@ -251,7 +291,7 @@ onUnmounted(() => {
                 "
                 fit="contain"
                 :src="transparentImg"
-                @click="receiveImage($event, item.image)"
+                @click="receiveImage($event, item)"
                 class="hover-image"
               ></q-img>
             </q-img>
@@ -273,7 +313,7 @@ onUnmounted(() => {
                 <div class="flex justify-center">
                   <q-card-section>
                     <div class="col justify-center items-center">
-                      <div class="text-h7 row justify-center">
+                      <div class="text-h7 row justify-center pokemonName">
                         {{ item.pokemon_object.name }}
                       </div>
                       <div class="text-h7 row justify-left">
