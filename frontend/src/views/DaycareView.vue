@@ -4,9 +4,9 @@ import axios from "axios";
 import { ref, onMounted, onUnmounted } from "vue";
 
 import { areas } from "@/assets/js/areasData.js";
-import transparentImg from "@/assets/images/transparent.png";
-
-const TRANSPARENT_IMG_CHECK = "transparent"; // must be the name of the transparentImg (without path and ext)
+const transparentImg = "transparent.png"; // Syntax for public folder
+// import transparentImg from "@/transparent.png"; // Syntax for assets folder
+// Note : We use the public folder to avoid the rename of the image when build (we use it's name for checks)
 
 const lblRequestEmpty = "Aucune demande pour le moment.";
 const lblMoneyDefault =
@@ -117,7 +117,7 @@ function sendImage(event, item) {
 function receiveImage(event, area) {
   if (imageElement.value != "") {
     if (tag.value == "pokemon") {
-      if (event.target.src.includes(TRANSPARENT_IMG_CHECK)) {
+      if (event.target.src.includes(transparentImg)) {
         event.target.src = imageElement.value.src;
 
         tag.value = "";
@@ -131,7 +131,7 @@ function receiveImage(event, area) {
       }
     } else {
       if (isReceived.value) {
-        if (!event.target.src.includes(TRANSPARENT_IMG_CHECK)) {
+        if (!event.target.src.includes(transparentImg)) {
           imageElement.value = event.target;
           lastAreaClicked.value = area;
           isReceived.value = false;
