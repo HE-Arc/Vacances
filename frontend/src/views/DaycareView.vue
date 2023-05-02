@@ -78,6 +78,11 @@ function pokemonRequest() {
 
     randomIndexZone = Math.floor(Math.random() * areas.length);
 
+    while(mapAreaPokemon.get(areas[randomIndexZone].name) == pokemonCurrent)
+    {
+      randomIndexZone = Math.floor(Math.random() * areas.length);
+    }
+
     lblRequest.innerText =
       randomPokemon.pokemon_object.name +
       " aimerait aller à la " +
@@ -85,11 +90,20 @@ function pokemonRequest() {
       ".";
 
     currentColorRequest.value = colorRequest;
+
+    let randomwait = Math.floor(Math.random() * 10000) + 5000;
+    clearInterval(interval.value);
+    interval.value = setInterval(pokemonRequest, randomwait);
+  }
+  else
+  {
+    lblRequest.innerText = lblRequestEmpty;
+    currentColorRequest.value = colorNoRequest;
   }
 }
 
 function coroutine() {
-  interval.value = setInterval(pokemonRequest, 5000); // 30000
+  interval.value = setInterval(pokemonRequest, 5000);
 }
 
 function changeTag() {
@@ -165,14 +179,12 @@ function receiveImage(event, area) {
             mapAreaPokemon.get(area.name) == randomPokemon
           ) {
             const id = mapAreaPokemon.get(area.name).id;
-            //const id = listPokemonMoved.value[randomIndexPokemon].id;
             axios
               .post(`owned-pokemons/${id}/increment-happiness/`)
               .then((ownedpkm) => {
                 mapAreaPokemon.get(area.name).current_happiness =
                   ownedpkm.data.current_happiness;
                 randomIndexZone = null;
-                lblRequest.innerText = lblRequestEmpty;
                 currentColorRequest.value = colorNoRequest;
 
                 if (mapAreaPokemon.get(area.name).current_happiness == 0) {
@@ -189,6 +201,7 @@ function receiveImage(event, area) {
                   lblMoney.innerText = lblMoneyDefault;
                   currentColorMoney.value = colorMoneyDefault;
                 }
+                pokemonRequest();
               });
           }
         }
@@ -215,8 +228,6 @@ function takeAbreak() {
     }
     if (mapAreaPokemon.get(lastAreaClicked.value.name) != null) {
       mapAreaPokemon.delete(lastAreaClicked.value.name);
-      lblRequest.innerText = lblRequestEmpty;
-      currentColorRequest.value = colorNoRequest;
     }
 
     imageElement.value.src = transparentImg;

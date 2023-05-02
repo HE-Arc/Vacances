@@ -45,7 +45,8 @@
       "fields": {
             "pokemon_type": 1,
             "name": "Bulbizarre",
-            "obtainable": true
+            "obtainable": true,
+            "image_url": "https://www.pokepedia.fr/images/thumb/e/ef/Bulbizarre-RFVF.png/250px-Bulbizarre-RFVF.png"
       }
     },
     {
@@ -54,7 +55,8 @@
         "fields": {
             "pokemon_type": 2,
             "name": "Herbizarre",
-            "obtainable": true
+            "obtainable": true,
+            "image_url": "https://www.pokepedia.fr/images/thumb/4/44/Herbizarre-RFVF.png/250px-Herbizarre-RFVF.png"
         }
     },
     {
@@ -63,7 +65,8 @@
         "fields": {
             "pokemon_type": 3,
             "name": "Florizarre",
-            "obtainable": true
+            "obtainable": true,
+            "image_url": "https://www.pokepedia.fr/images/thumb/4/42/Florizarre-RFVF.png/250px-Florizarre-RFVF.png"
         }
     },
     {
@@ -71,8 +74,9 @@
         "pk": 4,
         "fields": {
             "pokemon_type": 1,
-            "name": "Carapuce",
-            "obtainable": true
+            "name": "Salamèche",
+            "obtainable": true,
+            "image_url": "https://www.pokepedia.fr/images/thumb/8/89/Salam%C3%A8che-RFVF.png/250px-Salam%C3%A8che-RFVF.png"
         }
     },
     {
@@ -80,8 +84,9 @@
         "pk": 5,
         "fields": {
             "pokemon_type": 2,
-            "name": "Carabaffe",
-            "obtainable": true
+            "name": "Reptincel",
+            "obtainable": true,
+            "image_url": "https://www.pokepedia.fr/images/thumb/6/64/Reptincel-RFVF.png/250px-Reptincel-RFVF.png"
         }
     },
     {
@@ -89,8 +94,9 @@
         "pk": 6,
         "fields": {
             "pokemon_type": 3,
-            "name": "Tortank",
-            "obtainable": true
+            "name": "Dracaufeu",
+            "obtainable": true,
+            "image_url": "https://www.pokepedia.fr/images/thumb/1/17/Dracaufeu-RFVF.png/250px-Dracaufeu-RFVF.png"
         }
     },
     {
@@ -98,8 +104,9 @@
         "pk": 7,
         "fields": {
             "pokemon_type": 1,
-            "name": "Salamèche",
-            "obtainable": true
+            "name": "Carapuce",
+            "obtainable": true,
+            "image_url": "https://www.pokepedia.fr/images/thumb/c/cc/Carapuce-RFVF.png/250px-Carapuce-RFVF.png"
         }
     },
     {
@@ -107,8 +114,9 @@
         "pk": 8,
         "fields": {
             "pokemon_type": 2,
-            "name": "Reptincel",
-            "obtainable": true
+            "name": "Carabaffe",
+            "obtainable": true,
+            "image_url": "https://www.pokepedia.fr/images/thumb/2/2a/Carabaffe-RFVF.png/250px-Carabaffe-RFVF.png"
         }
     },
     {
@@ -116,8 +124,39 @@
         "pk": 9,
         "fields": {
             "pokemon_type": 3,
-            "name": "Dracaufeu",
-            "obtainable": true
+            "name": "Tortank",
+            "obtainable": true,
+            "image_url": "https://www.pokepedia.fr/images/thumb/2/24/Tortank-RFVF.png/250px-Tortank-RFVF.png"
+        }
+    },
+    {
+        "model": "vacancesapp.pokemon",
+        "pk": 10,
+        "fields": {
+            "pokemon_type": 1,
+            "name": "Psykokwak",
+            "obtainable": true,
+            "image_url": "https://www.pokepedia.fr/images/thumb/4/44/Psykokwak-RFVF.png/250px-Psykokwak-RFVF.png"
+        }
+    },
+    {
+        "model": "vacancesapp.pokemon",
+        "pk": 11,
+        "fields": {
+            "pokemon_type": 4,
+            "name": "Mew",
+            "obtainable": true,
+            "image_url": "https://www.pokepedia.fr/images/thumb/1/16/Mew-DEPS.png/250px-Mew-DEPS.png"
+        }
+    },
+    {
+        "model": "vacancesapp.pokemon",
+        "pk": 12,
+        "fields": {
+            "pokemon_type": 3,
+            "name": "Luxray",
+            "obtainable": true,
+            "image_url": "https://www.pokepedia.fr/images/thumb/b/bf/Luxray-DEPS.png/250px-Luxray-DEPS.png"
         }
     }
   ]
