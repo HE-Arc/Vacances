@@ -63,16 +63,14 @@ const placeAreas = async () => {
 };
 
 var randomIndexPokemon = null;
-var randomPokemon =  null;
+var randomPokemon = null;
 var randomIndexZone = null;
 
 function pokemonRequest() {
   if (mapAreaPokemon.size > 0) {
     let keys = Array.from(mapAreaPokemon.keys());
 
-    randomIndexPokemon = Math.floor(
-      Math.random() * mapAreaPokemon.size
-    );
+    randomIndexPokemon = Math.floor(Math.random() * mapAreaPokemon.size);
 
     randomPokemon = mapAreaPokemon.get(keys[randomIndexPokemon]);
 
@@ -103,28 +101,24 @@ function changeTag() {
 function sendImage(event, item) {
   const cursorStyle = window.getComputedStyle(event.target).cursor;
 
-  if (cursorStyle === "pointer")
-  {
+  if (cursorStyle === "pointer") {
     imageElement.value = event.target;
     isReceived.value = false;
     pokemonCurrent = item;
-  }
-  else
-  {
+  } else {
     imageElement.value = "";
     isReceived.value = true;
     tag.value = "";
   }
 }
 
-function receiveImage(event, area)
-{
-  if (imageElement.value != "")
-  {
-    if (tag.value == "pokemon")
-    {
-      if(event.target.src == "http://localhost:5173/src/assets/images/transparent.png")
-      {
+function receiveImage(event, area) {
+  if (imageElement.value != "") {
+    if (tag.value == "pokemon") {
+      if (
+        event.target.src ==
+        "http://localhost:5173/src/assets/images/transparent.png"
+      ) {
         event.target.src = imageElement.value.src;
 
         tag.value = "";
@@ -136,22 +130,17 @@ function receiveImage(event, area)
 
         mapAreaPokemon.set(area.name, pokemonCurrent);
       }
-      
-    }
-    else 
-    {
-
-      if (isReceived.value)
-      {
-        if (event.target.src != "http://localhost:5173/src/assets/images/transparent.png")
-        {
+    } else {
+      if (isReceived.value) {
+        if (
+          event.target.src !=
+          "http://localhost:5173/src/assets/images/transparent.png"
+        ) {
           imageElement.value = event.target;
           lastAreaClicked.value = area;
           isReceived.value = false;
         }
-      }
-      else
-      {
+      } else {
         tempImage.value = event.target.src;
         event.target.src = imageElement.value.src;
 
@@ -160,23 +149,25 @@ function receiveImage(event, area)
         imageElement.value.src = tempImage.value;
 
         let tempPokemon = mapAreaPokemon.get(lastAreaClicked.value.name);
-        mapAreaPokemon.set(lastAreaClicked.value.name, mapAreaPokemon.get(area.name));
+        mapAreaPokemon.set(
+          lastAreaClicked.value.name,
+          mapAreaPokemon.get(area.name)
+        );
         mapAreaPokemon.set(area.name, tempPokemon);
-        if(mapAreaPokemon.get(area.name) == null)
-        {
+        if (mapAreaPokemon.get(area.name) == null) {
           mapAreaPokemon.delete(area.name);
         }
-        if(mapAreaPokemon.get(lastAreaClicked.value.name) == null)
-        {
+        if (mapAreaPokemon.get(lastAreaClicked.value.name) == null) {
           mapAreaPokemon.delete(lastAreaClicked.value.name);
         }
 
         //lastAreaClicked.value = area;
 
-        if (randomIndexZone != null)
-        {
-          if (areas[randomIndexZone].name == area.name && mapAreaPokemon.get(area.name) == randomPokemon)
-          {
+        if (randomIndexZone != null) {
+          if (
+            areas[randomIndexZone].name == area.name &&
+            mapAreaPokemon.get(area.name) == randomPokemon
+          ) {
             const id = mapAreaPokemon.get(area.name).id;
             //const id = listPokemonMoved.value[randomIndexPokemon].id;
             axios
@@ -188,28 +179,21 @@ function receiveImage(event, area)
                 lblRequest.innerText = lblRequestEmpty;
                 currentColorRequest.value = colorNoRequest;
 
-                if (
-                  mapAreaPokemon.get(area.name).current_happiness == 0
-                )
-                {
+                if (mapAreaPokemon.get(area.name).current_happiness == 0) {
                   lblMoney.innerText =
                     "Vous avez gagné " +
                     mapAreaPokemon.get(area.name).pokemon_object
                       .pokemon_type_object.cash_factor *
                       10 +
                     " ₽ grâce au bonheur de " +
-                    mapAreaPokemon.get(area.name).pokemon_object
-                      .name +
+                    mapAreaPokemon.get(area.name).pokemon_object.name +
                     " !";
                   currentColorMoney.value = colorEarnMoney;
-                }
-                else
-                {
+                } else {
                   lblMoney.innerText = lblMoneyDefault;
                   currentColorMoney.value = colorMoneyDefault;
                 }
-              }
-              );
+              });
           }
         }
       }
@@ -233,8 +217,7 @@ function takeAbreak() {
         styleElem.cursor = "pointer";
       }
     }
-    if(mapAreaPokemon.get(lastAreaClicked.value.name) != null)
-    {
+    if (mapAreaPokemon.get(lastAreaClicked.value.name) != null) {
       mapAreaPokemon.delete(lastAreaClicked.value.name);
       lblRequest.innerText = lblRequestEmpty;
       currentColorRequest.value = colorNoRequest;
@@ -279,39 +262,39 @@ onUnmounted(() => {
     </q-page-sticky>
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-      <div class="q-mr-md">
-        <div v-for="(items, index) in areasPairs" :key="index" class="row">
-          <div
-            v-for="(item, index) in items"
-            :key="index"
-            class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm"
-          >
-            <q-img
-              v-if="item != 0"
-              :src="item.image"
-              style="outline: solid; max-width: 300px; height: 150px"
-              fit="cover"
-              :alt="item.name"
+        <div class="q-mr-md">
+          <div v-for="(items, index) in areasPairs" :key="index" class="row">
+            <div
+              v-for="(item, index) in items"
+              :key="index"
+              class="col-xs-12 col-sm-12 col-md-9 col-lg-3 q-pa-sm"
             >
               <q-img
-                style="
-                  outline: solid;
-                  max-width: 100px;
-                  height: 100px;
-                  margin-top: 2em;
-                  margin-left: 7em;
-                "
-                fit="contain"
-                :src="transparentImg"
-                @click="receiveImage($event, item)"
-                class="hover-image"
-              ></q-img>
-            </q-img>
+                v-if="item != 0"
+                :src="item.image"
+                style="outline: solid; max-width: 300px; height: 150px"
+                fit="cover"
+                :alt="item.name"
+              >
+                <q-img
+                  style="
+                    outline: solid;
+                    max-width: 100px;
+                    height: 100px;
+                    margin-top: 2em;
+                    margin-left: 7em;
+                  "
+                  fit="contain"
+                  :src="transparentImg"
+                  @click="receiveImage($event, item)"
+                  class="hover-image"
+                ></q-img>
+              </q-img>
+            </div>
           </div>
         </div>
       </div>
-      </div>
-      <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 ">
+      <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 column">
         <div
           id="scrolltarget"
           class="container q-pa-md"
@@ -357,8 +340,8 @@ onUnmounted(() => {
             </div>
           </q-scroll-area>
         </div>
-        <br />
-        <div class="column items-center q-mt-sm">
+
+        <div class="column items-center q-mt-sm" style="order: -1">
           <h5>Zone de repos</h5>
           <q-img
             style="outline: solid; max-width: 300px; height: 100px"
