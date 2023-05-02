@@ -52,7 +52,7 @@ onMounted(() => {
       </div>
 
       <!-- "Project information" -->
-      <div>
+      <div class="text-body1">
         <h1>But du projet</h1>
         <br />
         <p>Le projet choisi consiste à créer un jeu sur navigateur.</p>
