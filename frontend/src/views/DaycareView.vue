@@ -319,7 +319,8 @@ onUnmounted(() => {
                       <div class="text-h7 row justify-center pokemonName">
                         {{ item.pokemon_object.name }}
                       </div>
-                      <div class="text-h7 row justify-left">
+                      <div class="text-h7 row justify-center">
+                        <q-icon name="sentiment_very_satisfied" size="xs" class="q-mr-sm"/>
                         {{ item.current_happiness }} /
                         {{
                           item.pokemon_object.pokemon_type_object.max_happiness
