@@ -123,23 +123,27 @@ function receiveImage(event, area)
   {
     if (tag.value == "pokemon")
     {
-      event.target.src = imageElement.value.src;
+      if(event.target.src == "http://localhost:5173/src/assets/images/transparent.png")
+      {
+        event.target.src = imageElement.value.src;
 
-      tag.value = "";
+        tag.value = "";
 
-      isReceived.value = true;
+        isReceived.value = true;
 
-      imageElement.value.style.filter = "grayscale(100%)";
-      imageElement.value.style.cursor = "default";
+        imageElement.value.style.filter = "grayscale(100%)";
+        imageElement.value.style.cursor = "default";
 
-      mapAreaPokemon.set(area.name, pokemonCurrent)
+        mapAreaPokemon.set(area.name, pokemonCurrent);
+      }
+      
     }
     else 
     {
 
       if (isReceived.value)
       {
-        if (event.target.src != transparentImg)
+        if (event.target.src != "http://localhost:5173/src/assets/images/transparent.png")
         {
           imageElement.value = event.target;
           lastAreaClicked.value = area;
@@ -221,8 +225,9 @@ function takeAbreak() {
   if (!isReceived.value) {
     var elements = document.getElementsByClassName("rightImages");
     var nameElements = document.getElementsByClassName("pokemonName");
+    var pokemonToSleep = mapAreaPokemon.get(lastAreaClicked.value.name);
     for (var i = 0; i < elements.length; i++) {
-      if (nameElements[i].textContent == pokemonCurrent.pokemon_object.name) {
+      if (nameElements[i].textContent == pokemonToSleep.pokemon_object.name) {
         let styleElem = elements[i].children[1].children[0].style;
         styleElem.filter = "grayscale(0%)";
         styleElem.cursor = "pointer";
