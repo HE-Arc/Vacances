@@ -168,8 +168,6 @@ function receiveImage(event, area) {
           mapAreaPokemon.delete(lastAreaClicked.value.name);
         }
 
-        //lastAreaClicked.value = area;
-
         if (randomIndexZone != null) {
           if (
             areas[randomIndexZone].name == area.name &&
@@ -198,7 +196,16 @@ function receiveImage(event, area) {
                   lblMoney.innerText = lblMoneyDefault;
                   currentColorMoney.value = colorMoneyDefault;
                 }
-                pokemonRequest();
+
+                // Choose 1 mode to request new area
+                {
+                  // mode 1 : request new area after each move
+                  // pokemonRequest();
+
+                  // mode 2 : request
+                  lblRequest.innerText = lblRequestEmpty;
+                  currentColorRequest.value = colorNoRequest;
+                }
               });
           }
         }
