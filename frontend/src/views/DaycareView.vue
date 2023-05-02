@@ -279,6 +279,7 @@ onUnmounted(() => {
     </q-page-sticky>
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+      <div class="q-mr-md">
         <div v-for="(items, index) in areasPairs" :key="index" class="row">
           <div
             v-for="(item, index) in items"
@@ -309,11 +310,12 @@ onUnmounted(() => {
           </div>
         </div>
       </div>
-      <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 q-pl-xl">
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 ">
         <div
           id="scrolltarget"
-          class="container"
-          style="outline: solid; outline-offset: 2em; margin-top: 3em"
+          class="container q-pa-md"
+          style="outline: solid; margin-top: 3em"
         >
           <q-scroll-area style="height: 20em">
             <h5>Mes Pokémon</h5>
@@ -356,8 +358,7 @@ onUnmounted(() => {
           </q-scroll-area>
         </div>
         <br />
-        <div>
-          <br />
+        <div class="column items-center q-mt-sm">
           <h5>Zone de repos</h5>
           <q-img
             style="outline: solid; max-width: 300px; height: 100px"
