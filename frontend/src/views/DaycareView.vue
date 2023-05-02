@@ -268,9 +268,15 @@ onUnmounted(() => {
     <p id="money" :class="`text-${currentColorMoney} text-h6`">
       {{ lblMoneyDefault }}
     </p>
-    <p id="request" :class="`text-${currentColorRequest} text-h5`">
-      {{ lblRequestEmpty }}
-    </p>
+    <q-page-sticky
+      position="top-right"
+      :offset="[18, 18]"
+      class="text-h6 bg-white text-black border-info q-pa-sm rounded-borders z-top"
+    >
+      <span id="request" :class="`text-${currentColorRequest} text-h5`">
+        {{ lblRequestEmpty }}
+      </span>
+    </q-page-sticky>
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
         <div v-for="(items, index) in areasPairs" :key="index" class="row">
