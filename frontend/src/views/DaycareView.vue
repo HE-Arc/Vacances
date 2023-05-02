@@ -78,8 +78,7 @@ function pokemonRequest() {
 
     randomIndexZone = Math.floor(Math.random() * areas.length);
 
-    while(mapAreaPokemon.get(areas[randomIndexZone].name) == pokemonCurrent)
-    {
+    while (mapAreaPokemon.get(areas[randomIndexZone].name) == pokemonCurrent) {
       randomIndexZone = Math.floor(Math.random() * areas.length);
     }
 
@@ -94,9 +93,7 @@ function pokemonRequest() {
     let randomwait = Math.floor(Math.random() * 10000) + 5000;
     clearInterval(interval.value);
     interval.value = setInterval(pokemonRequest, randomwait);
-  }
-  else
-  {
+  } else {
     lblRequest.innerText = lblRequestEmpty;
     currentColorRequest.value = colorNoRequest;
   }
@@ -320,15 +317,20 @@ onUnmounted(() => {
                         {{ item.pokemon_object.name }}
                       </div>
                       <div class="text-h7 row justify-center">
-                        <q-icon name="sentiment_very_satisfied" size="xs" class="q-mr-sm"/>
+                        <q-icon
+                          name="sentiment_very_satisfied"
+                          size="xs"
+                          class="q-mr-sm"
+                        />
                         {{ item.current_happiness }} /
                         {{
                           item.pokemon_object.pokemon_type_object.max_happiness
                         }}
                       </div>
                       <div
-                        class="image-size-daycare row justify-center items-center q-ma-sm"
+                        class="image-size-daycare row justify-center items-center q-my-sm q-mx-auto"
                       >
+                        <!-- q-mx-auto is required to center fixed (max-)size content -->
                         <q-img
                           :src="item.pokemon_object.display_image_url"
                           :alt="pokemonAlt"
