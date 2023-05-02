@@ -6,6 +6,8 @@ import { ref, onMounted, onUnmounted } from "vue";
 import { areas } from "@/assets/js/areasData.js";
 import transparentImg from "@/assets/images/transparent.png";
 
+const TRANSPARENT_IMG_CHECK = "transparent"; // must be the name of the transparentImg (without path and ext)
+
 const lblRequestEmpty = "Aucune demande pour le moment.";
 const lblMoneyDefault =
   "Montez un Pokémon à son bonheur max pour gagner de l'argent !";
@@ -115,10 +117,7 @@ function sendImage(event, item) {
 function receiveImage(event, area) {
   if (imageElement.value != "") {
     if (tag.value == "pokemon") {
-      if (
-        event.target.src ==
-        "http://localhost:5173/src/assets/images/transparent.png"
-      ) {
+      if (event.target.src.includes(TRANSPARENT_IMG_CHECK)) {
         event.target.src = imageElement.value.src;
 
         tag.value = "";
@@ -132,10 +131,7 @@ function receiveImage(event, area) {
       }
     } else {
       if (isReceived.value) {
-        if (
-          event.target.src !=
-          "http://localhost:5173/src/assets/images/transparent.png"
-        ) {
+        if (!event.target.src.includes(TRANSPARENT_IMG_CHECK)) {
           imageElement.value = event.target;
           lastAreaClicked.value = area;
           isReceived.value = false;
