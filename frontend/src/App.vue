@@ -1,5 +1,6 @@
 <script setup>
 import NavBar from "./components/NavBar.vue";
+import FooterBar from "./components/FooterBar.vue";
 import axios from "axios";
 import { onDisconnect } from "@/assets/js/persistanceLoginInfo";
 import { useRouter } from "vue-router";
@@ -37,5 +38,6 @@ axios.interceptors.response.use(
     <q-page-container>
       <router-view />
     </q-page-container>
+    <FooterBar />
   </q-layout>
 </template>
