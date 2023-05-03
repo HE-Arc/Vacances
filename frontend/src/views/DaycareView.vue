@@ -89,7 +89,7 @@ function pokemonRequest() {
       ".";
     currentColorRequest.value = colorRequest;
 
-    let randomwait = Math.floor(Math.random() * 1000) + 1000;
+    let randomwait = Math.floor(Math.random() * 10000) + 5000;
     clearInterval(interval.value);
     interval.value = setInterval(pokemonRequest, randomwait);
   } else {
