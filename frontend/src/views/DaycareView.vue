@@ -140,6 +140,13 @@ function receiveImage(event, area) {
 
         mapAreaPokemon.set(area.name, pokemonCurrent);
       }
+      else
+      {
+        imageElement.value = event.target;
+        lastAreaClicked.value = area;
+        isReceived.value = false;
+        tag.value = "";
+      }
     } else {
       if (isReceived.value) {
         if (!event.target.src.includes(transparentImg)) {
