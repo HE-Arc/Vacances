@@ -78,7 +78,7 @@ function pokemonRequest() {
 
     randomIndexZone = Math.floor(Math.random() * areas.length);
 
-    while (mapAreaPokemon.get(areas[randomIndexZone].name) == pokemonCurrent) {
+    while (mapAreaPokemon.get(areas[randomIndexZone].name) == randomPokemon) {
       randomIndexZone = Math.floor(Math.random() * areas.length);
     }
 
@@ -87,10 +87,9 @@ function pokemonRequest() {
       " aimerait aller à la " +
       areas[randomIndexZone].name +
       ".";
-
     currentColorRequest.value = colorRequest;
 
-    let randomwait = Math.floor(Math.random() * 10000) + 5000;
+    let randomwait = Math.floor(Math.random() * 1000) + 1000;
     clearInterval(interval.value);
     interval.value = setInterval(pokemonRequest, randomwait);
   } else {
